@@ -2,6 +2,7 @@
 import Image from 'next/image'
 import { useState } from 'react'
 import Header from '@/components/Header'
+import Footer from '@/components/Footer'
 
 // Mock product data
 const products = [
@@ -91,17 +92,7 @@ export default function CatalogPage() {
         </div>
       </main>
 
-      <footer className="bg-gray-800 py-4 px-8 mt-12">
-        <div className="container mx-auto flex justify-between items-center">
-          <p>&copy; 2023 Printcraft. All rights reserved.</p>
-          <nav>
-            <ul className="flex space-x-4">
-              <li><a href="#" className="hover:text-gray-300">Privacy Policy</a></li>
-              <li><a href="#" className="hover:text-gray-300">Terms of Service</a></li>
-            </ul>
-          </nav>
-        </div>
-      </footer>
+     <Footer/>
     </div>
   )
 }

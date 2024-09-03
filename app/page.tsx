@@ -3,6 +3,7 @@
 import Image from 'next/image'
 import { Search, User } from 'lucide-react'
 import Header from '@/components/Header'
+import Footer from '@/components/Footer'
 
 export default function HomePage() {
   return (
@@ -64,10 +65,9 @@ export default function HomePage() {
         </section>
       </main>
 
-      <footer className="bg-gray-800 py-4 px-8 flex justify-between items-center mt-12">
-        <button>Contactanos</button>
-        <button>FAQ</button>
-      </footer>
+      <Footer/>
+      
+
     </div>
   )
 }
