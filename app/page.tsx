@@ -15,7 +15,9 @@ export default function HomePage() {
           <div className="absolute top-1/2 left-8 transform -translate-y-1/2">
             <h2 className="text-4xl font-bold mb-4">La Impresion 3D,<br />mas facil<br />que nunca.</h2>
             <p className="mb-4">Nunca mas vas a tener que perder<br />el sueño al ferretero.</p>
-            <button className="bg-white text-black py-2 px-6 rounded-full font-bold">Registrate</button>
+            <a href='./auth_users'>
+              <button className="bg-white text-black py-2 px-6 rounded-full font-bold">Registrate</button>
+            </a>
           </div>
         </section>
 
