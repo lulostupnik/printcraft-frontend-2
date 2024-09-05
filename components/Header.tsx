@@ -18,8 +18,12 @@ export default function Header(){
             />
             <Search className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={18} />
           </div>
-          <button className="bg-gray-700 py-1 px-3 rounded mr-2">Log in</button>
-          <button className="bg-gray-700 py-1 px-3 rounded">Register</button>
+          <a href="../login">
+            <button className="bg-gray-700 py-1 px-3 rounded mr-2">Log in</button>
+          </a>
+          <a href="../register">
+            <button className="bg-gray-700 py-1 px-3 rounded">Register</button>
+          </a>
         </div>
       </header>
     )

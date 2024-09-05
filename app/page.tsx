@@ -16,7 +16,7 @@ export default function HomePage() {
           <div className="absolute top-1/2 left-8 transform -translate-y-1/2">
             <h2 className="text-4xl font-bold mb-4">La Impresion 3D,<br />mas facil<br />que nunca.</h2>
             <p className="mb-4">Nunca mas vas a tener que perder<br />el sueño al ferretero.</p>
-            <a href='./auth_users'>
+            <a href='./register'>
               <button className="bg-white text-black py-2 px-6 rounded-full font-bold">Registrate</button>
             </a>
           </div>
@@ -53,7 +53,10 @@ export default function HomePage() {
             <a href="/products">
               <button className="bg-gray-700 py-2 px-4 rounded block w-full mb-2">Ver Productos</button>
             </a>
-            <button className="bg-gray-700 py-2 px-4 rounded block w-full mb-2">Buscar Diseñador</button>
+            <a href="/desing_request">
+                <button className="bg-gray-700 py-2 px-4 rounded block w-full mb-2">Buscar Diseñador</button>
+            </a>
+          
             <button className="bg-gray-700 py-2 px-4 rounded block w-full">Iniciar Subasta Inversa</button>
           </div>
           <div className="bg-gray-800 p-6 rounded-lg w-[48%]">
