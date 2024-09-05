@@ -53,7 +53,7 @@ export default function HomePage() {
             <a href="/products">
               <button className="bg-gray-700 py-2 px-4 rounded block w-full mb-2">Ver Productos</button>
             </a>
-            <a >
+            <a href="/lookfor_designer">
                 <button className="bg-gray-700 py-2 px-4 rounded block w-full mb-2">Buscar Diseñador</button>
             </a>
             <a href="/desing_request">
