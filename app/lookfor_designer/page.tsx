@@ -16,7 +16,7 @@ export default function DesignerPage() {
             {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((item) => (
               <div key={item} className="bg-gray-800 rounded-lg overflow-hidden">
                 <Image 
-                  src={`/designer${item}.jpg`} 
+                  src={`/designers/designer${item}.jpg`} 
                   alt={`Designer ${item}`} 
                   width={180} 
                   height={180} 
