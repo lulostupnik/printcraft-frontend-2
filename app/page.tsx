@@ -4,7 +4,8 @@ import Image from 'next/image'
 import { Search, User } from 'lucide-react'
 import Header from '@/components/Header'
 import Footer from '@/components/Footer'
-import RotatingStlViewer from '@/components/RotatingStlView'
+
+import StlViewerComponent from '@/components/RotateStlView'
 
 export default function HomePage() {
   return (
@@ -20,10 +21,12 @@ export default function HomePage() {
             <a href='./register'>
               <button className="bg-white text-black py-2 px-6 rounded-full font-bold">Registrate</button>
             </a>
-         
+            
           </div>
-      
-
+          <div className="absolute top-1/2 right-8 transform -translate-y-1/2">
+            <StlViewerComponent url={"/Capybara_Plain.stl"} />
+          </div>
+          
         </section>
 
         <section className="flex justify-between mb-12">
