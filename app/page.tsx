@@ -4,11 +4,12 @@ import Image from 'next/image'
 import { Search, User } from 'lucide-react'
 import Header from '@/components/Header'
 import Footer from '@/components/Footer'
+import RotatingStlViewer from '@/components/RotatingStlView'
 
 export default function HomePage() {
   return (
     <div className="min-h-screen bg-gray-900 text-white">
-      <Header/>
+      <Header />
 
       <main className="container mx-auto px-4 py-8">
         <section className="relative mb-12">
@@ -19,7 +20,10 @@ export default function HomePage() {
             <a href='./register'>
               <button className="bg-white text-black py-2 px-6 rounded-full font-bold">Registrate</button>
             </a>
+         
           </div>
+      
+
         </section>
 
         <section className="flex justify-between mb-12">
@@ -54,7 +58,7 @@ export default function HomePage() {
               <button className="bg-gray-700 py-2 px-4 rounded block w-full mb-2">Ver Productos</button>
             </a>
             <a href="/lookfor_designer">
-                <button className="bg-gray-700 py-2 px-4 rounded block w-full mb-2">Buscar Diseñador</button>
+              <button className="bg-gray-700 py-2 px-4 rounded block w-full mb-2">Buscar Diseñador</button>
             </a>
             <a href="/desing_request">
               <button className="bg-gray-700 py-2 px-4 rounded block w-full">Iniciar Subasta Inversa</button>
@@ -69,8 +73,8 @@ export default function HomePage() {
         </section>
       </main>
 
-      <Footer/>
-      
+      <Footer />
+
 
     </div>
   )
