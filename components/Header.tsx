@@ -6,7 +6,7 @@ export default function Header() {
         <header className="flex items-center p-4 bg-gray-800">
               <a href="/">
                  <div className="flex items-center">
-                     <Image src="/printcraft.jpg" alt="Printcraft logo" width={60} height={60} className="mr-2" />
+                     <Image src="/Printcraft.png" alt="Printcraft logo" width={70} height={70} className="mr-2" />
                  </div>
              </a>
             
