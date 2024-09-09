@@ -101,7 +101,7 @@ import { useState } from 'react';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import ProductCard from '@/components/ProductCard';
-import { products } from '@/app/products/mockProducts'; // Adjust path as necessary
+import { products } from '@/app/products_catalog/mockProducts'; // Adjust path as necessary
 
 export default function CatalogPage() {
   const [selectedCategory, setSelectedCategory] = useState("All");

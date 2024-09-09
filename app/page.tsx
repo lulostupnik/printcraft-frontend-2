@@ -6,7 +6,7 @@ import Header from '@/components/Header'
 import Footer from '@/components/Footer'
 import { Product } from '@/types/Product'; 
 import ProductCard from '@/components/ProductCard';
-import { products } from '@/app/products/mockProducts'; // Adjust path as necessary
+import { products } from '@/app/products_catalog/mockProducts'; // Adjust path as necessary
 
 import StlViewerComponent from '@/components/RotateStlView'
 
