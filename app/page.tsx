@@ -17,7 +17,7 @@ export default function HomePage() {
           <Image src="/placeholder.svg?height=400&width=1200" alt="3D Printing" width={1200} height={400} className="w-full h-[400px] object-cover rounded-lg" />
           <div className="absolute top-1/2 left-8 transform -translate-y-1/2">
             <h2 className="text-4xl font-bold mb-4">La Impresion 3D,<br />mas facil<br />que nunca.</h2>
-            <p className="mb-4">Nunca mas vas a tener que perder<br />el sueño al ferretero.</p>
+            <p className="mb-4">Nunca mas le vas a tener que pedir<br />el cosito al ferretero.</p>
             <a href='./register'>
               <button className="bg-white text-black py-2 px-6 rounded-full font-bold">Registrate</button>
             </a>
