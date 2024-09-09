@@ -4,7 +4,7 @@ import Image from 'next/image'
 import { Search, User } from 'lucide-react'
 import Header from '@/components/Header'
 import Footer from '@/components/Footer'
-import { Product } from '@/types/Product'; 
+import { Product } from '@/types/Product';
 import ProductCard from '@/components/ProductCard';
 import { products } from '@/app/products_catalog/mockProducts'; // Adjust path as necessary
 
@@ -17,20 +17,32 @@ export default function HomePage() {
 
       <main className="container mx-auto px-4 py-8">
         <section className="relative mb-12">
-          <Image src="/placeholder.svg?height=400&width=1200" alt="3D Printing" width={1200} height={400} className="w-full h-[400px] object-cover rounded-lg" />
-          <div className="absolute top-1/2 left-8 transform -translate-y-1/2">
-            <h2 className="text-4xl font-bold mb-4">La Impresion 3D,<br />mas facil<br />que nunca.</h2>
-            <p className="mb-4">Nunca mas le vas a tener que pedir<br />el cosito al ferretero.</p>
-            <a href='./register'>
-              <button className="bg-white text-black py-2 px-6 rounded-full font-bold">Registrate</button>
-            </a>
-            
+
+          <div className="flex items-center justify-between bg-gray-800 rounded-lg overflow-hidden pl-8">
+            <div className="w-1/2 space-y-4 text-center">
+              <h2 className="text-4xl font-bold mb-4">
+                La Impresión 3D,
+                más fácil que nunca.
+              </h2>
+              <h3 className="mb-4">
+                Nunca más le vas a tener que pedir el cosito al ferretero.
+              </h3>
+              <a href="./register">
+                <button className="bg-white text-black py-6 px-16 rounded-full font-bold text-lg mt-10">
+                  Regístrate
+                </button>
+              </a>
+            </div>
+
+            <div className="w-1/2 h-[400px]">
+              <StlViewerComponent url={"/Capybara.stl"} />
+            </div>
           </div>
-          <div className="absolute top-1/2 right-8 transform -translate-y-1/2">
-            <StlViewerComponent url={"/Capybara.stl"} />
-          </div>
-          
         </section>
+
+
+
+
 
         <section className="flex justify-between mb-12">
           {['Artistas', 'Usuarios', 'Diseños'].map((category, index) => (
@@ -74,7 +86,7 @@ export default function HomePage() {
               <button className="bg-gray-700 py-2 px-4 rounded block w-full mb-2">Publicar Produto</button>
             </a>
             <a href="/offer_services">
-            <button className="bg-gray-700 py-2 px-4 rounded block w-full mb-2">Ofrecer Servicios</button>
+              <button className="bg-gray-700 py-2 px-4 rounded block w-full mb-2">Ofrecer Servicios</button>
             </a>
             <a href="/subasta_inversa">
               <button className="bg-gray-700 py-2 px-4 rounded block w-full mb-2">Buscar Subasta Inversa</button>
