@@ -1,10 +1,7 @@
-// // /pages/seller/offer-services.jsx
-// "use client"
-// import { useState } from 'react'
-// import Header from '@/components/Header'
-// import Footer from '@/components/Footer'
-
-
+// "use client";
+// import React, { useState, ChangeEvent, FormEvent } from 'react';
+// import Header from '@/components/Header';
+// import Footer from '@/components/Footer';
 
 // // Opciones predefinidas de especialidades
 // const specialtiesOptions = [
@@ -15,43 +12,52 @@
 //   "Modelado CAD",
 //   "Escaneo 3D",
 //   "Renderizado de Productos"
-// ]
+// ];
+
+// interface ServiceData {
+//   name: string;
+//   specialty: string;
+//   description: string;
+//   photo: File | null;
+// }
 
 // export default function OfferServices() {
-//   const [serviceData, setServiceData] = useState({
+//   const [serviceData, setServiceData] = useState<ServiceData>({
 //     name: '',
 //     specialty: '',
 //     description: '',
 //     photo: null,
-//   })
+//   });
 
-//   const handleChange = (e) => {
-//     const { name, value } = e.target
-//     setServiceData({ ...serviceData, [name]: value })
-//   }
+//   const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
+//     const { name, value } = e.target;
+//     setServiceData({ ...serviceData, [name]: value });
+//   };
 
-//   const handleFileChange = (e) => {
-//     setServiceData({ ...serviceData, photo: e.target.files[0] })
-//   }
+//   const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
+//     if (e.target.files) {
+//       setServiceData({ ...serviceData, photo: e.target.files[0] });
+//     }
+//   };
 
-//   const handleSubmit = (e) => {
-//     e.preventDefault()
+//   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+//     e.preventDefault();
 //     // Aquí iría la lógica para enviar los datos al servidor o API
-//     console.log('Servicio ofrecido:', serviceData)
-//     alert(`Servicio ofrecido: ${serviceData.name} - ${serviceData.specialty}`)
+//     console.log('Servicio ofrecido:', serviceData);
+//     alert(`Servicio ofrecido: ${serviceData.name} - ${serviceData.specialty}`);
 //     setServiceData({
 //       name: '',
 //       specialty: '',
 //       description: '',
 //       photo: null,
-//     })
-//   }
+//     });
+//   };
 
 //   return (
 //     <div className="flex flex-col min-h-screen bg-gray-900 text-white">
-//     <Header />
+//       <Header />
 
-//     <main className="flex-1 container mx-auto px-4 py-8">
+//       <main className="flex-1 container mx-auto px-4 py-8">
 //         <h1 className="text-4xl font-bold mb-8">Ofrecer Mis Servicios</h1>
 //         <form onSubmit={handleSubmit} className="bg-gray-800 p-6 rounded-lg">
 //           <div className="mb-4">
@@ -118,30 +124,27 @@
 
 //       <Footer />
 //     </div>
-//   )
+//   );
 // }
-
-"use client";
-import React, { useState, ChangeEvent, FormEvent } from 'react';
-import Header from '@/components/Header';
-import Footer from '@/components/Footer';
+// /pages/seller/offer-services.tsx
+"use client"
+import { useState, ChangeEvent, FormEvent } from 'react'
+import Header from '@/components/Header'
+import Footer from '@/components/Footer'
 
 // Opciones predefinidas de especialidades
 const specialtiesOptions = [
-  "Diseño 3D",
-  "Prototipado Rápido",
-  "Impresión FDM",
-  "Impresión SLA",
-  "Modelado CAD",
-  "Escaneo 3D",
-  "Renderizado de Productos"
-];
+  "ABS", "PLA", "PETG", "Nylon", "TPU", "PVA", "HIPS"
+]
 
+const sizeOptions = ["Pequeño", "Mediano", "Grande"]
+
+// Define el tipo de datos del estado
 interface ServiceData {
   name: string;
   specialty: string;
   description: string;
-  photo: File | null;
+  size: string;
 }
 
 export default function OfferServices() {
@@ -149,32 +152,26 @@ export default function OfferServices() {
     name: '',
     specialty: '',
     description: '',
-    photo: null,
-  });
+    size: '',
+  })
 
   const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
-    const { name, value } = e.target;
-    setServiceData({ ...serviceData, [name]: value });
-  };
-
-  const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files) {
-      setServiceData({ ...serviceData, photo: e.target.files[0] });
-    }
-  };
+    const { name, value } = e.target
+    setServiceData({ ...serviceData, [name]: value })
+  }
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+    e.preventDefault()
     // Aquí iría la lógica para enviar los datos al servidor o API
-    console.log('Servicio ofrecido:', serviceData);
-    alert(`Servicio ofrecido: ${serviceData.name} - ${serviceData.specialty}`);
+    console.log('Servicio ofrecido:', serviceData)
+    alert(`Servicio ofrecido: ${serviceData.name} - ${serviceData.specialty}`)
     setServiceData({
       name: '',
       specialty: '',
       description: '',
-      photo: null,
-    });
-  };
+      size: '',
+    })
+  }
 
   return (
     <div className="flex flex-col min-h-screen bg-gray-900 text-white">
@@ -214,24 +211,30 @@ export default function OfferServices() {
             </select>
           </div>
           <div className="mb-4">
+            <label htmlFor="size" className="block text-sm font-medium">Tamaño</label>
+            <select
+              id="size"
+              name="size"
+              value={serviceData.size}
+              onChange={handleChange}
+              className="w-full mt-1 p-2 bg-gray-700 border border-gray-600 rounded"
+              required
+            >
+              <option value="">Selecciona un tamaño</option>
+              {sizeOptions.map((size, index) => (
+                <option key={index} value={size}>
+                  {size}
+                </option>
+              ))}
+            </select>
+          </div>
+          <div className="mb-4">
             <label htmlFor="description" className="block text-sm font-medium">Descripción Breve</label>
             <textarea
               id="description"
               name="description"
               value={serviceData.description}
               onChange={handleChange}
-              className="w-full mt-1 p-2 bg-gray-700 border border-gray-600 rounded"
-              required
-            />
-          </div>
-          <div className="mb-4">
-            <label htmlFor="photo" className="block text-sm font-medium">Foto</label>
-            <input
-              type="file"
-              id="photo"
-              name="photo"
-              accept="image/*"
-              onChange={handleFileChange}
               className="w-full mt-1 p-2 bg-gray-700 border border-gray-600 rounded"
               required
             />
@@ -247,5 +250,5 @@ export default function OfferServices() {
 
       <Footer />
     </div>
-  );
+  )
 }
