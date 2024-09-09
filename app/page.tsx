@@ -4,6 +4,9 @@ import Image from 'next/image'
 import { Search, User } from 'lucide-react'
 import Header from '@/components/Header'
 import Footer from '@/components/Footer'
+import { Product } from '@/types/Product'; 
+import ProductCard from '@/components/ProductCard';
+import { products } from '@/app/products/mockProducts'; // Adjust path as necessary
 
 import StlViewerComponent from '@/components/RotateStlView'
 
@@ -45,11 +48,9 @@ export default function HomePage() {
 
         <section className="mb-12">
           <h3 className="text-2xl font-bold mb-4">Elegidos para vos</h3>
-          <div className="grid grid-cols-4 gap-4">
-            {[1, 2, 3, 4].map((item) => (
-              <div key={item} className="bg-gray-800 rounded-lg overflow-hidden">
-                <Image src={`/placeholder.svg?height=200&width=200`} alt={`Product ${item}`} width={200} height={200} className="w-full h-48 object-cover" />
-              </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+            {products.map(product => (
+              <ProductCard key={product.id} product={product} />
             ))}
           </div>
         </section>
