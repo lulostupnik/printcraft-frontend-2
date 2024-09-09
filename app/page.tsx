@@ -27,7 +27,7 @@ export default function HomePage() {
             
           </div>
           <div className="absolute top-1/2 right-8 transform -translate-y-1/2">
-            <StlViewerComponent url={"/Capybara_Plain.stl"} />
+            <StlViewerComponent url={"/Capybara.stl"} />
           </div>
           
         </section>
