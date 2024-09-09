@@ -76,7 +76,7 @@ export default function HomePage() {
             <a href="/offer_services">
             <button className="bg-gray-700 py-2 px-4 rounded block w-full mb-2">Ofrecer Servicios</button>
             </a>
-            <a href="/choose_request">
+            <a href="/subasta_inversa">
               <button className="bg-gray-700 py-2 px-4 rounded block w-full mb-2">Buscar Subasta Inversa</button>
             </a>
           </div>
