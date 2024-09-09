@@ -69,9 +69,15 @@ export default function HomePage() {
           </div>
           <div className="bg-gray-800 p-6 rounded-lg w-[48%]">
             <h3 className="text-2xl font-bold mb-4">Quiero Vender</h3>
-            <button className="bg-gray-700 py-2 px-4 rounded block w-full mb-2">Publicar Produto</button>
+            <a href="/publish_product">
+              <button className="bg-gray-700 py-2 px-4 rounded block w-full mb-2">Publicar Produto</button>
+            </a>
+            <a href="/offer_services">
             <button className="bg-gray-700 py-2 px-4 rounded block w-full mb-2">Ofrecer Servicios</button>
-            <button className="bg-gray-700 py-2 px-4 rounded block w-full">Buscar Subasta Inversa</button>
+            </a>
+            <a href="/choose_request">
+              <button className="bg-gray-700 py-2 px-4 rounded block w-full mb-2">Buscar Subasta Inversa</button>
+            </a>
           </div>
         </section>
       </main>
