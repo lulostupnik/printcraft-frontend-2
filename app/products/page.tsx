@@ -5,12 +5,13 @@ import { useState } from 'react';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import StlViewerComponent from '@/components/RotateStlView';  // Ensure this path is correct
+import StarIcon from '@/components/StarIcon';
 
 // Mock product data
 const products = [
   { id: 1, name: "3D PERRO SALCHICHA", price: 29.99, category: "Accessories", rating: 5, image: "/mock_products/images/dog.jpg", stlUrl: "/mock_products/models/dog.stl" },
   { id: 2, name: "Millennium Falcom", price: 14.99, category: "Accessories", rating: 4.2, image: "", stlUrl: "/mock_products/models/falcon.stl" },
-  { id: 3, name: "Boat", price: 24.99, category: "Home Decor", rating: 4.7, image: "", stlUrl: "/mock_products/models/boat.stl"  },
+  { id: 3, name: "Boat", price: 24.99, category: "Home Decor", rating: 4.7, image: "", stlUrl: "/mock_products/models/boat.stl" },
   { id: 4, name: "3D Printed Keychain", price: 9.99, category: "Accessories", rating: 4.0, image: "/mock_products/images/keychain.jpg", stlUrl: "" },
   // { id: 5, name: "Desk Organizer", price: 19.99, category: "Office", rating: 4.6, image: "/images/organizer.png", stlUrl: "/models/organizer.stl" },
   // { id: 6, name: "3D Printed Lamp Shade", price: 34.99, category: "Lighting", rating: 4.3, image: "/images/lamp-shade.png", stlUrl: null },
@@ -92,9 +93,7 @@ export default function CatalogPage() {
                 <div className="flex justify-between items-center">
                   <span className="text-xl font-bold">${product.price.toFixed(2)}</span>
                   <div className="flex items-center">
-                    <svg className="w-5 h-5 text-yellow-500 mr-1" fill="currentColor" viewBox="0 0 20 20">
-                      <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                    </svg>
+                    <StarIcon className="w-5 h-5 text-yellow-500 mr-1" />
                     <span>{product.rating.toFixed(1)}</span>
                   </div>
                 </div>
