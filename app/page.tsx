@@ -58,7 +58,7 @@ export default function HomePage() {
         <section className="flex justify-between">
           <div className="bg-gray-800 p-6 rounded-lg w-[48%]">
             <h3 className="text-2xl font-bold mb-4">Quiero Comprar</h3>
-            <a href="/products">
+            <a href="/products_catalog">
               <button className="bg-gray-700 py-2 px-4 rounded block w-full mb-2">Ver Productos</button>
             </a>
             <a href="/lookfor_designer">
