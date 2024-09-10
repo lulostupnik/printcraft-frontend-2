@@ -3,7 +3,7 @@ import { API_URL } from "./api";
 //puto el que lee
 export async function RegisterUser(username:string,password:string) 
 {
-    const ans = await fetch(`${API_URL}/register`,{
+    const ans = await fetch(`${API_URL}/user/register/`,{
             method: "POST",
             body: JSON.stringify({
                 username,password
