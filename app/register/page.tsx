@@ -1,43 +1,42 @@
-// 'use client'
-
-// import React, { useState } from 'react'
-// import Image from 'next/image'
-// import { useRouter } from 'next/navigation'
-// import SimpleHeader from '@/components/SimpleHeader'
-// import Footer from '@/components/Footer'
+// import React, { useState } from 'react';
+// import Image from 'next/image';
+// import { useRouter } from 'next/navigation';
+// import SimpleHeader from '@/components/SimpleHeader';
+// import Footer from '@/components/Footer';
 
 // export default function RegisterPage() {
-//   const [email, setEmail] = useState('')
-//   const [password, setPassword] = useState('')
-//   const [confirmPassword, setConfirmPassword] = useState('')
-//   const [error, setError] = useState('')
-//   const router = useRouter()
+//   const [email, setEmail] = useState('');
+//   const [password, setPassword] = useState('');
+//   const [confirmPassword, setConfirmPassword] = useState('');
+//   const [error, setError] = useState('');
+//   const router = useRouter();
 
 //   const handleSubmit = (e: React.FormEvent) => {
-//     e.preventDefault()
-//     setError('')
+//     e.preventDefault();
+//     setError('');
 
 //     if (password !== confirmPassword) {
-//       setError('Passwords do not match')
-//       return
+//       setError('Passwords do not match');
+//       return;
 //     }
 
 //     if (password.length < 8 || !/[A-Z]/.test(password) || !/[a-z]/.test(password) || !/[0-9]/.test(password)) {
-//       setError('Password must be at least 8 characters long and contain uppercase, lowercase, and numbers')
-//       return
+//       setError('Password must be at least 8 characters long and contain uppercase, lowercase, and numbers');
+//       return;
 //     }
 
 //     // Handle registration logic here
-//     console.log('Registration submitted')
+//     console.log('Registration submitted');
 //     // Redirect to login page after successful registration
-//     router.push('/login')
-//   }
+//     router.push('/login');
+//   };
 
 //   return (
-//     <div className="min-h-screen bg-gray-900 text-white">
-//       <SimpleHeader/>
+//     <div className="min-h-screen flex flex-col bg-gray-900 text-white">
+//       <SimpleHeader />
 
-//       <main className="container mx-auto mt-16 p-4">
+//       {/* Make the main content flex-grow to fill the remaining space */}
+//       <main className="container mx-auto mt-16 p-4 flex-grow">
 //         <div className="max-w-md mx-auto">
 //           <h1 className="text-4xl font-bold mb-8">Register</h1>
 //           <form onSubmit={handleSubmit} className="space-y-4">
@@ -75,18 +74,21 @@
 //               />
 //             </div>
 //             {error && <p className="text-red-500">{error}</p>}
+//             <a href='../'>
 //             <button type="submit" className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-md">
 //               Register
 //             </button>
+//             </a>
 //           </form>
 //         </div>
 //       </main>
-//       <Footer className='mt-auto'/>
+
+//       {/* Move Footer outside of main and keep it at the bottom */}
+//       <Footer className='mt-auto' />
 //     </div>
-//   )
+//   );
 // }
 'use client'
-
 import React, { useState } from 'react';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
@@ -94,15 +96,17 @@ import SimpleHeader from '@/components/SimpleHeader';
 import Footer from '@/components/Footer';
 
 export default function RegisterPage() {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
-  const [error, setError] = useState('');
+  const [email, setEmail] = useState<string>('');
+  const [password, setPassword] = useState<string>('');
+  const [confirmPassword, setConfirmPassword] = useState<string>('');
+  const [error, setError] = useState<string>('');
+  const [successMessage, setSuccessMessage] = useState<string>('');
   const router = useRouter();
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setError('');
+    setSuccessMessage('');
 
     if (password !== confirmPassword) {
       setError('Passwords do not match');
@@ -114,17 +118,36 @@ export default function RegisterPage() {
       return;
     }
 
-    // Handle registration logic here
-    console.log('Registration submitted');
-    // Redirect to login page after successful registration
-    router.push('/login');
+    try {
+      const response = await fetch('https://794e1880-5860-4a69-9aab-68875eb23608-dev.e1-us-cdp-2.choreoapis.dev/printcraft/backend/v1.0/api/user/register/', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          username: email,
+          password: password,
+        }),
+      });
+
+      if (response.ok) {
+        setSuccessMessage('Registration successful! Redirecting to login...');
+        setTimeout(() => {
+          router.push('/login');
+        }, 2000);
+      } else {
+        const data = await response.json();
+        setError(data.message || 'Registration failed. Please try again.');
+      }
+    } catch (err) {
+      setError('An error occurred. Please try again later.');
+    }
   };
 
   return (
     <div className="min-h-screen flex flex-col bg-gray-900 text-white">
       <SimpleHeader />
 
-      {/* Make the main content flex-grow to fill the remaining space */}
       <main className="container mx-auto mt-16 p-4 flex-grow">
         <div className="max-w-md mx-auto">
           <h1 className="text-4xl font-bold mb-8">Register</h1>
@@ -163,6 +186,7 @@ export default function RegisterPage() {
               />
             </div>
             {error && <p className="text-red-500">{error}</p>}
+            {successMessage && <p className="text-green-500">{successMessage}</p>}
             <button type="submit" className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-md">
               Register
             </button>
@@ -170,8 +194,7 @@ export default function RegisterPage() {
         </div>
       </main>
 
-      {/* Move Footer outside of main and keep it at the bottom */}
-      <Footer className='mt-auto' />
+      <Footer className="mt-auto" />
     </div>
   );
 }
