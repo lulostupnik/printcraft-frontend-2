@@ -1,3 +1,5 @@
+import React from 'react';
+
 interface FooterProps { //ahora se le puede poner un className
     className?: string;
   }
@@ -16,4 +18,3 @@ interface FooterProps { //ahora se le puede poner un className
       </footer>
     );
   }
-  
