@@ -39,11 +39,6 @@ export default function HomePage() {
             </div>
           </div>
         </section>
-
-
-
-
-
         <section className="flex justify-between mb-12">
           {['Artistas', 'Usuarios', 'Diseños'].map((category, index) => (
             <div key={index} className="text-center">
