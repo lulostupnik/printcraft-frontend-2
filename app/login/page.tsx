@@ -1,15 +1,16 @@
 'use client'
 
 import React, { useState } from 'react';
-import Image from 'next/image';
+import { useRouter } from 'next/navigation';
 import SimpleHeader from '@/components/SimpleHeader';
 import Footer from '@/components/Footer';
 
 export default function AuthPage() {
-  const [username, setusername] = useState<string>('');
+  const [username, setUsername] = useState<string>('');
   const [password, setPassword] = useState<string>('');
   const [error, setError] = useState<string>('');
   const [successMessage, setSuccessMessage] = useState<string>('');
+  const router = useRouter(); // useRouter hook for redirection
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -30,8 +31,17 @@ export default function AuthPage() {
 
       if (response.ok) {
         const data = await response.json();
+
+        // Save the tokens in localStorage
+        localStorage.setItem('refreshToken', data.refresh);
+        localStorage.setItem('accessToken', data.access);
+
         setSuccessMessage('Login successful!');
-        console.log('Login response:', data);
+
+        // Redirect to the main page after a successful login
+        setTimeout(() => {
+          router.push('/'); // Redirect to the main page
+        }, 2000); // Optional delay of 2 seconds to show success message
       } else {
         const data = await response.json();
         setError(data.message || 'Login failed. Please try again.');
@@ -50,10 +60,10 @@ export default function AuthPage() {
           <h1 className="text-4xl font-bold mb-8">Log in</h1>
           <form onSubmit={handleSubmit} className="space-y-4">
             <input
-              type="username"
-              placeholder="username"
+              type="text"
+              placeholder="Username"
               value={username}
-              onChange={(e) => setusername(e.target.value)}
+              onChange={(e) => setUsername(e.target.value)}
               className="w-full bg-gray-800 text-white px-4 py-2 rounded-md"
               required
             />
