@@ -121,6 +121,7 @@ interface ProductData {
   description: string;
   price: string;
   image: File | null;
+  design: File | null;
 }
 
 export default function PublicarProducto() {
@@ -129,6 +130,7 @@ export default function PublicarProducto() {
     description: '',
     price: '',
     image: null,
+    design: null,
   });
 
   const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
@@ -152,6 +154,7 @@ export default function PublicarProducto() {
       description: '',
       price: '',
       image: null,
+      design: null,
     });
   };
 
@@ -204,6 +207,17 @@ export default function PublicarProducto() {
               id="image"
               name="image"
               accept="image/*"
+              onChange={handleFileChange}
+              className="w-full mt-1 p-2 bg-gray-700 border border-gray-600 rounded"
+            />
+          </div>
+          <div className="mb-4">
+            <label htmlFor="stlFile" className="block text-sm font-medium">Model del Producto</label>
+            <input
+              type="file"
+              id="stlFile"
+              name="stlFile"
+              accept=".stl"
               onChange={handleFileChange}
               className="w-full mt-1 p-2 bg-gray-700 border border-gray-600 rounded"
             />
