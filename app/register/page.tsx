@@ -49,7 +49,7 @@ export default function RegisterPage() {
         setSuccessMessage('Registration successful! Redirecting to login...');
         setTimeout(() => {
           router.push('/login');
-        }, 2000);
+        }, 200);
       } else {
         const data = await response.json();
         setError(data.message || 'Registration failed. Please try again.');

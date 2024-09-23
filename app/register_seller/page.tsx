@@ -58,7 +58,7 @@ export default function SellerPage() {
         // Redirect to the profile page after success
         setTimeout(() => {
           router.push('/profile'); // Redirect to profile page
-        }, 2000); // Optional delay to show success message
+        }, 200); // Optional delay to show success message
       } else {
         const errorData = await response.json();
         setErrorMessage(errorData.message || 'Ocurrió un error. Inténtalo nuevamente.');

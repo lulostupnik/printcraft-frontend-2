@@ -133,7 +133,7 @@ export default function AuthPage() {
         // Redirect to the main page after a successful login and fetching user data
         setTimeout(() => {
           router.push('/'); // Redirect to the main page
-        }, 2000); // Optional delay of 2 seconds to show success message
+        }, 200); // Optional delay of 2 seconds to show success message
       } else {
         const errorData = await userResponse.json();
         setError(errorData.message || 'Failed to fetch user data.');
