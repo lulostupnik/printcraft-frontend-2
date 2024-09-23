@@ -127,6 +127,9 @@ export default function AuthPage() {
         localStorage.setItem('lastName', userData.last_name);
         localStorage.setItem('email', userData.email);
         
+        const sellerStatus = userData.is_seller; // Assuming API sends `is_seller` field
+        localStorage.setItem('isSeller', JSON.stringify(sellerStatus));
+
         // Redirect to the main page after a successful login and fetching user data
         setTimeout(() => {
           router.push('/'); // Redirect to the main page
