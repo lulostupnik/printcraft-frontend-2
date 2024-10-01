@@ -1,7 +1,6 @@
 'use client'
 import { API_URL } from "@/api/api"
 
-
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';  // Use router for redirection
 import Header from '@/components/Header';
@@ -92,7 +91,7 @@ export default function HomePage() {
 
               {/* Conditionally render the "Regístrate" button based on login status */}
               {!isLoggedIn && (
-                <a href="./register">
+                <a href="./products_catalog">
                   <button className="bg-white text-black py-6 px-16 rounded-full font-bold text-lg mt-10">
                     Ver Catalogo
                   </button>
@@ -114,16 +113,7 @@ export default function HomePage() {
               {products.slice(0, 4).map((product) => (  // Get 4 random products
                 <ProductCard
                   key={product.code}
-                  product={{
-                    code: product.code,
-                    name: product.name,
-                    material: product.material,
-                    stock: product.stock,
-                    description: product.description,
-                    image_url: product.image_url,
-                    seller: product.seller,
-                    price: product.price
-                  }}
+                  product={product}
                 />
               ))}
             </div>
@@ -157,11 +147,28 @@ export default function HomePage() {
           </div>
         </section>
 
+        {/* "Tenés una impresora 3D?" Section with Same Style */}
+        
+        <section className="relative mb-12 bg-gray-800">
+          <div className="flex items-center justify-between p-12 bg-gray-800 rounded-lg overflow-hidden pl-8">
+            <div className="w-1/2 space-y-4 text-center mx-auto">
+              <h2 className="text-4xl font-bold mb-4">
+                Tenés una impresora 3D?
+              </h2>
+           
+              <button
+                onClick={handlePublishProductClick}
+                className="bg-white text-black py-6 px-16 rounded-full font-bold text-lg mt-10"
+              >
+                Empezá a vender
+              </button>
+            </div>
+
+          </div>
+        </section>
       </main>
 
       <Footer />
     </div>
   );
 }
-
-
