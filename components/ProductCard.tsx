@@ -120,7 +120,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
           spaceBetween={10}
           slidesPerView={1}
           className="w-full h-full"
-          autoplay={{ delay: 3000, disableOnInteraction: false }} // Configuración para deslizar automáticamente
+          autoplay={{ delay: 10000, disableOnInteraction: false }} // Configuración para deslizar automáticamente
           modules={[Autoplay]} // Utilizando el módulo Autoplay
         >
           {(product.images_url && product.images_url.length > 0) ? (
@@ -137,7 +137,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
             <SwiperSlide className="flex items-center justify-center h-full">
               <img
                 src="/placeholder-image.png"
-                alt="Placeholder image"
+                alt=""
                 className="object-contain max-h-full max-w-full mx-auto"
               />
             </SwiperSlide>
