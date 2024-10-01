@@ -67,6 +67,7 @@
 //   );
 // }
 "use client";
+import { API_URL } from "@/api/api"
 
 import { useState, useEffect } from 'react';
 import Header from '@/components/Header';
@@ -85,7 +86,7 @@ export default function CatalogPage() {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const response = await fetch('https://794e1880-5860-4a69-9aab-68875eb23608-dev.e1-us-cdp-2.choreoapis.dev/printcraft/backend/v1.0/api/products/');
+        const response = await fetch(`${API_URL}/products/`);
         if (!response.ok) {
           throw new Error("Failed to fetch products");
         }

@@ -114,14 +114,14 @@ export default function Header() {
       </a>
 
       <div className="flex flex-grow justify-center">
-        <div className="relative w-full max-w-lg">
+        {/* <div className="relative w-full max-w-lg">
           <input
             type="text"
             placeholder="Buscador de productos, diseñadores..."
             className="w-full py-3 px-4 pr-12 rounded-lg bg-gray-700 text-white placeholder-gray-400 text-lg"
           />
           <Search className="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400" size={24} />
-        </div>
+        </div> */}
       </div>
 
       <div className="flex-shrink-0 flex items-center">

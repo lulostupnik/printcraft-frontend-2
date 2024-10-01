@@ -2,6 +2,8 @@
 import React, { useState, ChangeEvent, FormEvent } from 'react';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
+import { API_URL } from "@/api/api"
+
 
 interface ProductData {
   name: string;
@@ -67,7 +69,7 @@ export default function PublicarProducto() {
         formData.append('image_url', 'https://null.jpg' );
       }
 
-      const response = await fetch('https://794e1880-5860-4a69-9aab-68875eb23608-dev.e1-us-cdp-2.choreoapis.dev/printcraft/backend/v1.0/api/products/create/', {
+      const response = await fetch(`${API_URL}/products/create/`, {
         method: 'POST',
         headers: {
           Authorization: `Bearer ${accessToken}`,  // Pass the access token

@@ -3,6 +3,8 @@ import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import SimpleHeader from '@/components/SimpleHeader';
 import Footer from '@/components/Footer';
+import { API_URL } from "@/api/api"
+
 
 export default function RegisterPage() {
   const [name, setName] = useState<string>('');
@@ -31,7 +33,7 @@ export default function RegisterPage() {
     }
 
     try {
-      const response = await fetch('https://794e1880-5860-4a69-9aab-68875eb23608-dev.e1-us-cdp-2.choreoapis.dev/printcraft/backend/v1.0/api/user/register/', {
+      const response = await fetch(`${API_URL}/user/register/`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -180,7 +182,7 @@ export default function RegisterPage() {
 //     }
 
 //     try {
-//       const response = await fetch('https://794e1880-5860-4a69-9aab-68875eb23608-dev.e1-us-cdp-2.choreoapis.dev/printcraft/backend/v1.0/api/user/register/', {
+//       const response = await fetch('${API_URL}/user/register/', {
 //         method: 'POST',
 //         headers: {
 //           'Content-Type': 'application/json',

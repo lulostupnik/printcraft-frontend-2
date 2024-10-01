@@ -1,5 +1,7 @@
 'use client'
 
+import { API_URL } from "@/api/api"
+
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import SimpleHeader from '@/components/SimpleHeader';
@@ -15,7 +17,7 @@ export default function AuthPage() {
   // Function to fetch user data and save it in localStorage
   const fetchUserData = async (accessToken: string) => {
     try {
-      const userResponse = await fetch('https://794e1880-5860-4a69-9aab-68875eb23608-dev.e1-us-cdp-2.choreoapis.dev/printcraft/backend/v1.0/api/user/data/', {
+      const userResponse = await fetch(`${API_URL}/user/data/`, {
         method: 'GET',
         headers: {
           'Authorization': `Bearer ${accessToken}`, // Include the access token in the Authorization header
@@ -55,7 +57,7 @@ export default function AuthPage() {
     setSuccessMessage('');
 
     try {
-      const response = await fetch('https://794e1880-5860-4a69-9aab-68875eb23608-dev.e1-us-cdp-2.choreoapis.dev/printcraft/backend/v1.0/api/token/', {
+      const response = await fetch(`${API_URL}/token/`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
