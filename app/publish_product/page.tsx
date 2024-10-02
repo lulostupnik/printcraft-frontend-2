@@ -905,10 +905,12 @@ export default function PublicarProducto() {
         if (productData.stl_file_url) {
             formData.append('stl_file_url', productData.stl_file_url);
         }
-        productData.imageFiles.forEach((file) => {
-          formData.append('image_files[]', file);  // Use 'image_files[]' to indicate it's an array of images
+      //   productData.imageFiles.forEach((file) => {
+      //     formData.append('image_files[]', file);  // Use 'image_files[]' to indicate it's an array of images
+      // });
+      productData.imageFiles.forEach((file) => {
+        formData.append('image_files', file); // Each file is appended under 'image_files'
       });
-      
 
         // Send the formData to create the product
         const response = await fetch(`${API_URL}/products/create/`, {
