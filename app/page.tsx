@@ -245,13 +245,13 @@ export default function HomePage() {
   };
 
   // Show a loading screen while data is being fetched
-  if (loading) {
-    return (
-      <div className="min-h-screen flex justify-center items-center bg-gray-900 text-white">
-        <div className="text-lg font-bold">Loading...</div>
-      </div>
-    );
-  }
+  // if (loading) {
+  //   return (
+  //     <div className="min-h-screen flex justify-center items-center bg-gray-900 text-white">
+  //       <div className="text-lg font-bold">Loading...</div>
+  //     </div>
+  //   );
+  // }
 
   return (
     <div className="min-h-screen bg-gray-900 text-white">
