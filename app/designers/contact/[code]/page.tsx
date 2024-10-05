@@ -13,7 +13,7 @@ const ContactPage = () => {
     <div className="flex flex-col min-h-screen bg-gray-900 text-white">
       <Header/>
       <main className="flex-grow container mx-auto px-4 py-8">
-        <h1 className="text-4xl font-bold mb-6">Contact Seller for Designer {code}</h1>
+        <h1 className="text-4xl font-bold mb-6">Contactar con {code}</h1>
 
         {/* Form Section */}
         <div className="bg-gray-700 p-6 rounded-lg mb-8">
@@ -24,7 +24,7 @@ const ContactPage = () => {
               checked={hasDesign}
               onChange={() => setHasDesign(!hasDesign)}
             />
-            <span>I already have a 3D design (STL file)</span>
+            <span>Ya tengo un diseño (archivo STL)</span>
           </label>
 
           {/* STL Upload Section - Always Present */}
@@ -32,41 +32,51 @@ const ContactPage = () => {
 
           {/* Description Section - Always Present */}
           <div className="mb-8">
-            <h3 className="text-2xl font-bold mb-2">Describe Your Idea</h3>
-            {hasDesign ? (
-              <p className="text-gray-300 mb-4">You can add any additional information about your design here.</p>
-            ) : (
-              <p className="text-gray-300 mb-4">
-                Please describe your idea in detail, so we can assist you with the design and printing.
-              </p>
-            )}
-            <textarea
-              className="w-full p-2 rounded text-gray-900"
-              placeholder="Describe your idea or provide additional information here..."
-              rows={4}
-            ></textarea>
+            {
+              hasDesign ? 
+              (
+                <div>
+                <h3 className="text-2xl font-bold mb-2">Informacion adicional</h3>
+                <p className="text-gray-300 mb-4">Aqui se puede agregar informacion adicional sobre su diseño.</p>
+                <textarea
+                  className="w-full p-2 rounded text-gray-900"
+                  placeholder="Incluya la informacion adicional pertinente..."
+                  rows={4}
+                  />
+                </div>
+              ) :
+              (
+                <div>
+                  <h3 className="text-2xl font-bold mb-2">Descripcion de su idea</h3>
+                  <p className="text-gray-300 mb-4">Por favor denos una descripcion detallada de su idea, para que lo podamos ayudar con un diseño y su consecuente impresion.</p>
+                  <textarea
+                  className="w-full p-2 rounded text-gray-900"
+                  placeholder="Describa su idea..."
+                  rows={4}
+                  />
+                </div>
+              )
+            }
           </div>
 
           <div className="mb-8">
-            <h3 className="text-2xl font-bold mb-2">Upload Your Design (Optional)</h3>
-            {hasDesign ? (
-              <p className="text-gray-300 mb-4">Since you have a design, please upload your STL file below.</p>
-            ) : (
-              <p className="text-gray-300 mb-4">
-                If you already have a design, feel free to upload your STL file here.
-              </p>
-            )}
-            <input
-              type="file"
-              accept=".stl"
-              className="mb-4 text-gray-900"
-            />
+            { hasDesign ? (
+            <div>  
+              <h3 className="text-2xl font-bold mb-2">Aqui puede subir su diseño</h3>
+              <p className="text-gray-300 mb-4">Inserte su archivo de tipo .stl.</p>
+              <input
+                type="file"
+                accept=".stl"
+                className="mb-4 text-gray-900"
+              />
+            </div>) : 
+            <div/>}
           </div>
 
           {/* Reference Image Section - Always Present */}
           <div className="mb-8">
-            <h3 className="text-2xl font-bold mb-2">Upload a Reference Image (Optional)</h3>
-            <p className="text-gray-300 mb-4">If you have any reference images, please upload them here.</p>
+            <h3 className="text-2xl font-bold mb-2">Imagen de referencia (Opcional)</h3>
+            <p className="text-gray-300 mb-4">Si cuenta con una imagen de referencia, puede subirla aqui.</p>
             <input
               type="file"
               accept="image/*"
@@ -76,7 +86,7 @@ const ContactPage = () => {
 
           {/* Submit Button - Always Present */}
           <button className="bg-blue-600 text-white py-2 px-4 rounded font-bold hover:bg-blue-500">
-            Submit
+            Enviar
           </button>
         </div>
 
