@@ -220,24 +220,24 @@ const SellerProfilePage = () => {
         {/* Seller Profile Section */}
         <div className="w-full lg:w-1/3 bg-gray-800 p-6 rounded-lg flex flex-col items-center">
           <div className="w-24 h-24 rounded-full bg-blue-500 mb-4"></div> {/* Placeholder for profile image */}
-          <h1 className="text-4xl font-bold mb-2">{sellerProfile?.name ?? 'nombre'}</h1>
-          <p className="text-sm text-gray-400 mb-2">{sellerProfile?.country ?? 'country'}</p>
-          <p className="text-center text-gray-300 mb-4">{sellerProfile?.bio ?? 'bio'}</p>
+          <h1 className="text-4xl font-bold mb-2">{sellerProfile?.name ?? 'Nombre'}</h1>
+          <p className="text-sm text-gray-400 mb-2">{sellerProfile?.country ?? 'Localidad'}</p>
+          <p className="text-center text-gray-300 mb-4">{sellerProfile?.bio ?? 'Biografia'}</p>
           <p className="text-lg font-bold">Rating: ⭐ {sellerProfile?.rating ?? 1.0}/5.0</p>
-          <p className="text-gray-400 mb-6">Response Time: {sellerProfile?.responseTime ?? 4}</p>
+          <p className="text-gray-400 mb-6">Tiempo de Respuesta: {sellerProfile?.responseTime ?? 4}</p>
 
           {/* Contact Seller Button */}
           <button
             onClick={() => router.push(`/designers/contact/${code}`)} // Redirect using code from URL
             className="bg-blue-600 text-white py-4 px-8 rounded-lg font-bold hover:bg-blue-500"
           >
-            Contact Seller
+            Contactar
           </button>
         </div>
 
         {/* Seller's Products Section */}
         <div className="w-full lg:w-2/3">
-          <h2 className="text-3xl font-bold mb-6">Products by {sellerProfile?.name ?? ''}</h2>
+          <h2 className="text-3xl font-bold mb-6">Productos {sellerProfile?.name ?? ''}</h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
             {products.map((product) => (
               <div key={product.code} className="bg-gray-800 p-4 rounded-lg">
