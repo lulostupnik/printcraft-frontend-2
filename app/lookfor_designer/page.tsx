@@ -73,6 +73,12 @@ export default function DesignerPage() {
             ))}
           </div>
         </section>
+          <div>
+            <h1>
+              PUBLICAR PARA TODOS 
+            </h1>
+          </div>
+
       </main>
 
       <Footer/>
