@@ -67,9 +67,9 @@ export default function Footer({ className = '' }: FooterProps) {
         </div>
         <div>
           <ul>
-            <li className="mb-2"><a className="hover:underline">FAQ</a></li>
-            <li className="mb-2"><a className="hover:underline">Terminos y Condiciones</a></li>
-            <li className="mb-2"><a className="hover:underline">Politica de Privacidad</a></li>
+            <li className="mb-2">FAQ</li>
+            <li className="mb-2">Terminos y Condiciones</li>
+            <li className="mb-2">Politica de Privacidad</li>
           </ul>
         </div>
         <div>
