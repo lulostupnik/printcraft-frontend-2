@@ -202,7 +202,7 @@ export default function HomePage() {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const response = await fetch(`${API_URL}/products/recommended/`);
+        const response = await fetch(`${API_URL}/products/`);
         if (response.ok) {
           const data = await response.json();
 
@@ -284,7 +284,7 @@ export default function HomePage() {
           <section className="mb-12">
             <h3 className="text-2xl font-bold mb-4">Elegidos para vos</h3>
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-              {products.map((product) => (
+              {products.slice(0, 4).map((product) => (
                 <ProductCard key={product.code} product={product} />
               ))}
             </div>
