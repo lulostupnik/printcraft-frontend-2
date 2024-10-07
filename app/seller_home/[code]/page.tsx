@@ -76,7 +76,7 @@ export default function SellerHomePage() {
                             <h4 className="mb-4 text-gray-300">
                                 Solamente vamos a necesitar que nos proporcione algunos datos, y el diseño.
                             </h4>
-                            <a href="./publish_product">
+                            <a href="../publish_product">
                                 <button className="bg-white text-black py-3 px-8 rounded-full font-bold text-lg mt-10">
                                     Publicar
                                 </button>
@@ -87,7 +87,7 @@ export default function SellerHomePage() {
                             <h4 className="mb-4 text-gray-300">
                                 Cada usuario va a poder contactarlo, para que usted pueda brindarle un servicio personalizado.
                             </h4>
-                            <a href="./lookfor_designer">
+                            <a href="../lookfor_designer">
                                 <button className="bg-white text-black py-3 px-8 rounded-full font-bold text-lg mt-10">
                                     Ofrecer servicios
                                 </button>
