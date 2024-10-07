@@ -244,6 +244,17 @@ export default function HomePage() {
     }
   };
 
+    // Redirect the user when "Publicar Producto" is clicked
+    const handleGoToSellerHomeClick = () => {
+      if (!isLoggedIn) {
+        router.push('/login');
+      } else if (!isSeller) {
+        router.push('/register_seller');
+      } else {
+        router.push('/seller_home');
+      }
+    };
+
   // Show a loading screen while data is being fetched
   // if (loading) {
   //   return (
@@ -314,7 +325,7 @@ export default function HomePage() {
             <div className="w-1/2 space-y-4 text-center mx-auto">
               <h2 className="text-4xl font-bold mb-4">Tenés una impresora 3D?</h2>
               <button
-                onClick={handlePublishProductClick}
+                onClick={handleGoToSellerHomeClick}
                 className="bg-white text-black py-6 px-16 rounded-full font-bold text-lg mt-10"
               >
                 Empezá a vender
