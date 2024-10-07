@@ -43,8 +43,7 @@ interface MercadoPagoComponentProps {
 const MercadoPagoComponent: React.FC<MercadoPagoComponentProps> = ({ preferenceId }) => {
   useEffect(() => {
     // Initialize MercadoPago with the provided public key from the .env file
-    const mercadoPagoPublicKey = process.env.REACT_APP_MP_SECRET;
-
+    const mercadoPagoPublicKey = process.env.MP_SECRET;
     if (mercadoPagoPublicKey) {
       initMercadoPago(mercadoPagoPublicKey, { locale: 'es-AR' });
     } else {

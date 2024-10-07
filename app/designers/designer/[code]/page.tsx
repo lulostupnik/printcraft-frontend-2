@@ -237,11 +237,16 @@ const SellerProfilePage = () => {
   }, [code]);
 
   if (loading) {
-    return <div className="flex flex-col min-h-screen bg-gray-900 text-white">Cargando perfil del vendedor...</div>;
+    return(
+        <div className="flex flex-col min-h-screen bg-gray-900 text-white">
+        <Header />
+        <main className="flex-grow container mx-auto px-4 py-8 flex flex-col lg:flex-row gap-8 pb-24"></main>
+        <Footer/>
+    </div>);
   }
 
   if (!sellerProfile) {
-    return <div className="text-white">Vendedor no encontrado</div>;
+    return <div className="flex flex-col min-h-screen bg-gray-900 text-white">Vendedor no encontrado</div>;
   }
 
   return (
