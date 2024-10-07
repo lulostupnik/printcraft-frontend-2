@@ -212,6 +212,9 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
   const hasImages = images.length > 0;
   const hasStlFile = product.stl_file_url !== null && product.stl_file_url !== "";
 
+  console.log(images.length);
+  console.log(product.images_url);
+
   // Toggle between Image and STL
   const handleToggleView = (e: React.MouseEvent) => {
     e.stopPropagation(); // Prevent triggering the link click event
@@ -243,7 +246,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
             modules={[Autoplay]}
           >
             {images.map((img, index) => {
-              console.log(img);
+              //console.log(images.length);
               return (
               <SwiperSlide key={index} className="flex items-center justify-center h-full">
                 <Image
