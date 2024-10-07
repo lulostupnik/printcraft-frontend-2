@@ -290,9 +290,9 @@ const ProductDetailPage = () => {
             </div>
 
             {/* Vendor Info */}
-            <div className="mt-8 p-4 bg-gray-700 rounded">
+            {/* <div className="mt-8 p-4 bg-gray-700 rounded">
               <p>Vendido por: <span className="font-bold">{product.seller_name}</span></p>
-            </div>
+            </div> */}
           </div>
         </div>
       </main>
