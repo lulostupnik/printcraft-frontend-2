@@ -200,21 +200,36 @@ const SellerProfilePage = () => {
         }
       };
 
-      const fetchSellerProducts = async () => {
-        try {
-          const response = await fetch(`${API_URL}/products/seller/${code}/`);
-          if (response.ok) {
-            const data: Product[] = await response.json();
-            setProducts(data);
-          } else {
-            console.error('Failed to fetch seller products');
-          }
-        } catch (error) {
-          console.error('Error fetching seller products:', error);
-        } finally {
-          setLoading(false);
+      // Fetch products from the API
+    const fetchSellerProducts = async () => {
+      try {
+        const response = await fetch(`${API_URL}/products/seller/${code}/`);
+        if (response.ok) {
+          const data = await response.json();
+
+          // Transform data to match Product interface if needed
+          const transformedProducts: Product[] = data.map((item: any) => ({
+            code: item.code,
+            name: item.name,
+            material: item.material,
+            stock: item.stock.toString(),
+            description: item.description,
+            stl_file_url: item.stl_file_url,
+            seller: item.seller,
+            price: item.price,
+            images_url: item.images.map((img: any) => img.image_url), // Assumes images is an array
+          }));
+
+          setProducts(transformedProducts);
+        } else {
+          console.error('Failed to fetch products');
         }
-      };
+      } catch (error) {
+        console.error('Error fetching products:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
 
       fetchSellerProfile();
       fetchSellerProducts();
