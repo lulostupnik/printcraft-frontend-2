@@ -87,7 +87,7 @@ export default function SellerHomePage() {
                             <h4 className="mb-4 text-gray-300">
                                 Cada usuario va a poder contactarlo, para que usted pueda brindarle un servicio personalizado.
                             </h4>
-                            <a href="../lookfor_designer">
+                            <a href="../offer_services">
                                 <button className="bg-white text-black py-3 px-8 rounded-full font-bold text-lg mt-10">
                                     Ofrecer servicios
                                 </button>
@@ -103,7 +103,7 @@ export default function SellerHomePage() {
                             <h4 className="mb-4 text-gray-300">
                                 Aquí podrá ver las Requests que se le han proporcionado específicamente a usted, así como las requests que se han proporcionado en general. 
                             </h4>
-                            <a href="./../../choose_request">
+                            <a href="../choose_request">
                                 <button className="bg-white text-black py-3 px-8 rounded-full font-bold text-lg mt-10">
                                     Explorar
                                 </button>
