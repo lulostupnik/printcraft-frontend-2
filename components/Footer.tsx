@@ -2,7 +2,51 @@ interface FooterProps { //ahora se le puede poner un className
   className?: string;
 }
 
+import React, { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
+
 export default function Footer({ className = '' }: FooterProps) {
+
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isSeller, setIsSeller] = useState(false);
+  const router = useRouter();
+
+    // Check if tokens exist in localStorage to determine login status and seller status
+  useEffect(() => {
+    const accessToken = localStorage.getItem('accessToken');
+    const sellerStatus = JSON.parse(localStorage.getItem('isSeller') || 'false');
+
+  
+    if (accessToken) {
+      setIsLoggedIn(true);
+      setIsSeller(sellerStatus);
+    } else {
+      setIsLoggedIn(false);
+    }
+  }, []);
+
+    // Redirect the user when "Publicar producto" button is clicked
+    const handlePublishProductClick = () => {
+      if (!isLoggedIn) {
+        router.push('/login');
+      } else if (!isSeller) {
+        router.push('/register_seller');
+      } else {
+        router.push('/publish_product');
+      }
+    };
+
+    // Redirect the user when "Publicar producto" button is clicked
+    const handleOfferServicesClick = () => {
+      if (!isLoggedIn) {
+        router.push('/login');
+      } else if (!isSeller) {
+        router.push('/register_seller');
+      } else {
+        router.push('/offer_services');
+      }
+    };
+
   return (
     <footer className="bg-gray-800 text-gray-300 py-8">
     <div className="max-w-7xl mx-auto">
@@ -17,15 +61,15 @@ export default function Footer({ className = '' }: FooterProps) {
         <div>
           <h3 className="text-lg font-semibold mb-4">Vender</h3>
           <ul>
-          <li className="mb-2"><a href="/publish_product" className="hover:underline">Publicar</a></li>
-            <li className="mb-2"><a href="/offer_services" className="hover:underline">Ofrecer Servicios</a></li>
+            <li className="mb-2"><a onClick={handlePublishProductClick} style={{ cursor: 'pointer' }} className="hover:underline">Publicar</a></li>
+            <li className="mb-2"><a onClick={handleOfferServicesClick} style={{ cursor: 'pointer' }} className="hover:underline">Ofrecer Servicios</a></li>
           </ul>
         </div>
         <div>
           <ul>
-            <li className="mb-2"><a href="/publish_product" className="hover:underline">FAQ</a></li>
-            <li className="mb-2"><a href="/offer_services" className="hover:underline">Terminos y Condiciones</a></li>
-            <li className="mb-2"><a href="/choose_request" className="hover:underline">Politica de Privacidad</a></li>
+            <li className="mb-2"><a className="hover:underline">FAQ</a></li>
+            <li className="mb-2"><a className="hover:underline">Terminos y Condiciones</a></li>
+            <li className="mb-2"><a className="hover:underline">Politica de Privacidad</a></li>
           </ul>
         </div>
         <div>

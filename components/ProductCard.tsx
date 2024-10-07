@@ -198,6 +198,7 @@ import 'swiper/css/autoplay';
 import { Autoplay } from 'swiper/modules';
 import StlViewerComponent from '@/components/RotateStlView'; // Ensure correct path
 import { useState } from 'react';
+import Image from 'next/image';
 
 interface ProductCardProps {
   product: Product;
@@ -241,15 +242,19 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
             autoplay={{ delay: 10000, disableOnInteraction: false }}
             modules={[Autoplay]}
           >
-            {images.map((img, index) => (
+            {images.map((img, index) => {
+              console.log(img);
+              return (
               <SwiperSlide key={index} className="flex items-center justify-center h-full">
-                <img
+                <Image
                   src={img} // Provide the image URL directly from the images array
                   alt={`${product.name} image ${index + 1}`}
                   className="object-contain max-h-full max-w-full mx-auto"
+                  width={500} // Set width and height for better optimization
+                  height={500}
                 />
               </SwiperSlide>
-            ))}
+            ) } )}
           </Swiper>
         ) : (
           // Placeholder if neither images nor STL file are available
