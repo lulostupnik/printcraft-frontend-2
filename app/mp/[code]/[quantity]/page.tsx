@@ -273,9 +273,7 @@ export default function PaymentPage() {
             body: JSON.stringify({
               product_id: code, // Use the code from the URL params as a string
               quantity: quantity, // Use the quantity from the URL params as a string
-            //  email: 'test@gmail.com'
-              //transaction_amount: 100.0, // Set the transaction amount as required
-              //email: 'TESTUSER1767510206', // Set the client's email as required
+           
             }),
           });
 
