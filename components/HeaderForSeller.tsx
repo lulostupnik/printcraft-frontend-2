@@ -38,13 +38,13 @@ export default function HeaderForSeller() {
     <header className="flex items-center p-4 bg-gray-800">
       <a href="/">
         <div className="flex items-center">
-          <Image src="/Printcraft.png" alt="Printcraft logo" width={70} height={70} className="mr-2" />
+          <Image src="/3DCAPYBARALOGOWHITE.png" alt="3dCapybara logo" width={80} height={80} className="mr-2" />
         </div>
       </a>
 
       <div className="flex flex-grow justify-center">
         <a href="../../">
-            <button className="bg-white text-black py-1 px-5 rounded-full font-bold text-lg">Comprar</button>
+            <button className="bg-white text-black py-2 px-7 rounded-full font-bold text-lg">Comprar</button>
         </a>
 
       </div>
