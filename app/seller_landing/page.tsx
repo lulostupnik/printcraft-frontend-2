@@ -1,22 +1,11 @@
-'use client';
+'use client'
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import { API_URL } from '@/api/api';
-
-// Define the PrintRequest type based on the structure you provided
-type PrintRequest = {
-  requestID: number;
-  userID: number;
-  quantity: number;
-  sellerID: number;
-  stl_url: string;
-  description: string;
-  material: string;
-  status: string;
-  price: string | null;
-};
+import RequestsTable from '@/components/RequestsTable';
+import { PrintRequest } from '@/types/PrintRequests';
 
 export default function SellerDashboard() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -24,8 +13,8 @@ export default function SellerDashboard() {
   const [printRequests, setPrintRequests] = useState<PrintRequest[]>([]);
   const [loading, setLoading] = useState(true);
   const [priceInputs, setPriceInputs] = useState<{ [key: number]: string }>({});
+  const [expandedTable, setExpandedTable] = useState<string | null>(null); // Manage which table is expanded
   const router = useRouter();
-  const [showDelivered, setShowDelivered] = useState(false)
 
   // Check if tokens exist in localStorage to determine login status and seller status
   useEffect(() => {
@@ -75,7 +64,7 @@ export default function SellerDashboard() {
 
   // Handle Accept Request with price
   const handleAcceptRequest = async (requestID: number) => {
-    const price = priceInputs[requestID]; // Get the price for the request
+    const price = priceInputs[requestID];
     if (!price || isNaN(Number(price))) {
       alert('Please enter a valid price.');
       return;
@@ -193,7 +182,6 @@ export default function SellerDashboard() {
       console.error('Error marking as delivered:', error);
     }
   };
-  
 
   // Filter requests into different statuses
   const pendingRequests = printRequests.filter((req: PrintRequest) => req.status === 'Pendiente');
@@ -209,259 +197,119 @@ export default function SellerDashboard() {
       <main className="container mx-auto px-4 py-8 flex-grow">
         <section className="mb-12 bg-gray-800 p-8 rounded-lg">
           <h2 className="text-4xl font-bold mb-4 text-center">Dashboard de Vendedor</h2>
-        
 
-          {/* Pending Requests Section */}
-          <div className="mt-8">
-            <h3 className="text-2xl font-bold mb-4 text-center">Solicitudes Pendientes</h3>
-            {pendingRequests.length === 0 ? (
-              <p className="text-center">No hay solicitudes pendientes.</p>
-            ) : (
-              <div className="overflow-x-auto">
-                <table className="min-w-full mx-auto table-auto bg-gray-700 text-white rounded-lg overflow-hidden">
-                  <thead>
-                    <tr className="bg-gray-600">
-                      <th className="px-6 py-4 text-left">Descripción</th>
-                      <th className="px-6 py-4 text-left">Cantidad</th>
-                      <th className="px-6 py-4 text-left">Material</th>
-                      <th className="px-6 py-4 text-left">Archivo STL</th>
-                      <th className="px-6 py-4 text-left">Precio</th>
-                      <th className="px-6 py-4 text-left">Acciones</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {pendingRequests.map((request) => (
-                      <tr key={request.requestID} className="border-t border-gray-600 hover:bg-gray-800 transition">
-                        <td className="px-6 py-4">{request.description}</td>
-                        <td className="px-6 py-4">{request.quantity}</td>
-                        <td className="px-6 py-4">{request.material}</td>
-                        <td className="px-6 py-4">
-                          {request.stl_url ? (
-                            <a href={request.stl_url} className="text-blue-500 underline" target="_blank" rel="noopener noreferrer">
-                              Ver STL
-                            </a>
-                          ) : (
-                            'No disponible'
-                          )}
-                        </td>
-                        <td className="px-6 py-4">
-                          <input
-                            type="number"
-                            value={priceInputs[request.requestID] || ''}
-                            onChange={(e) => handlePriceChange(request.requestID, e.target.value)}
-                            placeholder="Precio"
-                            className="bg-gray-800 text-white p-2 rounded-lg"
-                          />
-                        </td>
-                        <td className="px-6 py-4">
-                          <button
-                            className="bg-green-500 text-white px-4 py-2 rounded-lg mr-2"
-                            onClick={() => handleAcceptRequest(request.requestID)}
-                          >
-                            Aceptar
-                          </button>
-                          <button
-                            className="bg-red-500 text-white px-4 py-2 rounded-lg"
-                            onClick={() => handleDeclineRequest(request.requestID)}
-                          >
-                            Rechazar
-                          </button>
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            )}
-          </div>
+          {/* Show only one table if expanded, otherwise show all tables */}
+          {expandedTable === null && (
+            <>
+              {/* Pending Requests Table */}
+              <RequestsTable
+                title="Solicitudes Pendientes"
+                requests={pendingRequests}
+                type="pending"
+                priceInputs={priceInputs}
+                handlePriceChange={handlePriceChange}
+                handleAcceptRequest={handleAcceptRequest}
+                handleDeclineRequest={handleDeclineRequest}
+                isExpanded={false}
+                onExpand={() => setExpandedTable('pending')}
+              />
 
-          {/* Quoted Requests Section */}
-          <div className="mt-12">
-            <h3 className="text-2xl font-bold mb-4 text-center">Solicitudes Cotizadas</h3>
-            {quotedRequests.length === 0 ? (
-              <p className="text-center">No hay solicitudes cotizadas.</p>
-            ) : (
-              <div className="overflow-x-auto">
-                <table className="min-w-full mx-auto table-auto bg-gray-700 text-white rounded-lg overflow-hidden">
-                  <thead>
-                    <tr className="bg-gray-600">
-                      <th className="px-6 py-4 text-left">Descripción</th>
-                      <th className="px-6 py-4 text-left">Cantidad</th>
-                      <th className="px-6 py-4 text-left">Material</th>
-                      <th className="px-6 py-4 text-left">Archivo STL</th>
-                      <th className="px-6 py-4 text-left">Precio Cotizado</th>
-                      <th className="px-6 py-4 text-left">Estado</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {quotedRequests.map((request) => (
-                      <tr key={request.requestID} className="border-t border-gray-600 hover:bg-gray-800 transition">
-                        <td className="px-6 py-4">{request.description}</td>
-                        <td className="px-6 py-4">{request.quantity}</td>
-                        <td className="px-6 py-4">{request.material}</td>
-                        <td className="px-6 py-4">
-                          {request.stl_url ? (
-                            <a href={request.stl_url} className="text-blue-500 underline" target="_blank" rel="noopener noreferrer">
-                              Ver STL
-                            </a>
-                          ) : (
-                            'No disponible'
-                          )}
-                        </td>
-                        <td className="px-6 py-4">{request.price}</td>
-                        <td className="px-6 py-4">Status: esperando al comprador</td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            )}
-          </div>
+              {/* Quoted Requests Table */}
+              <RequestsTable
+                title="Solicitudes Cotizadas"
+                requests={quotedRequests}
+                type="quoted"
+                isExpanded={false}
+                onExpand={() => setExpandedTable('quoted')}
+              />
 
-          {/* Accepted Requests Section (with 'Finalizado' button) */}
-          <div className="mt-12">
-            <h3 className="text-2xl font-bold mb-4 text-center">Solicitudes Aceptadas</h3>
-            {acceptedRequests.length === 0 ? (
-              <p className="text-center">No hay solicitudes aceptadas.</p>
-            ) : (
-              <div className="overflow-x-auto">
-                <table className="min-w-full mx-auto table-auto bg-gray-700 text-white rounded-lg overflow-hidden">
-                  <thead>
-                    <tr className="bg-gray-600">
-                      <th className="px-6 py-4 text-left">Descripción</th>
-                      <th className="px-6 py-4 text-left">Cantidad</th>
-                      <th className="px-6 py-4 text-left">Material</th>
-                      <th className="px-6 py-4 text-left">Archivo STL</th>
-                      <th className="px-6 py-4 text-left">Acciones</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {acceptedRequests.map((request) => (
-                      <tr key={request.requestID} className="border-t border-gray-600 hover:bg-gray-800 transition">
-                        <td className="px-6 py-4">{request.description}</td>
-                        <td className="px-6 py-4">{request.quantity}</td>
-                        <td className="px-6 py-4">{request.material}</td>
-                        <td className="px-6 py-4">
-                          {request.stl_url ? (
-                            <a href={request.stl_url} className="text-blue-500 underline" target="_blank" rel="noopener noreferrer">
-                              Ver STL
-                            </a>
-                          ) : (
-                            'No disponible'
-                          )}
-                        </td>
-                        <td className="px-6 py-4">
-                          <button
-                            className="bg-blue-500 text-white px-4 py-2 rounded-lg"
-                            onClick={() => handleFinalizeRequest(request.requestID)}
-                          >
-                            Finalizado
-                          </button>
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            )}
-          </div>
+              {/* Accepted Requests Table */}
+              <RequestsTable
+                title="Solicitudes Aceptadas"
+                requests={acceptedRequests}
+                type="accepted"
+                handleFinalizeRequest={handleFinalizeRequest}
+                isExpanded={false}
+                onExpand={() => setExpandedTable('accepted')}
+              />
 
-          {/* Finalized Requests Section */}
-          <div className="mt-12">
-            <h3 className="text-2xl font-bold mb-4 text-center">Solicitudes Finalizadas</h3>
-            {finalizedRequests.length === 0 ? (
-              <p className="text-center">No hay solicitudes finalizadas.</p>
-            ) : (
-              <div className="overflow-x-auto">
-                <table className="min-w-full mx-auto table-auto bg-gray-700 text-white rounded-lg overflow-hidden">
-                  <thead>
-                    <tr className="bg-gray-600">
-                      <th className="px-6 py-4 text-left">Descripción</th>
-                      <th className="px-6 py-4 text-left">Cantidad</th>
-                      <th className="px-6 py-4 text-left">Material</th>
-                      <th className="px-6 py-4 text-left">Archivo STL</th>
-                      <th className="px-6 py-4 text-left">Acciones</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {finalizedRequests.map((request) => (
-                      <tr key={request.requestID} className="border-t border-gray-600 hover:bg-gray-800 transition">
-                        <td className="px-6 py-4">{request.description}</td>
-                        <td className="px-6 py-4">{request.quantity}</td>
-                        <td className="px-6 py-4">{request.material}</td>
-                        <td className="px-6 py-4">
-                          {request.stl_url ? (
-                            <a href={request.stl_url} className="text-blue-500 underline" target="_blank" rel="noopener noreferrer">
-                              Ver STL
-                            </a>
-                          ) : (
-                            'No disponible'
-                          )}
-                        </td>
-                        <td className="px-6 py-4">
-                          <button
-                            className="bg-green-500 text-white px-4 py-2 rounded-lg"
-                            onClick={() => handleMarkAsDelivered(request.requestID)}
-                          >
-                            Entregado
-                          </button>
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            )}
-          </div>
+              {/* Finalized Requests Table */}
+              <RequestsTable
+                title="Solicitudes Finalizadas"
+                requests={finalizedRequests}
+                type="finalized"
+                handleMarkAsDelivered={handleMarkAsDelivered}
+                isExpanded={false}
+                onExpand={() => setExpandedTable('finalized')}
+              />
 
-    
-           <div className="mt-12">
-          <h3 className="text-2xl font-bold mb-4 text-center">Historial de Solicitudes Entregadas</h3>
-          <button
-            className="bg-blue-500 text-white px-4 py-2 rounded-lg mb-4"
-            onClick={() => setShowDelivered(!showDelivered)} // Toggle button
-          >
-            {showDelivered ? 'Ocultar Entregados' : 'Mostrar Entregados'}
-          </button>
-          {showDelivered && ( // Conditionally render based on toggle state
-            deliveredRequests.length === 0 ? (
-              <p className="text-center">No hay solicitudes entregadas.</p>
-            ) : (
-              <div className="overflow-x-auto">
-                <table className="min-w-full mx-auto table-auto bg-gray-700 text-white rounded-lg overflow-hidden">
-                  <thead>
-                    <tr className="bg-gray-600">
-                      <th className="px-6 py-4 text-left">Descripción</th>
-                      <th className="px-6 py-4 text-left">Cantidad</th>
-                      <th className="px-6 py-4 text-left">Material</th>
-                      <th className="px-6 py-4 text-left">Archivo STL</th>
-                      <th className="px-6 py-4 text-left">Precio</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {deliveredRequests.map((request) => (
-                      <tr key={request.requestID} className="border-t border-gray-600 hover:bg-gray-800 transition">
-                        <td className="px-6 py-4">{request.description}</td>
-                        <td className="px-6 py-4">{request.quantity}</td>
-                        <td className="px-6 py-4">{request.material}</td>
-                        <td className="px-6 py-4">
-                          {request.stl_url ? (
-                            <a href={request.stl_url} className="text-blue-500 underline" target="_blank" rel="noopener noreferrer">
-                              Ver STL
-                            </a>
-                          ) : (
-                            'No disponible'
-                          )}
-                        </td>
-                        <td className="px-6 py-4">{request.price}</td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            )
+              {/* Delivered Requests Table */}
+              <RequestsTable
+                title="Solicitudes Entregadas"
+                requests={deliveredRequests}
+                type="delivered"
+                isExpanded={false}
+                onExpand={() => setExpandedTable('delivered')}
+              />
+            </>
           )}
-        </div>
+
+          {/* Show only the expanded table */}
+          {expandedTable === 'pending' && (
+            <RequestsTable
+              title="Solicitudes Pendientes"
+              requests={pendingRequests}
+              type="pending"
+              priceInputs={priceInputs}
+              handlePriceChange={handlePriceChange}
+              handleAcceptRequest={handleAcceptRequest}
+              handleDeclineRequest={handleDeclineRequest}
+              isExpanded={true}
+              onExpand={() => setExpandedTable(null)}
+            />
+          )}
+
+          {expandedTable === 'quoted' && (
+            <RequestsTable
+              title="Solicitudes Cotizadas"
+              requests={quotedRequests}
+              type="quoted"
+              isExpanded={true}
+              onExpand={() => setExpandedTable(null)}
+            />
+          )}
+
+          {expandedTable === 'accepted' && (
+            <RequestsTable
+              title="Solicitudes Aceptadas"
+              requests={acceptedRequests}
+              type="accepted"
+              handleFinalizeRequest={handleFinalizeRequest}
+              isExpanded={true}
+              onExpand={() => setExpandedTable(null)}
+            />
+          )}
+
+          {expandedTable === 'finalized' && (
+            <RequestsTable
+              title="Solicitudes Finalizadas"
+              requests={finalizedRequests}
+              type="finalized"
+              handleMarkAsDelivered={handleMarkAsDelivered}
+              isExpanded={true}
+              onExpand={() => setExpandedTable(null)}
+            />
+          )}
+
+          {expandedTable === 'delivered' && (
+            <RequestsTable
+              title="Solicitudes Entregadas"
+              requests={deliveredRequests}
+              type="delivered"
+              isExpanded={true}
+              onExpand={() => setExpandedTable(null)}
+            />
+          )}
         </section>
       </main>
 
