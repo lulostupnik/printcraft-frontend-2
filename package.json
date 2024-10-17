@@ -9,8 +9,10 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@heroicons/react": "^2.1.5",
     "@mercadopago/sdk-react": "^0.0.19",
     "framer-motion": "^11.4.0",
+    "heroicons": "^2.1.5",
     "lucide-react": "^0.438.0",
     "next": "^14.2.8",
     "react": "^18.3.1",
