@@ -1,616 +1,174 @@
-// // // 'use client'
-// // // import React, { useState, useEffect } from 'react';
-// // // import { useRouter } from 'next/navigation';
-// // // import Header from '@/components/Header';
-// // // import Footer from '@/components/Footer';
-// // // import { API_URL } from '@/api/api';
-// // // import RequestsTable from '@/components/RequestsTable';
-// // // import { PrintRequest } from '@/types/PrintRequests';
 
-// // // export default function SellerDashboard() {
-// // //   const [isLoggedIn, setIsLoggedIn] = useState(false);
-// // //   const [isSeller, setIsSeller] = useState(false);
-// // //   const [printRequests, setPrintRequests] = useState<PrintRequest[]>([]);
-// // //   const [loading, setLoading] = useState(true);
-// // //   const [priceInputs, setPriceInputs] = useState<{ [key: number]: string }>({});
-// // //   const [expandedTable, setExpandedTable] = useState<string | null>(null); // Manage which table is expanded
-// // //   const router = useRouter();
-
-// // //   // Check if tokens exist in localStorage to determine login status and seller status
-// // //   useEffect(() => {
-// // //     const accessToken = localStorage.getItem('accessToken');
-// // //     const sellerStatus = JSON.parse(localStorage.getItem('isSeller') || 'false');
-
-// // //     if (accessToken) {
-// // //       setIsLoggedIn(true);
-// // //       setIsSeller(sellerStatus);
-// // //     } else {
-// // //       setIsLoggedIn(false);
-// // //       router.push('/login');
-// // //     }
-// // //   }, [router]);
-
-// // //   // Fetch print requests from the API
-// // //   useEffect(() => {
-// // //     const fetchPrintRequests = async () => {
-// // //       try {
-// // //         const response = await fetch(`${API_URL}/print-requests/seller/`, {
-// // //           method: 'GET',
-// // //           headers: {
-// // //             'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
-// // //           },
-// // //         });
-
-// // //         if (response.ok) {
-// // //           const data: PrintRequest[] = await response.json();
-// // //           setPrintRequests(data);
-// // //         } else {
-// // //           console.error('Failed to fetch print requests');
-// // //         }
-// // //       } catch (error) {
-// // //         console.error('Error fetching print requests:', error);
-// // //       } finally {
-// // //         setLoading(false);
-// // //       }
-// // //     };
-
-// // //     fetchPrintRequests();
-// // //   }, []);
-
-// // //   // Handle price input change
-// // //   const handlePriceChange = (requestID: number, value: string) => {
-// // //     setPriceInputs((prev) => ({ ...prev, [requestID]: value }));
-// // //   };
-
-// // //   // Handle Accept Request with price
-// // //   const handleAcceptRequest = async (requestID: number) => {
-// // //     const price = priceInputs[requestID];
-// // //     if (!price || isNaN(Number(price))) {
-// // //       alert('Please enter a valid price.');
-// // //       return;
-// // //     }
-
-// // //     try {
-// // //       const response = await fetch(`${API_URL}/print-requests/${requestID}/accept-or-reject/`, {
-// // //         method: 'POST',
-// // //         headers: {
-// // //           'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
-// // //           'Content-Type': 'application/json',
-// // //         },
-// // //         body: JSON.stringify({
-// // //           response: 'Accept',
-// // //           price: Number(price),
-// // //         }),
-// // //       });
-
-// // //       if (response.ok) {
-// // //         // Update the status of the request to 'Cotizada'
-// // //         setPrintRequests((prevRequests) =>
-// // //           prevRequests.map((request) =>
-// // //             request.requestID === requestID
-// // //               ? { ...request, status: 'Cotizada', price: Number(price).toString() }
-// // //               : request
-// // //           )
-// // //         );
-// // //         alert('Request accepted!');
-// // //       } else {
-// // //         console.error('Failed to accept the request');
-// // //       }
-// // //     } catch (error) {
-// // //       console.error('Error accepting the request:', error);
-// // //     }
-// // //   };
-
-// // //   // Handle Decline Request
-// // //   const handleDeclineRequest = async (requestID: number) => {
-// // //     try {
-// // //       const response = await fetch(`${API_URL}/print-requests/${requestID}/accept-or-reject/`, {
-// // //         method: 'POST',
-// // //         headers: {
-// // //           'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
-// // //           'Content-Type': 'application/json',
-// // //         },
-// // //         body: JSON.stringify({
-// // //           response: 'Reject',
-// // //         }),
-// // //       });
-
-// // //       if (response.ok) {
-// // //         // Remove the request from the list after declining
-// // //         setPrintRequests((prevRequests) =>
-// // //           prevRequests.filter((request) => request.requestID !== requestID)
-// // //         );
-// // //         alert('Request declined!');
-// // //       } else {
-// // //         console.error('Failed to decline the request');
-// // //       }
-// // //     } catch (error) {
-// // //       console.error('Error declining the request:', error);
-// // //     }
-// // //   };
-
-// // //   // Handle Finalize Request (status: 'Aceptada')
-// // //   const handleFinalizeRequest = async (requestID: number) => {
-// // //     try {
-// // //       const response = await fetch(`${API_URL}/print-requests/${requestID}/finalize-print-request/`, {
-// // //         method: 'POST',
-// // //         headers: {
-// // //           'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
-// // //           'Content-Type': 'application/json',
-// // //         },
-// // //         body: JSON.stringify({}),
-// // //       });
-
-// // //       if (response.ok) {
-// // //         setPrintRequests((prevRequests) =>
-// // //           prevRequests.map((request) =>
-// // //             request.requestID === requestID ? { ...request, status: 'Realizada' } : request
-// // //           )
-// // //         );
-// // //         alert('Request finalized!');
-// // //       } else {
-// // //         console.error('Failed to finalize the request');
-// // //       }
-// // //     } catch (error) {
-// // //       console.error('Error finalizing the request:', error);
-// // //     }
-// // //   };
-
-// // //   // Handle Mark as Delivered Request (status: 'Finalizada')
-// // //   const handleMarkAsDelivered = async (requestID: number) => {
-// // //     try {
-// // //       const response = await fetch(`${API_URL}/print-requests/${requestID}/mark-as-delivered-print-request/`, {
-// // //         method: 'POST',
-// // //         headers: {
-// // //           'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
-// // //           'Content-Type': 'application/json',
-// // //         },
-// // //         body: JSON.stringify({}),
-// // //       });
-
-// // //       if (response.ok) {
-// // //         setPrintRequests((prevRequests) =>
-// // //           prevRequests.map((request) =>
-// // //             request.requestID === requestID ? { ...request, status: 'Entregada' } : request
-// // //           )
-// // //         );
-// // //         alert('Request marked as delivered!');
-// // //       } else {
-// // //         console.error('Failed to mark as delivered');
-// // //       }
-// // //     } catch (error) {
-// // //       console.error('Error marking as delivered:', error);
-// // //     }
-// // //   };
-
-// // //   // Filter requests into different statuses
-// // //   const pendingRequests = printRequests.filter((req: PrintRequest) => req.status === 'Pendiente');
-// // //   const quotedRequests = printRequests.filter((req: PrintRequest) => req.status === 'Cotizada');
-// // //   const acceptedRequests = printRequests.filter((req: PrintRequest) => req.status === 'Aceptada');
-// // //   const finalizedRequests = printRequests.filter((req: PrintRequest) => req.status === 'Realizada');
-// // //   const deliveredRequests = printRequests.filter((req: PrintRequest) => req.status === 'Entregada');
-
-// // //   return (
-// // //     <div className="min-h-screen flex flex-col bg-gray-900 text-white">
-// // //       <Header />
-
-// // //       <main className="container mx-auto px-4 py-8 flex-grow">
-// // //         <section className="mb-12 bg-gray-800 p-8 rounded-lg">
-// // //           <h2 className="text-4xl font-bold mb-4 text-center">Dashboard de Vendedor</h2>
-
-// // //           {/* Show only one table if expanded, otherwise show all tables */}
-// // //           {expandedTable === null && (
-// // //             <>
-// // //               {/* Pending Requests Table */}
-// // //               <RequestsTable
-// // //                 title="Solicitudes Pendientes"
-// // //                 requests={pendingRequests}
-// // //                 type="pending"
-// // //                 priceInputs={priceInputs}
-// // //                 handlePriceChange={handlePriceChange}
-// // //                 handleAcceptRequest={handleAcceptRequest}
-// // //                 handleDeclineRequest={handleDeclineRequest}
-// // //                 isExpanded={false}
-// // //                 onExpand={() => setExpandedTable('pending')}
-// // //               />
-
-// // //               {/* Quoted Requests Table */}
-// // //               <RequestsTable
-// // //                 title="Solicitudes Cotizadas"
-// // //                 requests={quotedRequests}
-// // //                 type="quoted"
-// // //                 isExpanded={false}
-// // //                 onExpand={() => setExpandedTable('quoted')}
-// // //               />
-
-// // //               {/* Accepted Requests Table */}
-// // //               <RequestsTable
-// // //                 title="Solicitudes Aceptadas"
-// // //                 requests={acceptedRequests}
-// // //                 type="accepted"
-// // //                 handleFinalizeRequest={handleFinalizeRequest}
-// // //                 isExpanded={false}
-// // //                 onExpand={() => setExpandedTable('accepted')}
-// // //               />
-
-// // //               {/* Finalized Requests Table */}
-// // //               <RequestsTable
-// // //                 title="Solicitudes Finalizadas"
-// // //                 requests={finalizedRequests}
-// // //                 type="finalized"
-// // //                 handleMarkAsDelivered={handleMarkAsDelivered}
-// // //                 isExpanded={false}
-// // //                 onExpand={() => setExpandedTable('finalized')}
-// // //               />
-
-// // //               {/* Delivered Requests Table */}
-// // //               <RequestsTable
-// // //                 title="Solicitudes Entregadas"
-// // //                 requests={deliveredRequests}
-// // //                 type="delivered"
-// // //                 isExpanded={false}
-// // //                 onExpand={() => setExpandedTable('delivered')}
-// // //               />
-// // //             </>
-// // //           )}
-
-// // //           {/* Show only the expanded table */}
-// // //           {expandedTable === 'pending' && (
-// // //             <RequestsTable
-// // //               title="Solicitudes Pendientes"
-// // //               requests={pendingRequests}
-// // //               type="pending"
-// // //               priceInputs={priceInputs}
-// // //               handlePriceChange={handlePriceChange}
-// // //               handleAcceptRequest={handleAcceptRequest}
-// // //               handleDeclineRequest={handleDeclineRequest}
-// // //               isExpanded={true}
-// // //               onExpand={() => setExpandedTable(null)}
-// // //             />
-// // //           )}
-
-// // //           {expandedTable === 'quoted' && (
-// // //             <RequestsTable
-// // //               title="Solicitudes Cotizadas"
-// // //               requests={quotedRequests}
-// // //               type="quoted"
-// // //               isExpanded={true}
-// // //               onExpand={() => setExpandedTable(null)}
-// // //             />
-// // //           )}
-
-// // //           {expandedTable === 'accepted' && (
-// // //             <RequestsTable
-// // //               title="Solicitudes Aceptadas"
-// // //               requests={acceptedRequests}
-// // //               type="accepted"
-// // //               handleFinalizeRequest={handleFinalizeRequest}
-// // //               isExpanded={true}
-// // //               onExpand={() => setExpandedTable(null)}
-// // //             />
-// // //           )}
-
-// // //           {expandedTable === 'finalized' && (
-// // //             <RequestsTable
-// // //               title="Solicitudes Finalizadas"
-// // //               requests={finalizedRequests}
-// // //               type="finalized"
-// // //               handleMarkAsDelivered={handleMarkAsDelivered}
-// // //               isExpanded={true}
-// // //               onExpand={() => setExpandedTable(null)}
-// // //             />
-// // //           )}
-
-// // //           {expandedTable === 'delivered' && (
-// // //             <RequestsTable
-// // //               title="Solicitudes Entregadas"
-// // //               requests={deliveredRequests}
-// // //               type="delivered"
-// // //               isExpanded={true}
-// // //               onExpand={() => setExpandedTable(null)}
-// // //             />
-// // //           )}
-// // //         </section>
-// // //       </main>
-
-// // //       <Footer />
-// // //     </div>
-// // //   );
-// // // }
-// // 'use client'
-// // import React from 'react';
-// // import Header from '@/components/Header';
-// // import Footer from '@/components/Footer';
-// // import RequestsTable from '@/components/RequestsTable';
-// // import usePrintRequests from '@/hooks/usePrintRequest';
-
-// // export default function SellerDashboard() {
-// //   const {
-// //     pendingRequests,
-// //     quotedRequests,
-// //     acceptedRequests,
-// //     finalizedRequests,
-// //     deliveredRequests,
-// //     priceInputs,
-// //     expandedTable,
-// //     setExpandedTable,
-// //     handlePriceChange,
-// //     handleAcceptRequest,
-// //     handleDeclineRequest,
-// //     handleFinalizeRequest,
-// //     handleMarkAsDelivered,
-// //   } = usePrintRequests();
-
-// //   return (
-// //     <div className="min-h-screen flex flex-col bg-gray-900 text-white">
-// //       <Header />
-
-// //       <main className="container mx-auto px-4 py-8 flex-grow">
-// //         <section className="mb-12 bg-gray-800 p-8 rounded-lg">
-// //           <h2 className="text-4xl font-bold mb-4 text-center">Dashboard de Vendedor</h2>
-
-// //           {/* Show only one table if expanded, otherwise show all tables */}
-// //           {expandedTable === null && (
-// //             <>
-// //               {/* Pending Requests Table */}
-// //               <RequestsTable
-// //                 title="Solicitudes Pendientes"
-// //                 requests={pendingRequests}
-// //                 type="pending"
-// //                 priceInputs={priceInputs}
-// //                 handlePriceChange={handlePriceChange}
-// //                 handleAcceptRequest={handleAcceptRequest}
-// //                 handleDeclineRequest={handleDeclineRequest}
-// //                 isExpanded={false}
-// //                 onExpand={() => setExpandedTable('pending')}
-// //               />
-
-// //               {/* Quoted Requests Table */}
-// //               <RequestsTable
-// //                 title="Solicitudes Cotizadas"
-// //                 requests={quotedRequests}
-// //                 type="quoted"
-// //                 isExpanded={false}
-// //                 onExpand={() => setExpandedTable('quoted')}
-// //               />
-
-// //               {/* Accepted Requests Table */}
-// //               <RequestsTable
-// //                 title="Solicitudes Aceptadas"
-// //                 requests={acceptedRequests}
-// //                 type="accepted"
-// //                 handleFinalizeRequest={handleFinalizeRequest}
-// //                 isExpanded={false}
-// //                 onExpand={() => setExpandedTable('accepted')}
-// //               />
-
-// //               {/* Finalized Requests Table */}
-// //               <RequestsTable
-// //                 title="Solicitudes Finalizadas"
-// //                 requests={finalizedRequests}
-// //                 type="finalized"
-// //                 handleMarkAsDelivered={handleMarkAsDelivered}
-// //                 isExpanded={false}
-// //                 onExpand={() => setExpandedTable('finalized')}
-// //               />
-
-// //               {/* Delivered Requests Table */}
-// //               <RequestsTable
-// //                 title="Solicitudes Entregadas"
-// //                 requests={deliveredRequests}
-// //                 type="delivered"
-// //                 isExpanded={false}
-// //                 onExpand={() => setExpandedTable('delivered')}
-// //               />
-// //             </>
-// //           )}
-
-// //           {/* Show only the expanded table */}
-// //           {expandedTable === 'pending' && (
-// //             <RequestsTable
-// //               title="Solicitudes Pendientes"
-// //               requests={pendingRequests}
-// //               type="pending"
-// //               priceInputs={priceInputs}
-// //               handlePriceChange={handlePriceChange}
-// //               handleAcceptRequest={handleAcceptRequest}
-// //               handleDeclineRequest={handleDeclineRequest}
-// //               isExpanded={true}
-// //               onExpand={() => setExpandedTable(null)}
-// //             />
-// //           )}
-
-// //           {expandedTable === 'quoted' && (
-// //             <RequestsTable
-// //               title="Solicitudes Cotizadas"
-// //               requests={quotedRequests}
-// //               type="quoted"
-// //               isExpanded={true}
-// //               onExpand={() => setExpandedTable(null)}
-// //             />
-// //           )}
-
-// //           {expandedTable === 'accepted' && (
-// //             <RequestsTable
-// //               title="Solicitudes Aceptadas"
-// //               requests={acceptedRequests}
-// //               type="accepted"
-// //               handleFinalizeRequest={handleFinalizeRequest}
-// //               isExpanded={true}
-// //               onExpand={() => setExpandedTable(null)}
-// //             />
-// //           )}
-
-// //           {expandedTable === 'finalized' && (
-// //             <RequestsTable
-// //               title="Solicitudes Finalizadas"
-// //               requests={finalizedRequests}
-// //               type="finalized"
-// //               handleMarkAsDelivered={handleMarkAsDelivered}
-// //               isExpanded={true}
-// //               onExpand={() => setExpandedTable(null)}
-// //             />
-// //           )}
-
-// //           {expandedTable === 'delivered' && (
-// //             <RequestsTable
-// //               title="Solicitudes Entregadas"
-// //               requests={deliveredRequests}
-// //               type="delivered"
-// //               isExpanded={true}
-// //               onExpand={() => setExpandedTable(null)}
-// //             />
-// //           )}
-// //         </section>
-// //       </main>
-
-// //       <Footer />
-// //     </div>
-// //   );
-// // }
-// 'use client'
-// import React from 'react';
-// import Header from '@/components/Header';
-// import Footer from '@/components/Footer';
-// import RequestsTable from '@/components/RequestsTable';
-// import usePrintRequests from '@/hooks/usePrintRequest';
-
-// type TableType = 'pending' | 'quoted' | 'accepted' | 'finalized' | 'delivered'; // Define the valid table types
-
-// export default function SellerDashboard() {
-//   const {
-//     pendingRequests,
-//     quotedRequests,
-//     acceptedRequests,
-//     finalizedRequests,
-//     deliveredRequests,
-//     priceInputs,
-//     expandedTable,
-//     setExpandedTable,
-//     handlePriceChange,
-//     handleAcceptRequest,
-//     handleDeclineRequest,
-//     handleFinalizeRequest,
-//     handleMarkAsDelivered,
-//   } = usePrintRequests();
-
-//   // Define the tables and their properties, making sure the type is properly typed
-//   const tables: {
-//     key: TableType;
-//     title: string;
-//     requests: any[];
-//     type: TableType;
-//     priceInputs?: { [key: number]: string };
-//     handlePriceChange?: (requestID: number, value: string) => void;
-//     handleAcceptRequest?: (requestID: number) => void;
-//     handleDeclineRequest?: (requestID: number) => void;
-//     handleFinalizeRequest?: (requestID: number) => void;
-//     handleMarkAsDelivered?: (requestID: number) => void;
-//   }[] = [
-//     {
-//       key: 'pending',
-//       title: 'Solicitudes Pendientes',
-//       requests: pendingRequests,
-//       type: 'pending',
-//       priceInputs,
-//       handlePriceChange,
-//       handleAcceptRequest,
-//       handleDeclineRequest,
-//     },
-//     {
-//       key: 'quoted',
-//       title: 'Solicitudes Cotizadas',
-//       requests: quotedRequests,
-//       type: 'quoted',
-//     },
-//     {
-//       key: 'accepted',
-//       title: 'Solicitudes Aceptadas',
-//       requests: acceptedRequests,
-//       type: 'accepted',
-//       handleFinalizeRequest,
-//     },
-//     {
-//       key: 'finalized',
-//       title: 'Solicitudes Finalizadas',
-//       requests: finalizedRequests,
-//       type: 'finalized',
-//       handleMarkAsDelivered,
-//     },
-//     {
-//       key: 'delivered',
-//       title: 'Solicitudes Entregadas',
-//       requests: deliveredRequests,
-//       type: 'delivered',
-//     },
-//   ];
-
-//   return (
-//     <div className="min-h-screen flex flex-col bg-gray-900 text-white">
-//       <Header />
-
-//       <main className="container mx-auto px-4 py-8 flex-grow">
-//         <section className="mb-12 bg-gray-800 p-8 rounded-lg">
-//           <h2 className="text-4xl font-bold mb-4 text-center">Dashboard de Vendedor</h2>
-
-//           {/* Loop over tables to render them */}
-//           {expandedTable === null
-//             ? tables.map((table) => (
-//                 <RequestsTable
-//                   key={table.key}
-//                   title={table.title}
-//                   requests={table.requests}
-//                   type={table.type} // The type is now explicitly typed
-//                   priceInputs={table.priceInputs}
-//                   handlePriceChange={table.handlePriceChange}
-//                   handleAcceptRequest={table.handleAcceptRequest}
-//                   handleDeclineRequest={table.handleDeclineRequest}
-//                   handleFinalizeRequest={table.handleFinalizeRequest}
-//                   handleMarkAsDelivered={table.handleMarkAsDelivered}
-//                   isExpanded={false}
-//                   onExpand={() => setExpandedTable(table.key)}
-//                 />
-//               ))
-//             : tables
-//                 .filter((table) => table.key === expandedTable)
-//                 .map((table) => (
-//                   <RequestsTable
-//                     key={table.key}
-//                     title={table.title}
-//                     requests={table.requests}
-//                     type={table.type} // The type is now explicitly typed
-//                     priceInputs={table.priceInputs}
-//                     handlePriceChange={table.handlePriceChange}
-//                     handleAcceptRequest={table.handleAcceptRequest}
-//                     handleDeclineRequest={table.handleDeclineRequest}
-//                     handleFinalizeRequest={table.handleFinalizeRequest}
-//                     handleMarkAsDelivered={table.handleMarkAsDelivered}
-//                     isExpanded={true}
-//                     onExpand={() => setExpandedTable(null)}
-//                   />
-//                 ))}
-//         </section>
-//       </main>
-
-//       <Footer />
-//     </div>
-//   );
-// }
 'use client'
-import React from 'react';
+//Opcion 1
+import React, { useState } from 'react';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import PrintReqDashboard from '@/components/printReqDashboard';
+// import DesignReqDashboard from '@/components/designReqDashboard';
+// import SellDashboard from '@/components/sellDashboard';
+
 const SellerDashboardPage: React.FC = () => {
+  const [selectedDashboard, setSelectedDashboard] = useState<'print' | 'design' | 'sell'>('print');
+
+  const renderDashboard = () => {
+    switch (selectedDashboard) {
+      case 'print':
+        return <PrintReqDashboard />;
+      case 'design':
+        return <div>Design Dashboard Placeholder</div>;
+      case 'sell':
+        return <div>Sell Dashboard Placeholder</div>;
+      default:
+        return <PrintReqDashboard />;
+    }
+  };
+
   return (
     <div className="min-h-screen flex flex-col bg-gray-900 text-white">
+      {/* Header */}
       <Header />
-      <main className="flex-grow">
-        <PrintReqDashboard />
-      </main>
+      
+      {/* Flex container for sidebar and main content */}
+      <div className="flex flex-grow h-full">
+        {/* Sidebar */}
+        <aside className="w-1/5 bg-gray-800 p-10 flex flex-col">
+          <div className="py-8">
+          <h2 className="text-xl font-bold mb-4">Dashboard Navigation</h2>
+          <ul className="space-y-4">
+            <li>
+              <button
+                onClick={() => setSelectedDashboard('print')}
+                className={`w-full text-left px-4 py-2 rounded-lg ${
+                  selectedDashboard === 'print' ? 'bg-blue-600 text-white' : 'bg-gray-700 text-gray-300'
+                }`}
+              >
+                Print Requests
+              </button>
+            </li>
+            <li>
+              <button
+                onClick={() => setSelectedDashboard('design')}
+                className={`w-full text-left px-4 py-2 rounded-lg ${
+                  selectedDashboard === 'design' ? 'bg-blue-600 text-white' : 'bg-gray-700 text-gray-300'
+                }`}
+              >
+                Design Requests
+              </button>
+            </li>
+            <li>
+              <button
+                onClick={() => setSelectedDashboard('sell')}
+                className={`w-full text-left px-4 py-2 rounded-lg ${
+                  selectedDashboard === 'sell' ? 'bg-blue-600 text-white' : 'bg-gray-700 text-gray-300'
+                }`}
+              >
+                Sell Dashboard
+              </button>
+            </li>
+          </ul>
+          </div>
+        
+        </aside>
+
+        {/* Main Content */}
+        <main className="flex-grow px-4 py-12">
+          {renderDashboard()}
+        </main>
+
+      </div>
+
+   
+      {/* Footer */}
       <Footer />
     </div>
   );
 };
 
 export default SellerDashboardPage;
+
+
+//Opcion 2:
+
+
+// 'use client'
+// import React, { useState } from 'react';
+// import Header from '@/components/Header';
+// import Footer from '@/components/Footer';
+// import PrintReqDashboard from '@/components/printReqDashboard';
+// // import DesignReqDashboard from '@/components/designReqDashboard';
+// // import SellDashboard from '@/components/sellDashboard';
+
+// const SellerDashboardPage: React.FC = () => {
+//   const [selectedDashboard, setSelectedDashboard] = useState<'print' | 'design' | 'sell'>('print');
+
+//   const renderDashboard = () => {
+//     switch (selectedDashboard) {
+//       case 'print':
+//         return <PrintReqDashboard />;
+//       case 'design':
+//         return <div>Design Dashboard Placeholder</div>;
+//       case 'sell':
+//         return <div>Sell Dashboard Placeholder</div>;
+//       default:
+//         return <PrintReqDashboard />;
+//     }
+//   };
+
+//   return (
+//     <div className="min-h-screen flex flex-col bg-gray-900 text-white">
+//       {/* Header */}
+//       <Header />
+      
+//       {/* Flex container for sidebar and main content */}
+//       <div className="flex flex-grow py-8 px-4">
+//         {/* Sidebar */}
+//         <aside className="bg-gray-800 p-6 rounded-lg shadow-lg mr-8">
+//           <h2 className="text-xl font-bold mb-4">Dashboard Navigation</h2>
+//           <ul className="space-y-4">
+//             <li>
+//               <button
+//                 onClick={() => setSelectedDashboard('print')}
+//                 className={`w-full text-left px-4 py-2 rounded-lg ${
+//                   selectedDashboard === 'print' ? 'bg-blue-600 text-white' : 'bg-gray-700 text-gray-300'
+//                 }`}
+//               >
+//                 Print Requests
+//               </button>
+//             </li>
+//             <li>
+//               <button
+//                 onClick={() => setSelectedDashboard('design')}
+//                 className={`w-full text-left px-4 py-2 rounded-lg ${
+//                   selectedDashboard === 'design' ? 'bg-blue-600 text-white' : 'bg-gray-700 text-gray-300'
+//                 }`}
+//               >
+//                 Design Requests
+//               </button>
+//             </li>
+//             <li>
+//               <button
+//                 onClick={() => setSelectedDashboard('sell')}
+//                 className={`w-full text-left px-4 py-2 rounded-lg ${
+//                   selectedDashboard === 'sell' ? 'bg-blue-600 text-white' : 'bg-gray-700 text-gray-300'
+//                 }`}
+//               >
+//                 Sell Dashboard
+//               </button>
+//             </li>
+//           </ul>
+//         </aside>
+
+//         {/* Main Content */}
+//         <main className="flex-grow">
+//           {renderDashboard()}
+//         </main>
+//       </div>
+
+//       {/* Footer */}
+//       <Footer />
+//     </div>
+//   );
+// };
+
+// export default SellerDashboardPage;
