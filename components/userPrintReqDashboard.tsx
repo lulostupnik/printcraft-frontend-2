@@ -1,15 +1,15 @@
 import React from 'react';
-import RequestsTable from '@/components/RequestsTable';
+import UserRequestsTable from './userRequestTable';
 import usePrintRequests from '@/hooks/usePrintRequest';
 
 type TableType = 'pending' | 'quoted' | 'accepted' | 'finalized' | 'delivered';
 
 
-interface PrintReqDashboardProps {
+interface UserPrintReqDashboardProps {
   requestType: 'print-requests' | 'design-requests';
 }
 
-const PrintReqDashboard: React.FC<PrintReqDashboardProps> = ({ requestType }) => {
+const UserPrintReqDashboard: React.FC<UserPrintReqDashboardProps> = ({ requestType }) => {
   const {
     pendingRequests,
     quotedRequests,
@@ -43,8 +43,6 @@ const PrintReqDashboard: React.FC<PrintReqDashboardProps> = ({ requestType }) =>
       title: 'Solicitudes Pendientes',
       requests: pendingRequests,
       type: 'pending',
-      priceInputs,
-      handlePriceChange,
       handleAcceptRequest,
       handleDeclineRequest,
     },
@@ -88,13 +86,12 @@ const PrintReqDashboard: React.FC<PrintReqDashboardProps> = ({ requestType }) =>
 
         {expandedTable === null
           ? tables.map((table) => (
-              <RequestsTable
+              <UserRequestsTable
                 key={table.key}
                 title={table.title}
                 requests={table.requests}
                 type={table.type}
                 priceInputs={table.priceInputs}
-                handlePriceChange={table.handlePriceChange}
                 handleAcceptRequest={table.handleAcceptRequest}
                 handleDeclineRequest={table.handleDeclineRequest}
                 handleFinalizeRequest={table.handleFinalizeRequest}
@@ -107,13 +104,12 @@ const PrintReqDashboard: React.FC<PrintReqDashboardProps> = ({ requestType }) =>
           : tables
               .filter((table) => table.key === expandedTable)
               .map((table) => (
-                <RequestsTable
+                <UserRequestsTable
                   key={table.key}
                   title={table.title}
                   requests={table.requests}
                   type={table.type}
                   priceInputs={table.priceInputs}
-                  handlePriceChange={table.handlePriceChange}
                   handleAcceptRequest={table.handleAcceptRequest}
                   handleDeclineRequest={table.handleDeclineRequest}
                   handleFinalizeRequest={table.handleFinalizeRequest}
@@ -125,14 +121,8 @@ const PrintReqDashboard: React.FC<PrintReqDashboardProps> = ({ requestType }) =>
               ))}
       </section>
 
-      <section className="mb-12 bg-gray-800 p-8 rounded-lg">
-   
-        <h2 className="text-4xl font-bold mb-4 text-center">
-          {requestType === 'design-requests' ? 'Explorar design requests' : 'Explorar print requests'}
-        </h2> 
-    </section>
     </div>
   );
 };
 
-export default PrintReqDashboard;
+export default UserPrintReqDashboard;

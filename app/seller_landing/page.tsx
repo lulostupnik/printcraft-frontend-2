@@ -5,11 +5,15 @@ import React, { useState } from 'react';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import PrintReqDashboard from '@/components/printReqDashboard';
-// import DesignReqDashboard from '@/components/designReqDashboard';
-// import SellDashboard from '@/components/sellDashboard';
+import ProductForm from '@/components/ProductForm';
+
 
 const SellerDashboardPage: React.FC = () => {
   const [selectedDashboard, setSelectedDashboard] = useState<'print' | 'design' | 'sell'>('print');
+  
+  const handleProductPublished = (data: any) => {
+    console.log('Producto publicado con éxito:', data);
+  };
 
   const renderDashboard = () => {
     switch (selectedDashboard) {
@@ -18,7 +22,16 @@ const SellerDashboardPage: React.FC = () => {
       case 'design':
         return <PrintReqDashboard requestType='design-requests'/>;
       case 'sell':
-        return <div>Sell Dashboard Placeholder</div>;
+        return (
+          <div className="container mx-auto">
+            <section className="mb-12 bg-gray-800 p-8 rounded-lg">
+              <h2 className="text-4xl font-bold mb-4 text-center">
+                Publicar un producto
+              </h2>
+                <ProductForm onProductPublished={handleProductPublished} />  {/* Use the form component */}
+              </section>
+          </div>
+        );
       default:
         return <div>error</div>;
     }
@@ -63,9 +76,11 @@ const SellerDashboardPage: React.FC = () => {
                   selectedDashboard === 'sell' ? 'bg-blue-600 text-white' : 'bg-gray-700 text-gray-300'
                 }`}
               >
-                Sell Dashboard
+                Publish product dashboard ((publicar, publicados y a vender))
               </button>
             </li>
+
+            
           </ul>
           </div>
         
