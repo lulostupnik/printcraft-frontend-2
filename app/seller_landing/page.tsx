@@ -14,13 +14,13 @@ const SellerDashboardPage: React.FC = () => {
   const renderDashboard = () => {
     switch (selectedDashboard) {
       case 'print':
-        return <PrintReqDashboard />;
+        return <PrintReqDashboard requestType='print-requests'/>;
       case 'design':
-        return <div>Design Dashboard Placeholder</div>;
+        return <PrintReqDashboard requestType='design-requests'/>;
       case 'sell':
         return <div>Sell Dashboard Placeholder</div>;
       default:
-        return <PrintReqDashboard />;
+        return <div>error</div>;
     }
   };
 

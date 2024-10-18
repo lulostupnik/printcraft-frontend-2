@@ -3,7 +3,7 @@ import { API_URL } from '@/api/api';
 import { PrintRequest } from '@/types/PrintRequests';
 import { useRouter } from 'next/navigation';
 
-const usePrintRequests = () => {
+const usePrintRequests = (requestType: 'print-requests' | 'design-requests' ) => {
   const [printRequests, setPrintRequests] = useState<PrintRequest[]>([]);
   const [priceInputs, setPriceInputs] = useState<{ [key: number]: string }>({});
   const [expandedTable, setExpandedTable] = useState<string | null>(null); // Manage expanded table
@@ -13,7 +13,7 @@ const usePrintRequests = () => {
   useEffect(() => {
     const fetchPrintRequests = async () => {
       try {
-        const response = await fetch(`${API_URL}/print-requests/seller/`, {
+        const response = await fetch(`${API_URL}/${requestType}/seller/`, {
           method: 'GET',
           headers: {
             'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
@@ -23,6 +23,7 @@ const usePrintRequests = () => {
         if (response.ok) {
           const data: PrintRequest[] = await response.json();
           setPrintRequests(data);
+          
         } else {
           console.error('Failed to fetch print requests');
         }
@@ -32,7 +33,7 @@ const usePrintRequests = () => {
     };
 
     fetchPrintRequests();
-  }, []);
+  }, [requestType]);
 
   // Handle price input change
   const handlePriceChange = (requestID: number, value: string) => {
@@ -48,7 +49,7 @@ const usePrintRequests = () => {
     }
 
     try {
-      const response = await fetch(`${API_URL}/print-requests/${requestID}/accept-or-reject/`, {
+      const response = await fetch(`${API_URL}/${requestType}/${requestID}/accept-or-reject/`, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
@@ -81,7 +82,7 @@ const usePrintRequests = () => {
   // Handle Decline Request
   const handleDeclineRequest = async (requestID: number) => {
     try {
-      const response = await fetch(`${API_URL}/print-requests/${requestID}/accept-or-reject/`, {
+      const response = await fetch(`${API_URL}/${requestType}/${requestID}/accept-or-reject/`, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
@@ -109,7 +110,7 @@ const usePrintRequests = () => {
   // Handle Finalize Request (status: 'Aceptada')
   const handleFinalizeRequest = async (requestID: number) => {
     try {
-      const response = await fetch(`${API_URL}/print-requests/${requestID}/finalize-print-request/`, {
+      const response = await fetch(`${API_URL}/${requestType}/${requestID}/finalize/`, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
@@ -136,7 +137,7 @@ const usePrintRequests = () => {
   // Handle Mark as Delivered Request (status: 'Finalizada')
   const handleMarkAsDelivered = async (requestID: number) => {
     try {
-      const response = await fetch(`${API_URL}/print-requests/${requestID}/mark-as-delivered-print-request/`, {
+      const response = await fetch(`${API_URL}/${requestType}/${requestID}/mark-as-delivered/`, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
@@ -185,3 +186,5 @@ const usePrintRequests = () => {
 };
 
 export default usePrintRequests;
+
+
