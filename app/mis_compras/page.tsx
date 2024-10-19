@@ -1,13 +1,21 @@
-"use client";
+'use client';
 import React, { useState } from "react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import UserPrintReqDashboard from "@/components/userPrintReqDashboard";
+import { useRouter } from "next/navigation"; // Import useRouter
 
 const MisComprasPage: React.FC = () => {
   const [selectedSection, setSelectedSection] = useState<
     "products" | "designRequests" | "printRequests"
   >("products");
+
+  const router = useRouter(); // Initialize useRouter
+
+  // Function to navigate to designer's profile page
+  const handleNavigateToDesigner = (sellerID: number) => {
+    router.push(`/designers/designer/${sellerID}`);
+  };
 
   // Placeholder render functions for each section
   const renderProducts = () => {
@@ -46,7 +54,12 @@ const MisComprasPage: React.FC = () => {
   };
 
   const renderPrintRequests = () => {
-
+    return (
+      <UserPrintReqDashboard
+        requestType="print-requests"
+        handleNavigateToDesigner={handleNavigateToDesigner} // Pass function here
+      />
+    );
   };
 
   const renderSection = () => {
@@ -56,7 +69,7 @@ const MisComprasPage: React.FC = () => {
       case "designRequests":
         return renderDesignRequests();
       case "printRequests":
-        return <UserPrintReqDashboard requestType='print-requests'/>;;
+        return renderPrintRequests();
       default:
         return null;
     }
