@@ -231,6 +231,7 @@ export default function SellerPage() {
               Dirección
             </label>
             <input
+              name="address"
               type="text"
               id="address"
               value={address}
@@ -245,6 +246,7 @@ export default function SellerPage() {
               Nombre de la Tienda
             </label>
             <input
+              name="storeName"
               type="text"
               id="storeName"
               value={storeName}
@@ -259,6 +261,7 @@ export default function SellerPage() {
               Descripción
             </label>
             <textarea
+              name="description"
               id="description"
               value={description}
               onChange={(e) => setDescription(e.target.value)}
@@ -273,6 +276,7 @@ export default function SellerPage() {
               Correo de Mercado Pago
             </label>
             <input
+              name="email"
               type="email"
               id="mpMail"
               value={mpMail}

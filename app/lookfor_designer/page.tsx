@@ -68,9 +68,9 @@ export default function DesignerPage() {
         <section className="mb-12 p-6 bg-red-500 rounded-lg text-center text-white">
           <h2 className="text-3xl font-bold mb-4">¿Desea realizar una Subasta Inversa?</h2>
           <p className="mb-4">Puedes enviar un request para que todos los diseñadores vean tu solicitud.</p>
-          <a onClick={handleDoRequestClick} style={{ cursor: 'pointer' }} className="bg-white text-red-600 py-3 px-8 rounded-full font-bold text-lg hover:bg-gray-200">
+          <button onClick={handleDoRequestClick} style={{ cursor: 'pointer' }} className="bg-white text-red-600 py-3 px-8 rounded-full font-bold text-lg hover:bg-gray-200" name="do_request">
             Realizar Request
-          </a>
+          </button>
         </section>
 
         {/* Sección de Diseñadores */}

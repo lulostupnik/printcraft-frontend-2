@@ -111,6 +111,7 @@ export default function AuthPage({ redirectTo }: AuthPageProps) {
           <h1 className="text-4xl font-bold mb-8">Log in</h1>
           <form onSubmit={handleSubmit} className="space-y-4">
             <input
+              name="username"
               type="text"
               placeholder="Username"
               value={username}
@@ -119,6 +120,7 @@ export default function AuthPage({ redirectTo }: AuthPageProps) {
               required
             />
             <input
+              name="password"
               type="password"
               placeholder="Password"
               value={password}

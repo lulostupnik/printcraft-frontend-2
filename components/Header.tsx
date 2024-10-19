@@ -145,7 +145,7 @@ export default function Header() {
             <>
               {/* Show welcome message and user profile if logged in */}
               <span className="text-white mr-4">Bienvenido {firstName}</span>
-              <a href="/profile" className="mr-4">
+              <a type="profile" href="/profile" className="mr-4">
                 <User className="text-gray-400" size={32} />
               </a>
               <button className="bg-gray-700 py-1 px-3 rounded" onClick={handleLogout}>

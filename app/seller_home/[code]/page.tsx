@@ -1,4 +1,4 @@
-'use client';
+/*'use client';
 import { API_URL } from "@/api/api";
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
@@ -126,4 +126,150 @@ export default function SellerHomePage() {
             <Footer />
         </div>
     );
+}*/
+
+'use client';
+import { API_URL } from "@/api/api";
+import React, { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
+import HeaderForSeller from "@/components/HeaderForSeller";
+import Footer from '@/components/Footer';
+import ProductCard from '@/components/ProductCard';
+import RequestCard from "@/components/RequestCard";
+import { Product } from '@/types/Product';
+import { useParams } from 'next/navigation';
+import ProductListItem from "@/components/ProductListItem";
+
+export default function SellerHomePage() {
+    const [isLoggedIn, setIsLoggedIn] = useState(false);
+    const [isSeller, setIsSeller] = useState(false);
+    const [products, setProducts] = useState<Product[]>([]);
+    const [loading, setLoading] = useState(true);
+    const [activeTab, setActiveTab] = useState('products'); // New state for the dashboard tab
+    const { code } = useParams(); 
+    const router = useRouter();
+
+    function onDelete(){
+        
+    }
+    function onIncreaseStock(){}
+
+    useEffect(() => {
+        const accessToken = localStorage.getItem('accessToken');
+        const sellerStatus = JSON.parse(localStorage.getItem('isSeller') || 'false');
+    
+        if (accessToken) {
+            setIsLoggedIn(true);
+            setIsSeller(sellerStatus);
+        } else {
+            setIsLoggedIn(false);
+        }
+    }, []);
+
+    // Fetch products from the API
+    useEffect(() => {
+        const fetchProducts = async () => {
+            try {
+                const response = await fetch(`${API_URL}/products/seller/${code}/`);
+                if (response.ok) {
+                    const data = await response.json();
+
+                    const transformedProducts: Product[] = data.map((item: any) => ({
+                        code: item.code,
+                        name: item.name,
+                        material: item.material,
+                        stock: item.stock.toString(),
+                        description: item.description,
+                        stl_file_url: item.stl_file_url,
+                        seller: item.seller,
+                        price: item.price,
+                        images_url: item.images.map((img: any) => img.image_url),
+                    }));
+
+                    setProducts(transformedProducts);
+                } else {
+                    console.error('Failed to fetch products');
+                }
+            } catch (error) {
+                console.error('Error fetching products:', error);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchProducts();
+    }, [code]);
+
+    return (
+        <div className="flex flex-col min-h-screen bg-gray-900 text-white">
+            <HeaderForSeller />
+            <main className="container mx-auto px-4 py-8 flex-grow flex">
+                {/* Sidebar for navigation */}
+                <aside className="w-1/4 bg-gray-800 p-4 rounded-lg">
+                    <ul className="space-y-4">
+                        <li>
+                            <button 
+                                className={`w-full text-left py-2 px-4 rounded-lg ${activeTab === 'products' ? 'bg-gray-700' : ''}`}
+                                onClick={() => setActiveTab('products')}
+                            >
+                                Mis Productos
+                            </button>
+                        </li>
+                        <li>
+                            <button 
+                                className={`w-full text-left py-2 px-4 rounded-lg ${activeTab === 'myOrders' ? 'bg-gray-700' : ''}`}
+                                onClick={() => setActiveTab('myOrders')}
+                            >
+                                Mis Pedidos
+                            </button>
+                        </li>
+                        <li>
+                            <button 
+                                className={`w-full text-left py-2 px-4 rounded-lg ${activeTab === 'allOrders' ? 'bg-gray-700' : ''}`}
+                                onClick={() => setActiveTab('allOrders')}
+                            >
+                                Pedidos Generales
+                            </button>
+                        </li>
+                    </ul>
+                </aside>
+
+                {/* Main content based on activeTab */}
+                <section className="w-3/4 pl-8">
+                    {activeTab === 'products' && (
+                        <>
+                            <h3 className="text-2xl font-bold mb-4">Mis Productos</h3>
+                            {products.length > 0 ? (
+                                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+                                    {products.map((product) => (
+                                        <ProductListItem key={product.code} product={product} onDelete={onDelete} onIncreaseStock={onIncreaseStock} />
+                                    ))}
+                                </div>
+                            ) : (
+                                <p>No hay productos disponibles.</p>
+                            )}
+                        </>
+                    )}
+
+                    {activeTab === 'myOrders' && (
+                        <>
+                            <h3 className="text-2xl font-bold mb-4">Mis Pedidos</h3>
+                            {/* Aquí puedes agregar lógica para mostrar los pedidos del vendedor */}
+                            <p>Aún no tienes pedidos.</p>
+                        </>
+                    )}
+
+                    {activeTab === 'allOrders' && (
+                        <>
+                            <h3 className="text-2xl font-bold mb-4">Pedidos Generales</h3>
+                            {/* Aquí puedes agregar lógica para mostrar los pedidos generales */}
+                            <p>Mostrando pedidos generales...</p>
+                        </>
+                    )}
+                </section>
+            </main>
+            <Footer />
+        </div>
+    );
 }
+

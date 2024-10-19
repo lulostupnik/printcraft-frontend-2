@@ -72,6 +72,7 @@ export default function RegisterPage() {
             <div className="space-y-2">
               <label htmlFor="name" className="block text-sm font-medium">First Name</label>
               <input
+                name="name"
                 id="name"
                 type="text"
                 value={name}
@@ -83,6 +84,7 @@ export default function RegisterPage() {
             <div className="space-y-2">
               <label htmlFor="surname" className="block text-sm font-medium">Surname</label>
               <input
+                name="surname"
                 id="surname"
                 type="text"
                 value={surname}
@@ -94,6 +96,7 @@ export default function RegisterPage() {
             <div className="space-y-2">
               <label htmlFor="username" className="block text-sm font-medium">Username</label>
               <input
+                name="username"
                 id="username"
                 type="text"
                 value={username}
@@ -105,6 +108,7 @@ export default function RegisterPage() {
             <div className="space-y-2">
               <label htmlFor="email" className="block text-sm font-medium">Email</label>
               <input
+                name="email"
                 id="email"
                 type="email"
                 value={email}
@@ -116,6 +120,7 @@ export default function RegisterPage() {
             <div className="space-y-2">
               <label htmlFor="password" className="block text-sm font-medium">Password</label>
               <input
+                name="password"
                 id="password"
                 type="password"
                 value={password}
@@ -127,6 +132,7 @@ export default function RegisterPage() {
             <div className="space-y-2">
               <label htmlFor="confirmPassword" className="block text-sm font-medium">Confirm Password</label>
               <input
+                name="confirmPassword"
                 id="confirmPassword"
                 type="password"
                 value={confirmPassword}
