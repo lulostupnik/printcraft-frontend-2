@@ -120,6 +120,7 @@ export default function ProfilePage() {
             {/* Conditionally render the "Empezar a vender" button if the user is not a seller */}
             {!isSeller && (
               <button
+                name="startSelling"
                 onClick={handleStartSelling}
                 className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
               >

@@ -356,7 +356,7 @@ export default function HomePage() {
               <h2 className="text-4xl font-bold mb-4">Necesitas algo específico?</h2>
               <h3 className="mb-4">Conectá con vendedores especializados.</h3>
               <a href="./lookfor_designer">
-                <button className="bg-white text-black py-6 px-16 rounded-full font-bold text-lg mt-10">
+                <button name="contact" className="bg-white text-black py-6 px-16 rounded-full font-bold text-lg mt-10">
                   Contactar
                 </button>
               </a>
@@ -370,6 +370,7 @@ export default function HomePage() {
             <div className="w-1/2 space-y-4 text-center mx-auto">
               <h2 className="text-4xl font-bold mb-4">Tenés una impresora 3D?</h2>
               <button
+                name="startSelling"
                 onClick={handleGoToSellerHomeClick}
                 className="bg-white text-black py-6 px-16 rounded-full font-bold text-lg mt-10"
               >
