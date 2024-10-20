@@ -57,7 +57,6 @@ const MisComprasPage: React.FC = () => {
     return (
       <UserPrintReqDashboard
         requestType="print-requests"
-        handleNavigateToDesigner={handleNavigateToDesigner} // Pass function here
       />
     );
   };
