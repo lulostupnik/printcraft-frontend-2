@@ -4,7 +4,7 @@ import React, { useEffect, useState } from 'react';
 import UserRequestsTable from './userRequestTable';
 import usePrintRequestsUser from '@/hooks/usePrintRequestsUser';
 
-type TableType = 'pending' | 'quoted' | 'accepted' | 'finalized' | 'delivered';
+type TableType = 'pending' | 'quoted' |  'delivered' | 'accepted-finalized';
 
 interface UserPrintReqDashboardProps {
   requestType: 'print-requests' | 'design-requests';
@@ -23,13 +23,16 @@ const UserPrintReqDashboard: React.FC<UserPrintReqDashboardProps> = ({ requestTy
     handleDeclineRequest,
   } = usePrintRequestsUser(requestType);
 
-  const combinedAcceptedAndFinalizedRequests = [...acceptedRequests, ...finalizedRequests];
-
+  const combinedAcceptedAndFinalizedRequests = [
+    ...acceptedRequests,
+    ...finalizedRequests,
+  ];
+  
   const tables: {
-    key: TableType | 'accepted-finalized';
+    key: TableType;
     title: string;
     requests: any[]; // You can type this based on your actual request data model
-    type: TableType;
+    type: TableType ;
     priceInputs?: { [key: number]: string };
     handlePriceChange?: (requestID: number, value: string) => void;
     handleAcceptRequest?: (requestID: number) => void;
@@ -50,23 +53,11 @@ const UserPrintReqDashboard: React.FC<UserPrintReqDashboardProps> = ({ requestTy
       requests: quotedRequests,
       type: 'quoted',
     },
-    // {
-    //   key: 'accepted',
-    //   title: 'Solicitudes Aceptadas',
-    //   requests: acceptedRequests,
-    //   type: 'accepted',
-    // },
-    // {
-    //   key: 'finalized',
-    //   title: 'Solicitudes Finalizadas',
-    //   requests: finalizedRequests,
-    //   type: 'finalized',
-    // },
     {
-      key: 'accepted-finalized', // Combined table
+      key: 'accepted-finalized', // Combined table for accepted and finalized requests
       title: 'Solicitudes Aceptadas y Finalizadas',
       requests: combinedAcceptedAndFinalizedRequests,
-      type: 'accepted',
+      type: 'accepted-finalized'
     },
     {
       key: 'delivered',
