@@ -1,12 +1,13 @@
 import { useState, useEffect } from 'react';
 import { API_URL } from '@/api/api';
 import { PrintRequest } from '@/types/PrintRequests';
+import { useRouter, useParams } from 'next/navigation'; // Ensure this import is correct
 
 const usePrintRequestsUser = (requestType: 'print-requests' | 'design-requests' ) => {
   const [printRequests, setPrintRequests] = useState<PrintRequest[]>([]);
   const [priceInputs, setPriceInputs] = useState<{ [key: number]: string }>({});
   const [expandedTable, setExpandedTable] = useState<string | null>(null); // Manage expanded table
-
+  const router = useRouter(); 
 
 
   // Function to fetch the print requests and their store names
@@ -41,6 +42,37 @@ const usePrintRequestsUser = (requestType: 'print-requests' | 'design-requests' 
 
 
   // Handle Accept Request with price
+  // const handleAcceptRequest = async (requestID: number) => {
+  //   try {
+  //     const response = await fetch(`${API_URL}/${requestType}/${requestID}/user-respond/`, {
+  //       method: 'POST',
+  //       headers: {
+  //         'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
+  //         'Content-Type': 'application/json',
+  //       },
+  //       body: JSON.stringify({
+  //         response: 'Accept',
+  //       }),
+  //     });
+
+  //     if (response.ok) {
+  //       // Update the status of the request to 'Cotizada'
+  //       setPrintRequests((prevRequests) =>
+  //         prevRequests.map((request) =>
+  //           request.requestID === requestID
+  //             ? { ...request, status: 'Cotizada' }
+  //             : request
+  //         )
+  //       );
+  //       alert('Request accepted!');
+  //     } else {
+  //       console.error('Failed to accept the request');
+  //     }
+  //   } catch (error) {
+  //     console.error('Error accepting the request:', error);
+  //   }
+  // };
+
   const handleAcceptRequest = async (requestID: number) => {
     try {
       const response = await fetch(`${API_URL}/${requestType}/${requestID}/user-respond/`, {
@@ -53,8 +85,11 @@ const usePrintRequestsUser = (requestType: 'print-requests' | 'design-requests' 
           response: 'Accept',
         }),
       });
-
+  
       if (response.ok) {
+        const data = await response.json();
+        const preferenceID = data.preference_id; // Extract preference ID
+  
         // Update the status of the request to 'Cotizada'
         setPrintRequests((prevRequests) =>
           prevRequests.map((request) =>
@@ -63,6 +98,12 @@ const usePrintRequestsUser = (requestType: 'print-requests' | 'design-requests' 
               : request
           )
         );
+  
+        // If preference ID exists, navigate to the Mercado Pago page with the ID
+        if (preferenceID) {
+          router.push(`/mp_pref/${preferenceID}`);
+        }
+  
         alert('Request accepted!');
       } else {
         console.error('Failed to accept the request');
@@ -71,6 +112,7 @@ const usePrintRequestsUser = (requestType: 'print-requests' | 'design-requests' 
       console.error('Error accepting the request:', error);
     }
   };
+  
 
   // Handle Decline Request
   const handleDeclineRequest = async (requestID: number) => {
