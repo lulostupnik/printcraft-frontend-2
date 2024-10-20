@@ -45,11 +45,9 @@ const MisComprasPage: React.FC = () => {
 
   const renderDesignRequests = () => {
     return (
-      <div className="bg-gray-700 p-6 rounded-lg mb-8">
-        <h2 className="text-3xl font-bold mb-4">Design Requests</h2>
-        {/* Placeholder for design requests */}
-        <p className="text-gray-400">No hay solicitudes de diseño actualmente.</p>
-      </div>
+      <UserPrintReqDashboard
+        requestType="design-requests"
+      />
     );
   };
 

@@ -44,14 +44,15 @@ const UserPrintReqDashboard: React.FC<UserPrintReqDashboardProps> = ({ requestTy
       title: 'Solicitudes Pendientes',
       requests: pendingRequests,
       type: 'pending',
-      handleAcceptRequest,
-      handleDeclineRequest,
+   
     },
     {
       key: 'quoted',
       title: 'Solicitudes Cotizadas',
       requests: quotedRequests,
       type: 'quoted',
+      handleAcceptRequest,
+      handleDeclineRequest,
     },
     {
       key: 'accepted-finalized', // Combined table for accepted and finalized requests

@@ -4,6 +4,7 @@ export interface PrintRequestUser {
   quantity: number;
   sellerID: number;
   store_name?: string;
+  direccion_del_vendedor? : string;
   stl_url?: string; // Optional for design-requests
   design_images: { image_url: string }[];
   description: string;

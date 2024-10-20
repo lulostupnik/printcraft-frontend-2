@@ -42,12 +42,6 @@ const usePrintRequestsUser = (requestType: 'print-requests' | 'design-requests' 
 
   // Handle Accept Request with price
   const handleAcceptRequest = async (requestID: number) => {
-    const price = priceInputs[requestID];
-    if (!price || isNaN(Number(price))) {
-      alert('Please enter a valid price.');
-      return;
-    }
-
     try {
       const response = await fetch(`${API_URL}/${requestType}/${requestID}/user-respond/`, {
         method: 'POST',
@@ -57,7 +51,6 @@ const usePrintRequestsUser = (requestType: 'print-requests' | 'design-requests' 
         },
         body: JSON.stringify({
           response: 'Accept',
-          price: Number(price),
         }),
       });
 
@@ -66,7 +59,7 @@ const usePrintRequestsUser = (requestType: 'print-requests' | 'design-requests' 
         setPrintRequests((prevRequests) =>
           prevRequests.map((request) =>
             request.requestID === requestID
-              ? { ...request, status: 'Cotizada', price: Number(price).toString() }
+              ? { ...request, status: 'Cotizada' }
               : request
           )
         );
