@@ -150,7 +150,10 @@ const UserRequestsTable: React.FC<UserRequestsTableProps> = ({
                     )}
 
                     {type === 'accepted' && (
-                      <td className="px-4 py-2 text-center">Waiting</td>
+                      <td className="px-4 py-2 text-center">Waiting (no anda bien para finalizada) </td>
+                    )}
+                    {type === 'finalized' && (
+                      <td className="px-4 py-2 text-center">Lookfor it</td>
                     )}
 
                     {type === 'delivered' && (
@@ -187,14 +190,7 @@ const UserRequestsTable: React.FC<UserRequestsTableProps> = ({
                             </>
                           )}
 
-                          {type === 'finalized' && (
-                            <button
-                              className="bg-yellow-500 text-white px-4 py-2 rounded-lg"
-                              onClick={() => handleMarkAsDelivered?.(request.requestID)}
-                            >
-                              Marcar como entregado
-                            </button>
-                          )}
+                         
                         </div>
                       </td>
                     )}
