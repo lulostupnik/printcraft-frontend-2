@@ -16,7 +16,6 @@ const ProductTable: React.FC<ProductTableProps> = ({
   onExpand,
   finalizeRequest,
 }) => {
-  // Define el alto máximo de la tabla dependiendo del estado expandido
   const maxHeight = isExpanded ? 'max-h-[24rem]' : 'max-h-[12rem]';
 
   return (
@@ -25,28 +24,17 @@ const ProductTable: React.FC<ProductTableProps> = ({
         <p className="text-gray-500 text-center">No hay solicitudes disponibles.</p>
       ) : (
         <div className="overflow-x-auto">
-          {/* Encabezado de la tabla con el título y el icono de expandir/contraer en la parte superior derecha */}
           <div className="flex justify-between items-center mb-4 bg-gray-800 py-2 px-4 rounded-lg">
             <h3 className="text-2xl font-bold text-white">{title}</h3>
-            {/* Icono para expandir/contraer la tabla */}
             <button
               onClick={onExpand}
               className="text-white hover:text-gray-300 focus:outline-none ml-auto flex items-center space-x-2"
               aria-label={isExpanded ? "Contraer tabla" : "Expandir tabla"}
             >
-              {isExpanded ? (
-                <>
-                  <span>Contraer</span>
-                </>
-              ) : (
-                <>
-                  <span>Expandir</span>
-                </>
-              )}
+              {isExpanded ? 'Contraer' : 'Expandir'}
             </button>
           </div>
 
-          {/* Mostrar el contenido de la tabla */}
           <div className={`${maxHeight} overflow-y-auto`}>
             <table className="min-w-full bg-gray-700 text-white rounded-lg">
               <thead>
@@ -54,6 +42,8 @@ const ProductTable: React.FC<ProductTableProps> = ({
                   <th className="px-4 py-2 text-center">Correo</th>
                   <th className="px-4 py-2 text-center">Cantidad</th>
                   <th className="px-4 py-2 text-center">Nombre</th>
+                  <th className="px-4 py-2 text-center">Producto</th>
+                  <th className="px-4 py-2 text-center">Precio</th>
                   <th className="px-4 py-2 text-center">Fecha</th>
                   <th className="px-4 py-2 text-center">Acciones</th>
                 </tr>
@@ -65,7 +55,19 @@ const ProductTable: React.FC<ProductTableProps> = ({
                     <td className="px-4 py-2 text-center">{request.email}</td>
                     <td className="px-4 py-2 text-center">{request.quantity}</td>
                     <td className="px-4 py-2 text-center">{request.name}</td>
-                    <td className="px-4 py-2 text-center">{request.date}</td>
+                    <td className="px-4 py-2 text-center">{request.price}</td>
+                    <td className="px-4 py-2 text-center">
+                      <a href={`/products/${request.productCode}`} className="text-blue-500 underline hover:text-blue-700">
+                        Ver producto aquí
+                      </a>
+                    </td>
+                    <td className="px-4 py-2 text-center">
+                      {new Date(request.date).toLocaleDateString('es-ES', {
+                        year: 'numeric',
+                        month: 'long',
+                        day: 'numeric',
+                      })}
+                    </td>
                     <td className="px-4 py-2 text-center">
                       {request.status === 'accepted' && (
                         <button
@@ -88,4 +90,3 @@ const ProductTable: React.FC<ProductTableProps> = ({
 };
 
 export default ProductTable;
-

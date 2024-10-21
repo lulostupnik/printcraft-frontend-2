@@ -4,5 +4,7 @@ export interface ProductRequest{
     quantity: number;
     name: string;
     date: string;
+    productCode: number;
     status: 'accepted' | 'finalized';
+    price: number;
 };
