@@ -104,7 +104,7 @@ const ExploreReqComponent: React.FC<ExploreReqComponentProps> = ({ type }) => {
   return (
     <div className="mt-8">
       {requests.length === 0 ? (
-        <p className="text-center text-white">No reverse auction requests found.</p>
+        <p className="text-center text-white"></p>
       ) : (
         <section className="mb-12 bg-gray-800 p-8 rounded-lg">
           <div className="overflow-x-auto">
