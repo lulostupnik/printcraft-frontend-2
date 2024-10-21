@@ -84,7 +84,10 @@ const ProductForm: React.FC<ProductFormProps> = ({ onProductPublished }) => {
       formData.append('material', productData.material);
       formData.append('stock', productData.stock);
       
-      formData.append('materials', productData.material); //@TODO fix create
+      //formData.append('materials', productData.material); //@TODO fix create
+
+      //formData.append('materials', JSON.stringify([productData.material]));
+
       
 
       if (productData.stlFile) {

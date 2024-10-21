@@ -1,4 +1,5 @@
 import { url } from "inspector";
+import 'cypress-file-upload';
 
 
 describe('Start Selling', () => {
@@ -36,45 +37,39 @@ describe('Start Selling', () => {
       cy.wait(1000);
   });
 
-    it('should redirect into a login page', () => {
+    it('should login into a user that is a seller and publish a product', () => {
       cy.visit('/');
       cy.wait(1000);
-      cy.get('button[name="startSelling"]').click();
-      cy.wait(1000);
-      cy.url().should('include', '/login');
-      cy.wait(1000);
-    });
-
-    it('should register as a seller successfully', () => {
-
-      cy.register('Juan','Perez','juancitorulo','juancitorulo@gmail.com','Juancitorulo123');
       cy.login('juancitorulo','Juancitorulo123');
-
+      cy.wait(1000);
+      cy.get('button[name="publish_product"]').click();
       cy.wait(2000);
-      cy.get('button[name="startSelling"]').click();
+      cy.get('input[name="name"]').type("Millenium Falcon 2");
       cy.wait(1000);
-      cy.url().should('include', '/register_seller');
+      cy.get('textarea[name="description"]').type("The best ship in the entire galaxy");
       cy.wait(1000);
-      cy.get('input[name="address"]').type('Libertador 3500');
+      cy.get('input[name="price"]').type("50");
       cy.wait(1000);
-      cy.get('input[name="storeName"]').type('Juan y Asociados');
+      cy.get('input[name="material"]').type("PVS");
       cy.wait(1000);
-      cy.get('textarea[name="description"]').type('La mejor tienda de todo Belgrano');
-      cy.wait(1000);
-      cy.get('input[name="email"]').type('juancitorulo@gmail.com');
-      cy.wait(1000);
+      cy.get('input[name="stock"]').type("7");
+      cy.wait(2000);
+      cy.get('input[name="imageFiles"]').attachFile('millenium_falcon.jpg');;
+      cy.wait(2000);
       cy.get('button[type="submit"]').click();
       cy.wait(2000);
+
     });
 
-    it('finally be able to visit the seller page', () => {
-      cy.visit('/');
-      cy.wait(1000);
-      cy.login('juancitorulo','Juancitorulo123');
-      cy.wait(2000);
-      cy.url().should('include', '/seller_landing');
-      cy.wait(1000);
-    });
+    it('should appear as a product', () => {
+        cy.visit('/');
+        cy.wait(1000);
+        cy.get('button[name="catalog"]').click();
+        cy.wait(2000);
+        cy.contains('Millenium Falcon 2');
+        cy.wait(2000);
+  
+      });
 
   
   });
