@@ -1,17 +1,26 @@
-/*'use client';
-import React, { useEffect, useState } from 'react';
+'use client';
+import React, { useState } from "react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import UserPrintReqDashboard from "@/components/userPrintReqDashboard";
 import { useRouter } from "next/navigation"; // Import useRouter
-import { API_URL } from "@/api/api";
 
 const MisComprasPage: React.FC = () => {
   const [selectedSection, setSelectedSection] = useState<
     "products" | "designRequests" | "printRequests"
   >("products");
 
+  const [loading, setLoading] = useState<boolean>(false); // Add loading state
   const router = useRouter(); // Initialize useRouter
+
+  const handleSectionChange = (section: "products" | "designRequests" | "printRequests") => {
+    setLoading(true); // Set loading to true
+
+    setTimeout(() => {
+      setSelectedSection(section); // Set the new section after a small delay
+      setLoading(false); // Stop loading after the timeout
+    }, 100); // 500ms delay to simulate loading
+  };
 
   // Function to navigate to designer's profile page
   const handleNavigateToDesigner = (sellerID: number) => {
@@ -117,21 +126,34 @@ const MisComprasPage: React.FC = () => {
 
   const renderDesignRequests = () => {
     return (
-      <UserPrintReqDashboard
+      <div>
+         <UserPrintReqDashboard
         requestType="design-requests"
       />
+      <UserExploreAnsTableComponent type='design-requests' ></UserExploreAnsTableComponent>
+      </div>
+     
     );
   };
 
   const renderPrintRequests = () => {
     return (
+      <div>
       <UserPrintReqDashboard
         requestType="print-requests"
       />
+
+<UserExploreAnsTableComponent type='print-requests' ></UserExploreAnsTableComponent>
+      </div>
+
     );
   };
 
   const renderSection = () => {
+    if (loading) {
+      return <p className="text-center text-white"></p>; // Show loading indicator
+    }
+    
     switch (selectedSection) {
       case "products":
         return renderProducts();
@@ -153,7 +175,7 @@ const MisComprasPage: React.FC = () => {
           <ul className="space-y-4">
             <li>
               <button
-                onClick={() => setSelectedSection("products")}
+                onClick={() => handleSectionChange("products")} // Use handleSectionChange
                 className={`w-full text-left px-4 py-2 rounded-lg ${
                   selectedSection === "products"
                     ? "bg-blue-600 text-white"
@@ -165,7 +187,7 @@ const MisComprasPage: React.FC = () => {
             </li>
             <li>
               <button
-                onClick={() => setSelectedSection("designRequests")}
+                onClick={() => handleSectionChange("designRequests")} // Use handleSectionChange
                 className={`w-full text-left px-4 py-2 rounded-lg ${
                   selectedSection === "designRequests"
                     ? "bg-blue-600 text-white"
@@ -177,7 +199,7 @@ const MisComprasPage: React.FC = () => {
             </li>
             <li>
               <button
-                onClick={() => setSelectedSection("printRequests")}
+                onClick={() => handleSectionChange("printRequests")} // Use handleSectionChange
                 className={`w-full text-left px-4 py-2 rounded-lg ${
                   selectedSection === "printRequests"
                     ? "bg-blue-600 text-white"
@@ -191,7 +213,7 @@ const MisComprasPage: React.FC = () => {
         </aside>
 
         <main className="flex-1 container mx-auto px-4 py-8">
-          {renderSection()}
+          {renderSection()} {/* Render section based on loading state */}
         </main>
       </div>
       <Footer />

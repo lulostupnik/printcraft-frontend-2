@@ -68,10 +68,16 @@ const ExploreReqComponent: React.FC<ExploreReqComponentProps> = ({ type }) => {
           ? `${API_URL}/print-reverse-auction/${requestID}/create-response/`
           : `${API_URL}/design-reverse-auctions/${requestID}/create-response/`;
 
+          const accessToken = localStorage.getItem('accessToken');
+          if (!accessToken) {
+            throw new Error('User is not authenticated');
+          }
+  
       const response = await fetch(endpoint, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          'Authorization': `Bearer ${accessToken}`
         },
         body: JSON.stringify({
           price: parseFloat(price),
@@ -98,7 +104,7 @@ const ExploreReqComponent: React.FC<ExploreReqComponentProps> = ({ type }) => {
   return (
     <div className="mt-8">
       {requests.length === 0 ? (
-        <p className="text-center text-white">No reverse auction requests found.</p>
+        <p className="text-center text-white"></p>
       ) : (
         <section className="mb-12 bg-gray-800 p-8 rounded-lg">
           <div className="overflow-x-auto">
