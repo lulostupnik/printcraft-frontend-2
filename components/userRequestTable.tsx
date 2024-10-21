@@ -137,12 +137,12 @@ const UserRequestsTable: React.FC<UserRequestsTableProps> = ({
                     {
                       type !== 'pending' && (
                         <td className="px-4 py-2 text-center">
-                        {request.store_name ? (
+                        {request.seller_name ? (
                           <span
                             className="text-blue-500 underline cursor-pointer"
                             onClick={() => handleNavigateToDesigner(request.sellerID)} // Make the store name clickable
                           >
-                            {request.store_name}
+                            {request.seller_name}
                           </span>
                         ) : (
                           <button

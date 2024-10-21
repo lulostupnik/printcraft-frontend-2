@@ -1,6 +1,7 @@
 import React from 'react';
 import RequestsTable from '@/components/RequestsTable';
 import usePrintRequests from '@/hooks/usePrintRequest';
+import ExploreReqComponent from './ExploreReqComponent';
 
 type TableType = 'pending' | 'quoted' | 'accepted' | 'finalized' | 'delivered';
 
@@ -126,10 +127,7 @@ const PrintReqDashboard: React.FC<PrintReqDashboardProps> = ({ requestType }) =>
       </section>
 
       <section className="mb-12 bg-gray-800 p-8 rounded-lg">
-   
-        <h2 className="text-4xl font-bold mb-4 text-center">
-          {requestType === 'design-requests' ? 'Explorar design requests' : 'Explorar print requests'}
-        </h2> 
+        <ExploreReqComponent type={requestType}></ExploreReqComponent>
     </section>
     </div>
   );

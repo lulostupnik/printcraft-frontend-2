@@ -15,6 +15,8 @@ const ContactPage = () => {
   const params = useParams();
   const code = typeof params.code === 'string' ? params.code : '';
   const [reqType, setReqType] = useState<'print-requests' | 'design-requests'>('design-requests');
+  const [urlfecth, setUrlFetch] = useState<string>('');
+
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -42,12 +44,30 @@ const ContactPage = () => {
       } else {
         setReqType('design-requests');
         // Append multiple design images to 'design_images_files'
-        designImages.forEach((image, index) => {
-          formData.append(`design_images_files[${index}]`, image);
-        });
+        if(code === 'all'){
+          designImages.forEach((image, index) => {
+            formData.append(`image_files[${index}]`, image);
+          });
+        }else{
+          designImages.forEach((image, index) => {
+            formData.append(`design_images_files[${index}]`, image);
+          });
+        }
+       
+      }
+      
+      if(code == 'all'){
+        if(reqType == 'design-requests' ){
+          setUrlFetch(`${API_URL}/design-reverse-auction/create/`);
+        }else{
+          setUrlFetch(`${API_URL}/print-reverse-auction/create/`);
+        }
+      
+      }else{
+        setUrlFetch(`${API_URL}/${reqType}/create/`);
       }
 
-      const response = await fetch(`${API_URL}/${reqType}/create/`, {
+      const response = await fetch(urlfecth, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${accessToken}`,

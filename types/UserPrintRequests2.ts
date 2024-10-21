@@ -3,7 +3,7 @@ export interface PrintRequestUser {
   userID: number;
   quantity: number;
   sellerID: number;
-  store_name?: string;
+  seller_name?: string;
   direccion_del_vendedor? : string;
   stl_url?: string; // Optional for design-requests
   design_images: { image_url: string }[];
