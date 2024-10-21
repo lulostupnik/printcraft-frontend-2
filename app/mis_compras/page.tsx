@@ -155,7 +155,12 @@ const MisComprasPage: React.FC = () => {
   const router = useRouter(); // Initialize useRouter
 
   const handleSectionChange = (section: "products" | "designRequests" | "printRequests") => {
-    setSelectedSection(section); // Set the new section after a small delay (simulates loading)
+    setLoading(true); // Set loading to true
+
+    setTimeout(() => {
+      setSelectedSection(section); // Set the new section after a small delay
+      setLoading(false); // Stop loading after the timeout
+    }, 100); // 500ms delay to simulate loading
   };
 
   // Function to navigate to designer's profile page
