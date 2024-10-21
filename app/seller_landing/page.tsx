@@ -10,11 +10,10 @@ import { ProductRequest } from '@/types/ProductRequests';
 import { Cantarell } from 'next/font/google';
 import { totalmem } from 'os';
 import ProductDashboard from '@/components/ProductDashboard';
-import PublishedProducts from '@/components/PublishedProducts';
 
 
 const SellerDashboardPage: React.FC = () => {
-  const [selectedDashboard, setSelectedDashboard] = useState<'print' | 'design' | 'sell' | 'products' | 'published'>('sell');
+  const [selectedDashboard, setSelectedDashboard] = useState<'print' | 'design' | 'sell' | 'products'>('sell');
   
   const handleProductPublished = (data: any) => {
     console.log('Producto publicado con éxito:', data);
@@ -38,9 +37,7 @@ const SellerDashboardPage: React.FC = () => {
           </div>
         );
       case 'products':
-        return <ProductDashboard/>;
-      case 'published':
-        return <PublishedProducts/>;
+        return <ProductDashboard/>
       default:
         return <div>error</div>;
     }
@@ -98,16 +95,6 @@ const SellerDashboardPage: React.FC = () => {
                 }`}
               >
                 Products Sold
-              </button>
-            </li>
-            <li>
-              <button
-                onClick={() => setSelectedDashboard('published')}
-                className={`w-full text-left px-4 py-2 rounded-lg ${
-                  selectedDashboard === 'published' ? 'bg-blue-600 text-white' : 'bg-gray-700 text-gray-300'
-                }`}
-              >
-                Published Products
               </button>
             </li>
             

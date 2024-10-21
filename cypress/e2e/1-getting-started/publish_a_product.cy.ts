@@ -1,4 +1,4 @@
-/*import 'cypress-file-upload';
+import 'cypress-file-upload';
 import { password, username } from './user';
 import { login, register } from './commands'; 
 
@@ -44,5 +44,5 @@ describe('Start Selling', () => {
       });
 
   
-  });*/
+  });
   
