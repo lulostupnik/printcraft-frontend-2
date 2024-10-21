@@ -21,27 +21,26 @@ describe('Do a Request', () => {
     // Usa cy.session() para mantener la sesión
 
     it('should redirect into a login page', () => {
-
       cy.visit('/');
-      cy.wait(2000);
+      cy.wait(4000);
       cy.get('button[name="contact"]').click();
       cy.wait(2000);
       cy.get('button[name="do_request"]').click();
-      cy.wait(1000);
+      cy.wait(2000);
       cy.url().should('include', '/login');
-      cy.wait(1000);
+      cy.wait(2000);
 
     });
 
     it('should finally let me do a request', () => {
       cy.login('messi2','Messi1234');
-      cy.wait(2000);
+      cy.wait(4000);
       cy.get('button[name="contact"]').click();
       cy.wait(2000);
       cy.get('button[name="do_request"]').click();
-      cy.wait(1000);
+      cy.wait(2000);
       cy.url().should('include', '/designers/contact/all');
-      cy.wait(1000);
+      cy.wait(2000);
     });
     
   

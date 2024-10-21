@@ -155,7 +155,9 @@ export default function HomePage() {
                 Nunca más le vas a tener que pedir el cosito al ferretero.
               </h3>
               <a href="./products_catalog">
-                <button className="bg-white text-black py-6 px-16 rounded-full font-bold text-lg mt-10">
+                <button 
+                name="catalog"
+                className="bg-white text-black py-6 px-16 rounded-full font-bold text-lg mt-10">
                   Ver Catalogo
                 </button>
               </a>
