@@ -3,8 +3,7 @@ import { url, waitForDebugger } from "inspector";
 
 describe('Do a Request', () => {
 
-  Cypress.Commands.add('login', (username, password) => {
-
+    Cypress.Commands.add('login', (username, password) => {
     cy.visit('/login');
     cy.wait(2000);
     cy.get('input[name="username"]').type(username);
@@ -13,7 +12,6 @@ describe('Do a Request', () => {
     cy.wait(2000);
     cy.get('button[type="submit"]').click();
     cy.wait(1000);
-    
   });
 
 

@@ -36,7 +36,7 @@ describe('Start Selling', () => {
         cy.wait(1000);
         cy.get('button[name="catalog"]').click();
         cy.wait(2000);
-        cy.contains('Millenium Falcon 2');
+        cy.contains('Millenium Falcon X');
         cy.wait(2000);
   
       });
