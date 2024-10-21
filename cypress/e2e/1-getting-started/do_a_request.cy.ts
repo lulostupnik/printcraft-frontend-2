@@ -3,8 +3,6 @@ import { url, waitForDebugger } from "inspector";
 
 describe('Do a Request', () => {
 
-
-
   Cypress.Commands.add('login', (username, password) => {
 
     cy.visit('/login');
@@ -18,7 +16,6 @@ describe('Do a Request', () => {
     
   });
 
-    // Usa cy.session() para mantener la sesión
 
     it('should redirect into a login page', () => {
       cy.visit('/');
@@ -33,7 +30,7 @@ describe('Do a Request', () => {
     });
 
     it('should finally let me do a request', () => {
-      cy.login('messi2','Messi1234');
+      cy.login('birsa123','Birsa123@');
       cy.wait(4000);
       cy.get('button[name="contact"]').click();
       cy.wait(2000);

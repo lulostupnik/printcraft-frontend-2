@@ -1,40 +1,10 @@
-import { url } from "inspector";
-
+import { name, surname, username, mail, store_name, password } from './user';
+import { login, register } from './commands'; 
 
 describe('Start Selling', () => {
 
-
-    // Usa cy.session() para mantener la sesión
-    Cypress.Commands.add('login', (username, password) => {
-        cy.visit('/login');
-        cy.wait(1000);
-        cy.get('input[name="username"]').type(username);
-        cy.wait(1000);
-        cy.get('input[name="password"]').type(password);
-        cy.wait(1000);
-        cy.get('button[type="submit"]').click();
-        cy.wait(2000);
-    });
-
-    // Usa cy.session() para mantener la sesión
-    Cypress.Commands.add('register', (firstName, lastName, username, email, password) => {
-      cy.visit('/register');
-      cy.wait(1000);
-      cy.get('input[name="name"]').type(firstName);
-      cy.wait(1000);
-      cy.get('input[name="surname"]').type(lastName);
-      cy.wait(1000);
-      cy.get('input[name="username"]').type(username);
-      cy.wait(1000);
-      cy.get('input[name="email"]').type(email);
-      cy.wait(1000);
-      cy.get('input[name="password"]').type(password);
-      cy.wait(1000);
-      cy.get('input[name="confirmPassword"]').type(password);
-      cy.wait(1000);
-      cy.get('button[type="submit"]').click();
-      cy.wait(1000);
-  });
+    Cypress.Commands.add('login', login); 
+    Cypress.Commands.add('register', register); 
 
     it('should redirect into a login page', () => {
       cy.visit('/');
@@ -46,9 +16,9 @@ describe('Start Selling', () => {
     });
 
     it('should register as a seller successfully', () => {
-
-      cy.register('Juan','Perez','juancitorulo','juancitorulo@gmail.com','Juancitorulo123');
-      cy.login('juancitorulo','Juancitorulo123');
+    
+      cy.register(name, surname,username,mail,password);
+      cy.login(username,password);
 
       cy.wait(2000);
       cy.get('button[name="startSelling"]').click();
@@ -57,11 +27,11 @@ describe('Start Selling', () => {
       cy.wait(1000);
       cy.get('input[name="address"]').type('Libertador 3500');
       cy.wait(1000);
-      cy.get('input[name="storeName"]').type('Juan y Asociados');
+      cy.get('input[name="storeName"]').type(store_name);
       cy.wait(1000);
       cy.get('textarea[name="description"]').type('La mejor tienda de todo Belgrano');
       cy.wait(1000);
-      cy.get('input[name="email"]').type('juancitorulo@gmail.com');
+      cy.get('input[name="email"]').type(mail);
       cy.wait(1000);
       cy.get('button[type="submit"]').click();
       cy.wait(2000);
@@ -70,7 +40,7 @@ describe('Start Selling', () => {
     it('finally be able to visit the seller page', () => {
       cy.visit('/');
       cy.wait(1000);
-      cy.login('juancitorulo','Juancitorulo123');
+      cy.login(username,password);
       cy.wait(2000);
       cy.url().should('include', '/seller_landing');
       cy.wait(1000);

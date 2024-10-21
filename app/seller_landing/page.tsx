@@ -9,7 +9,7 @@ import ProductForm from '@/components/ProductForm';
 
 
 const SellerDashboardPage: React.FC = () => {
-  const [selectedDashboard, setSelectedDashboard] = useState<'print' | 'design' | 'sell'>('print');
+  const [selectedDashboard, setSelectedDashboard] = useState<'print' | 'design' | 'sell'>('sell');
   
   const handleProductPublished = (data: any) => {
     console.log('Producto publicado con éxito:', data);
@@ -77,8 +77,9 @@ const SellerDashboardPage: React.FC = () => {
                   selectedDashboard === 'sell' ? 'bg-blue-600 text-white' : 'bg-gray-700 text-gray-300'
                 }`}
               >
-                Publish product dashboard ((publicar, publicados y a vender))
+                Publish product 
               </button>
+              {/* dashboard ((publicar, publicados y a vender)) */}
             </li>
 
             
