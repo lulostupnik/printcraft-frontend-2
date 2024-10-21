@@ -68,10 +68,16 @@ const ExploreReqComponent: React.FC<ExploreReqComponentProps> = ({ type }) => {
           ? `${API_URL}/print-reverse-auction/${requestID}/create-response/`
           : `${API_URL}/design-reverse-auctions/${requestID}/create-response/`;
 
+          const accessToken = localStorage.getItem('accessToken');
+          if (!accessToken) {
+            throw new Error('User is not authenticated');
+          }
+  
       const response = await fetch(endpoint, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          'Authorization': `Bearer ${accessToken}`
         },
         body: JSON.stringify({
           price: parseFloat(price),
