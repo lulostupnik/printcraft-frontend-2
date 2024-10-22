@@ -73,7 +73,7 @@ const SoldProdTable: React.FC<SoldProdTableProps> = ({
                       })}
                     </td>
                    
-                      {(request.status === 'accepted'  || request.status == 'En proceso') && (
+                      {( request.status == 'En proceso') && (
                          <td className="px-4 py-2 text-center">
                         <button
                           onClick={() => finalizeRequest(request)}
