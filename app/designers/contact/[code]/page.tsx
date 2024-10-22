@@ -15,7 +15,7 @@ const ContactPage = () => {
   const params = useParams();
   const code = typeof params.code === 'string' ? params.code : '';
   const [reqType, setReqType] = useState<'print-requests' | 'design-requests'>('design-requests');
-  const [urlfecth, setUrlFetch] = useState<string>('');
+  const [urlfecth, setUrlFetch] = useState<string>(`${API_URL}`);
 
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -56,18 +56,24 @@ const ContactPage = () => {
        
       }
       
-      if(code == 'all'){
-        if(reqType == 'design-requests' ){
-          setUrlFetch(`${API_URL}/design-reverse-auction/create/`);
-        }else{
-          setUrlFetch(`${API_URL}/print-reverse-auction/create/`);
-        }
-      
-      }else{
-        setUrlFetch(`${API_URL}/${reqType}/create/`);
-      }
+      const finalUrl = code === 'all'
+      ? (reqType === 'design-requests'
+        ? `${API_URL}/design-reverse-auction/create/`
+        : `${API_URL}/print-reverse-auction/create/`)
+      : `${API_URL}/${reqType}/create/`;
 
-      const response = await fetch(urlfecth, {
+      // if(code == 'all'){
+      //   if(reqType == 'design-requests' ){
+      //     setUrlFetch(`${API_URL}/design-reverse-auction/create/`);
+      //   }else{
+      //     setUrlFetch(`${API_URL}/print-reverse-auction/create/`);
+      //   }
+      
+      // }else{
+      //   setUrlFetch(`${API_URL}/${reqType}/create/`);
+      // }
+
+      const response = await fetch(finalUrl, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${accessToken}`,

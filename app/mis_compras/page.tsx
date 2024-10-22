@@ -13,7 +13,7 @@ const MisComprasPage: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(false); // Add loading state
   const router = useRouter(); // Initialize useRouter
 
-  const handleSectionChange = (section: "products" | "designRequests" | "printRequests") => {
+  const= (section: "products" | "designRequests" | "printRequests") => {
     setLoading(true); // Set loading to true
 
     setTimeout(() => {
@@ -180,6 +180,14 @@ const MisComprasPage: React.FC = () => {
     total_price: number;
   };
 
+  const handleSectionChange= (section: "products" | "designRequests" | "printRequests") => {
+    setLoading(true); // Set loading to true
+
+    setTimeout(() => {
+      setSelectedSection(section); // Set the new section after a small delay
+      setLoading(false); // Stop loading after the timeout
+    }, 100); // 500ms delay to simulate loading
+  };
 
 
   // Función para navegar al perfil del diseñador
@@ -292,22 +300,24 @@ const MisComprasPage: React.FC = () => {
   };
 
   const renderPrintRequests = () => {
+    return (
     <div>
     <UserPrintReqDashboard requestType="print-requests" />
      <AuctionRequestComponent type="print-requests"></AuctionRequestComponent>
- </div>
+ </div>)
   };
+ 
 
   const renderSection = () => {
     switch (selectedSection) {
       case "products":
-        return renderProducts();
+        return <div>{renderProducts()}</div>
       case "designRequests":
-        return renderDesignRequests();
+        return <div>{renderDesignRequests()}</div>
       case "printRequests":
-        return renderPrintRequests();
+        return <div>{renderPrintRequests()}</div>
       default:
-        return null;
+        return <div></div>;
     }
   };
 
@@ -320,7 +330,7 @@ const MisComprasPage: React.FC = () => {
           <ul className="space-y-4">
             <li>
               <button
-                onClick={() => setSelectedSection("products")}
+                onClick={() => handleSectionChange("products")}
                 className={`w-full text-left px-4 py-2 rounded-lg ${
                   selectedSection === "products"
                     ? "bg-blue-600 text-white"
@@ -332,7 +342,7 @@ const MisComprasPage: React.FC = () => {
             </li>
             <li>
               <button
-                onClick={() => setSelectedSection("designRequests")}
+                onClick={() => handleSectionChange("designRequests")}
                 className={`w-full text-left px-4 py-2 rounded-lg ${
                   selectedSection === "designRequests"
                     ? "bg-blue-600 text-white"
@@ -344,7 +354,7 @@ const MisComprasPage: React.FC = () => {
             </li>
             <li>
               <button
-                onClick={() => setSelectedSection("printRequests")}
+                onClick={() => handleSectionChange("printRequests")}
                 className={`w-full text-left px-4 py-2 rounded-lg ${
                   selectedSection === "printRequests"
                     ? "bg-blue-600 text-white"

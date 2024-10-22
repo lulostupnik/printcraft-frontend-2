@@ -7,6 +7,7 @@ interface AuctionResponse {
   responseID: number;
   auction: number;
   seller: string;
+  sellerName: string;
   price: number;
   created_at: string;
   status: string; // Pending, Accepted, Rejected
@@ -242,7 +243,13 @@ const AuctionRequestComponent: React.FC<AuctionRequestComponentProps> = ({ type 
                                     <tbody className="divide-y divide-gray-600">
                                       {responses[request.requestID].map((response) => (
                                         <tr key={response.responseID} className="hover:bg-gray-800">
-                                          <td className="px-4 py-2 text-center">{response.seller}</td>
+                                        
+                                          <td className="px-4 py-2 text-center">
+                                          <a href={`designers/designer/${response.seller}`}   className="text-blue-500 hover:underline">
+                                              {response.sellerName}     
+                                          </a></td>
+                                         
+                                          {/* <td className="px-4 py-2 text-center">{response.sellerName}</td> */}
                                           <td className="px-4 py-2 text-center">
                                             {response.price ? `$${Number(response.price).toFixed(2)}` : 'N/A'}
                                           </td>

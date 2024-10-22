@@ -1,15 +1,15 @@
 import React from 'react';
-import { ProductRequest } from '@/types/ProductRequests';
+import { SoldProductRequest } from '@/types/SoldProduct';
 
-type ProductTableProps = {
+type SoldProdTableProps = {
   title: string;
-  requests: ProductRequest[];
+  requests: SoldProductRequest[];
   isExpanded: boolean;
   onExpand: () => void;
-  finalizeRequest: (request: ProductRequest) => void;
+  finalizeRequest: (request: SoldProductRequest) => void;
 };
 
-const ProductTable: React.FC<ProductTableProps> = ({
+const SoldProdTable: React.FC<SoldProdTableProps> = ({
   title,
   requests,
   isExpanded,
@@ -22,7 +22,7 @@ const ProductTable: React.FC<ProductTableProps> = ({
   return (
     <div className="mt-8">
       {requests.length === 0 ? (
-        <p className="text-gray-500 text-center">No hay solicitudes disponibles.</p>
+        <p className="text-gray-500 text-center"></p>
       ) : (
         <div className="overflow-x-auto">
           {/* Encabezado de la tabla con el título y el icono de expandir/contraer en la parte superior derecha */}
@@ -48,7 +48,7 @@ const ProductTable: React.FC<ProductTableProps> = ({
                   <th className="px-4 py-2 text-center">Producto</th>
                   <th className="px-4 py-2 text-center">Precio</th>
                   <th className="px-4 py-2 text-center">Fecha</th>
-                  <th className="px-4 py-2 text-center">Acciones</th>
+                 {title != 'Entregadas' && ( <th className="px-4 py-2 text-center">Acciones</th>)} 
                  
                 </tr>
               </thead>
@@ -73,7 +73,7 @@ const ProductTable: React.FC<ProductTableProps> = ({
                       })}
                     </td>
                    
-                      {(request.status === 'accepted' ) && (
+                      {(request.status === 'accepted'  || request.status == 'En proceso') && (
                          <td className="px-4 py-2 text-center">
                         <button
                           onClick={() => finalizeRequest(request)}
@@ -83,6 +83,21 @@ const ProductTable: React.FC<ProductTableProps> = ({
                         </button>
                         </td>
                       )}
+                    
+                      
+                    {(request.status === 'Completada') && (
+                          <td className="px-4 py-2 text-center">
+                        <button
+                          onClick={() => finalizeRequest(request)}
+                          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-4 rounded"
+                        >
+                          Marcar como entregada
+                        </button>
+                        </td>
+                      )}
+                
+                    
+                  
 
 
                   </tr>
@@ -96,5 +111,5 @@ const ProductTable: React.FC<ProductTableProps> = ({
   );
 };
 
-export default ProductTable;
+export default SoldProdTable;
 

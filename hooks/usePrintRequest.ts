@@ -5,41 +5,65 @@ import { useRouter } from 'next/navigation';
 
 const usePrintRequests = (requestType: 'print-requests' | 'design-requests' ) => {
   const [printRequests, setPrintRequests] = useState<PrintRequest[]>([]);
+  const [printRequestsQuoted, setPrintRequestsQuoted] = useState<PrintRequest[]>([]);
   const [priceInputs, setPriceInputs] = useState<{ [key: number]: string }>({});
   const [expandedTable, setExpandedTable] = useState<string | null>(null); // Manage expanded table
   const router = useRouter();
 
-  // Fetch print requests from the API
   useEffect(() => {
-    const fetchPrintRequests = async () => {
+    const fetchRequests = async () => {
       try {
-        const response = await fetch(`${API_URL}/${requestType}/seller/`, {
-          method: 'GET',
-          headers: {
-            'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
-          },
-        });
-
-        if (response.ok) {
-          const data: PrintRequest[] = await response.json();
-          setPrintRequests(data);
-          
+        // Define the endpoints for both fetches
+        const endQuoted = requestType === 'print-requests' ? 'print-reverse-auction' : 'design-reverse-auctions';
+        
+        // Fetch both print requests and quoted requests in parallel
+        const [printResponse, quotedResponse] = await Promise.all([
+          fetch(`${API_URL}/${requestType}/seller/`, {
+            method: 'GET',
+            headers: {
+              'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
+            },
+          }),
+          fetch(`${API_URL}/${endQuoted}/seller/`, {
+            method: 'GET',
+            headers: {
+              'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
+            },
+          }),
+        ]);
+  
+        // Handle the print requests response
+        if (printResponse.ok) {
+          const printData: PrintRequest[] = await printResponse.json();
+          // Exclude requests with 'quoted' status
+          const filteredPrintData = printData.filter(request => request.status !== 'quoted');
+          setPrintRequests(filteredPrintData);
         } else {
           console.error('Failed to fetch print requests');
         }
+  
+        // Handle the quoted requests response
+        if (quotedResponse.ok) {
+          const quotedData: PrintRequest[] = await quotedResponse.json();
+          setPrintRequestsQuoted(quotedData); // Save quoted requests to state
+        } else {
+          console.error('Failed to fetch quoted requests');
+        }
       } catch (error) {
-        console.error('Error fetching print requests:', error);
+        console.error('Error fetching requests:', error);
       }
     };
-
-    fetchPrintRequests();
+  
+    fetchRequests();
   }, [requestType]);
-
-  // Handle price input change
+  
   const handlePriceChange = (requestID: number, value: string) => {
     setPriceInputs((prev) => ({ ...prev, [requestID]: value }));
   };
 
+  const addToQuotedArray = (request: PrintRequest) => {
+    setPrintRequestsQuoted((prevQuotedRequests) => [...prevQuotedRequests, request]);
+  };
   // Handle Accept Request with price
   const handleAcceptRequest = async (requestID: number) => {
     const price = priceInputs[requestID];
@@ -62,14 +86,26 @@ const usePrintRequests = (requestType: 'print-requests' | 'design-requests' ) =>
       });
 
       if (response.ok) {
-        // Update the status of the request to 'Cotizada'
-        setPrintRequests((prevRequests) =>
-          prevRequests.map((request) =>
-            request.requestID === requestID
-              ? { ...request, status: 'Cotizada', price: Number(price).toString() }
-              : request
-          )
-        );
+ 
+      const updatedRequest = { status: 'Cotizada', price: Number(price).toString() };
+
+      setPrintRequests((prevRequests) =>
+        prevRequests.map((request) =>
+          request.requestID === requestID
+            ? { ...request, ...updatedRequest }
+            : request
+        )
+      );
+
+      // Find the accepted request and add it to the `printRequestsQuoted` array
+      const acceptedRequest = printRequests.find((request) => request.requestID === requestID);
+      if (acceptedRequest) {
+        setPrintRequestsQuoted((prevRequests) => [
+          ...prevRequests, 
+          { ...acceptedRequest, ...updatedRequest } // Add the updated request to the Quoted array
+        ]);
+      }
+
         alert('Request accepted!');
       } else {
         console.error('Failed to accept the request');
@@ -161,9 +197,8 @@ const usePrintRequests = (requestType: 'print-requests' | 'design-requests' ) =>
     }
   };
 
-  // Filter requests into different statuses
   const pendingRequests = printRequests.filter((req: PrintRequest) => req.status === 'Pendiente');
-  const quotedRequests = printRequests.filter((req: PrintRequest) => req.status === 'Cotizada');
+  const quotedRequests = printRequestsQuoted;
   const acceptedRequests = printRequests.filter((req: PrintRequest) => req.status === 'Aceptada');
   const finalizedRequests = printRequests.filter((req: PrintRequest) => req.status === 'Realizada');
   const deliveredRequests = printRequests.filter((req: PrintRequest) => req.status === 'Entregada');
@@ -182,6 +217,7 @@ const usePrintRequests = (requestType: 'print-requests' | 'design-requests' ) =>
     handleDeclineRequest,
     handleFinalizeRequest,
     handleMarkAsDelivered,
+    addToQuotedArray
   };
 };
 

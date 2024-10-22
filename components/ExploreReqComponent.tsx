@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { API_URL } from '@/api/api';
+import { useRouter } from 'next/navigation';
 
 interface ReverseAuctionRequest {
   requestID: number;
@@ -22,6 +23,7 @@ const ExploreReqComponent: React.FC<ExploreReqComponentProps> = ({ type }) => {
   const [priceInputs, setPriceInputs] = useState<{ [key: number]: string }>({}); // Store price inputs
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
+  const router = useRouter();
 
   useEffect(() => {
     // Fetch data from API based on requestType
@@ -99,6 +101,7 @@ const ExploreReqComponent: React.FC<ExploreReqComponentProps> = ({ type }) => {
     } finally {
       setLoading(false);
     }
+    
   };
 
   return (

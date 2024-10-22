@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import ProductTable from '@/components/ProductTable';
-import { ProductRequest } from '@/types/ProductRequests'; // Asegúrate de que este tipo esté correctamente definido
+import { SoldProductRequest } from '@/types/SoldProduct';
 import { API_URL } from '@/api/api';
+import SoldProdTable from './SoldProdTable';
 
 type ProductFromBack = {
   orderid: number;
@@ -9,7 +10,7 @@ type ProductFromBack = {
   orderdate: string; // Cambié a string ya que la API normalmente devuelve una cadena
   quantity: number;
   productcode: number; // Cambié a un objeto con el campo name
-  status: "accepted" | "finalized" | "Completada" | "En proceso";
+  status: "Completada" | "En proceso" | "Entregada";
   preference_id: string;
   user_email: string;
   product_name: string;
@@ -17,7 +18,7 @@ type ProductFromBack = {
 };
 
 const ProductDashboard: React.FC = () => {
-  const [requests, setRequests] = useState<ProductRequest[]>([]);
+  const [requests, setRequests] = useState<SoldProductRequest[]>([]);
   const [expandedTable, setExpandedTable] = useState<string | null>(null);
 
   const getAccessToken = () => {
@@ -40,8 +41,8 @@ const ProductDashboard: React.FC = () => {
       if (response.ok) {
         const data: ProductFromBack[] = await response.json();
 
-        // Mapea los datos a ProductRequest
-        const updatedRequests: ProductRequest[] = data.map((product) => ({
+        // Mapea los datos a SoldProductRequest
+        const updatedRequests: SoldProductRequest[] = data.map((product) => ({
           requestID: product.orderid,
           email: product.user_email, // Asegúrate de que este campo existe
           quantity: product.quantity,
@@ -63,8 +64,8 @@ const ProductDashboard: React.FC = () => {
 
   // Función para cambiar el estado de una solicitud a 'finalized'
  // Función para cambiar el estado de una solicitud a 'finalized'
-const finalizeRequest = async (request: ProductRequest) => {
-  const updatedRequest: ProductRequest = {
+const finalizeRequest = async (request: SoldProductRequest) => {
+  const updatedRequest: SoldProductRequest = {
     ...request,
     status: 'Completada', // Assign 'finalized' status
   };
@@ -105,8 +106,8 @@ const finalizeRequest = async (request: ProductRequest) => {
 
 
 
-const deliveredRequest = async (request: ProductRequest) => {
-  const updatedRequest: ProductRequest = {
+const deliveredRequest = async (request: SoldProductRequest) => {
+  const updatedRequest: SoldProductRequest = {
     ...request,
     status: 'Entregada', // Assign 'finalized' status
   };
@@ -177,7 +178,7 @@ const deliveredRequest = async (request: ProductRequest) => {
 
         {expandedTable === null
           ? tables.map((table) => (
-              <ProductTable
+              <SoldProdTable
                 key={table.key}
                 title={table.title}
                 requests={table.requests}
@@ -189,7 +190,7 @@ const deliveredRequest = async (request: ProductRequest) => {
           : tables
               .filter((table) => table.key === expandedTable)
               .map((table) => (
-                <ProductTable
+                <SoldProdTable
                   key={table.key}
                   title={table.title}
                   requests={table.requests}
