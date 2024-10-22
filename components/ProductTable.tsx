@@ -34,15 +34,6 @@ const ProductTable: React.FC<ProductTableProps> = ({
               className="text-white hover:text-gray-300 focus:outline-none ml-auto flex items-center space-x-2"
               aria-label={isExpanded ? "Contraer tabla" : "Expandir tabla"}
             >
-              {isExpanded ? (
-                <>
-                  <span>Contraer</span>
-                </>
-              ) : (
-                <>
-                  <span>Expandir</span>
-                </>
-              )}
             </button>
           </div>
 
@@ -54,6 +45,8 @@ const ProductTable: React.FC<ProductTableProps> = ({
                   <th className="px-4 py-2 text-center">Correo</th>
                   <th className="px-4 py-2 text-center">Cantidad</th>
                   <th className="px-4 py-2 text-center">Nombre</th>
+                  <th className="px-4 py-2 text-center">Producto</th>
+                  <th className="px-4 py-2 text-center">Precio</th>
                   <th className="px-4 py-2 text-center">Fecha</th>
                   <th className="px-4 py-2 text-center">Acciones</th>
                 </tr>
@@ -65,7 +58,19 @@ const ProductTable: React.FC<ProductTableProps> = ({
                     <td className="px-4 py-2 text-center">{request.email}</td>
                     <td className="px-4 py-2 text-center">{request.quantity}</td>
                     <td className="px-4 py-2 text-center">{request.name}</td>
-                    <td className="px-4 py-2 text-center">{request.date}</td>
+                    <td className="px-4 py-2 text-center">{request.price}</td>
+                    <td className="px-4 py-2 text-center">
+                      <a href={`/products/${request.productCode}`} className="text-blue-500 underline hover:text-blue-700">
+                        Ver producto aquí
+                      </a>
+                    </td>
+                    <td className="px-4 py-2 text-center">
+                      {new Date(request.date).toLocaleDateString('es-ES', {
+                        year: 'numeric',
+                        month: 'long',
+                        day: 'numeric',
+                      })}
+                    </td>
                     <td className="px-4 py-2 text-center">
                       {request.status === 'accepted' && (
                         <button

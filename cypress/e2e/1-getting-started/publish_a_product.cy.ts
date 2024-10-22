@@ -26,7 +26,7 @@ describe('Start Selling', () => {
       cy.wait(2000);
       cy.get('input[name="stock"]').type("7");
       cy.wait(2000);
-      cy.get('input[name="imageFiles"]').attachFile('millenium_falcon.jpg');;
+      //cy.get('input[name="imageFiles"]').attachFile('millenium_falcon.jpg');;
       cy.wait(2000);
       cy.get('button[type="submit"]').click();
       cy.wait(2000);

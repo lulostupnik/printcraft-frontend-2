@@ -189,13 +189,16 @@ import { ProductRequest } from '@/types/ProductRequests'; // Asegúrate de que e
 import { API_URL } from '@/api/api';
 
 type ProductFromBack = {
-  orderID: number;
-  userID: { email: string }; // Asegúrate de que userID tenga un campo email
-  orderDate: string; // Cambié a string ya que la API normalmente devuelve una cadena
+  orderid: number;
+  userid: number; // Asegúrate de que userID tenga un campo email
+  orderdate: string; // Cambié a string ya que la API normalmente devuelve una cadena
   quantity: number;
-  productCode: { name: string }; // Cambié a un objeto con el campo name
+  productcode: number; // Cambié a un objeto con el campo name
   status: string;
   preference_id: string;
+  user_email: string;
+  product_name: string;
+  total_price: number;
 };
 
 const ProductDashboard: React.FC = () => {
@@ -224,12 +227,14 @@ const ProductDashboard: React.FC = () => {
 
         // Mapea los datos a ProductRequest
         const updatedRequests: ProductRequest[] = data.map((product) => ({
-          requestID: product.orderID,
-          email: product.userID.email, // Asegúrate de que este campo existe
+          requestID: product.orderid,
+          email: product.user_email, // Asegúrate de que este campo existe
           quantity: product.quantity,
-          name: product.productCode.name, // Asegúrate de que este campo existe
-          date: new Date(product.orderDate).toISOString(), // Convierte a string
+          name: product.product_name, // Asegúrate de que este campo existe
+          date: new Date(product.orderdate).toISOString(), // Convierte a string
           status: 'accepted', // Valor por defecto
+          productCode: product.productcode,
+          price: product.total_price
         }));
 
         setRequests(updatedRequests);

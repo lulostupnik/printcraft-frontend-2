@@ -1,4 +1,4 @@
-'use client';
+/*'use client';
 import React, { useState } from "react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
@@ -32,7 +32,6 @@ const MisComprasPage: React.FC = () => {
     return (
       <div className="bg-gray-700 p-6 rounded-lg mb-8">
         <h2 className="text-3xl font-bold mb-4">Mis Compras</h2>
-        {/* Add dynamic product list here */}
         <div className="flex flex-col space-y-6">
           <div className="bg-gray-800 p-4 rounded-lg">
             <h3 className="text-xl font-bold mb-2">Producto Ejemplo 1</h3>
@@ -142,7 +141,6 @@ const MisComprasPage: React.FC = () => {
         </aside>
 
         <main className="flex-1 container mx-auto px-4 py-8">
-          {renderSection()} {/* Render section based on loading state */}
         </main>
       </div>
       <Footer />
