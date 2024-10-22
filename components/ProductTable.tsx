@@ -48,7 +48,8 @@ const ProductTable: React.FC<ProductTableProps> = ({
                   <th className="px-4 py-2 text-center">Producto</th>
                   <th className="px-4 py-2 text-center">Precio</th>
                   <th className="px-4 py-2 text-center">Fecha</th>
-                  <th className="px-4 py-2 text-center">Acciones</th>
+                 {title != 'Entregadas' && ( <th className="px-4 py-2 text-center">Acciones</th>)} 
+                 
                 </tr>
               </thead>
 
@@ -71,16 +72,34 @@ const ProductTable: React.FC<ProductTableProps> = ({
                         day: 'numeric',
                       })}
                     </td>
-                    <td className="px-4 py-2 text-center">
-                      {request.status === 'accepted' && (
+                   
+                      {(request.status === 'accepted'  || request.status == 'En proceso') && (
+                         <td className="px-4 py-2 text-center">
                         <button
                           onClick={() => finalizeRequest(request)}
                           className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-4 rounded"
                         >
                           Finalizar
                         </button>
+                        </td>
                       )}
-                    </td>
+                    
+                      
+                    {(request.status === 'Completada') && (
+                          <td className="px-4 py-2 text-center">
+                        <button
+                          onClick={() => finalizeRequest(request)}
+                          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-4 rounded"
+                        >
+                          Marcar como entregada
+                        </button>
+                        </td>
+                      )}
+                
+                    
+                  
+
+
                   </tr>
                 ))}
               </tbody>

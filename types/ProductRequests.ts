@@ -5,6 +5,6 @@ export interface ProductRequest{
     name: string;
     date: string;
     productCode: number;
-    status: 'accepted' | 'finalized';
+    status: 'accepted' | 'finalized' | 'Completada' | 'En proceso' | 'Entregada';
     price: number;
 };

@@ -157,6 +157,7 @@ import Footer from "@/components/Footer";
 import UserPrintReqDashboard from "@/components/userPrintReqDashboard";
 import { useRouter } from "next/navigation"; // Import useRouter
 import { API_URL } from "@/api/api";
+import AuctionRequestComponent from '@/components/UserExploreAnsTable';
 
 const MisComprasPage: React.FC = () => {
   const [selectedSection, setSelectedSection] = useState<
@@ -179,16 +180,7 @@ const MisComprasPage: React.FC = () => {
     total_price: number;
   };
 
-  /*
-  orderid	12
-  productcode	81
-  quantity	1
-  total_price	1
-  status	"En proceso"
-  orderdate	"2024-10-21T22:47:29.812555Z"
-  sellerid	142
-  product_name	"Perro salchicha 3d"
-*/
+
 
   // Función para navegar al perfil del diseñador
   const handleNavigateToDesigner = (sellerID: number) => {
@@ -291,11 +283,19 @@ const MisComprasPage: React.FC = () => {
   };
 
   const renderDesignRequests = () => {
-    return <UserPrintReqDashboard requestType="design-requests" />;
+    return (
+    <div>
+       <UserPrintReqDashboard requestType="design-requests" />
+        <AuctionRequestComponent type="design-requests"></AuctionRequestComponent>
+    </div>
+    );
   };
 
   const renderPrintRequests = () => {
-    return <UserPrintReqDashboard requestType="print-requests" />;
+    <div>
+    <UserPrintReqDashboard requestType="print-requests" />
+     <AuctionRequestComponent type="print-requests"></AuctionRequestComponent>
+ </div>
   };
 
   const renderSection = () => {
