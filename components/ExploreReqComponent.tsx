@@ -163,7 +163,7 @@ const ExploreReqComponent: React.FC<ExploreReqComponentProps> = ({ type }) => {
                           onClick={() => handleSubmitOffer(request.requestID)}
                           disabled={loading}
                         >
-                          {loading ? 'Submitting...' : 'Enviar Oferta'}
+                          {loading ? 'Enviar Oferta'  : 'Enviar Oferta'}
                         </button>
                       </td>
                     </tr>
