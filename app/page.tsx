@@ -7,6 +7,9 @@ import Footer from '@/components/Footer';
 import ProductCard from '@/components/ProductCard';
 import StlViewerComponent from '@/components/RotateStlView';
 import { Product } from '@/types/Product';
+import STLViewer from "@/components/RotatingStlView_crazy";
+
+
 
 export default function HomePage() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -162,9 +165,12 @@ export default function HomePage() {
                 </button>
               </a>
             </div>
+           
             <div className="w-1/2 h-[400px]">
-              <StlViewerComponent url="/Capybara.stl" />
+              <STLViewer url="/Capybara.stl" rotate/>
             </div>
+
+
           </div>
         </section>
 
@@ -182,9 +188,11 @@ export default function HomePage() {
 
         <section className="relative mb-12">
           <div className="flex items-center justify-between bg-gray-800 rounded-lg overflow-hidden pl-8">
+            
             <div className="w-1/2 h-[400px]">
               <StlViewerComponent url="/Printer.stl" />
             </div>
+
             <div className="w-1/2 space-y-4 text-center">
               <h2 className="text-4xl font-bold mb-4">Necesitas algo específico?</h2>
               <h3 className="mb-4">Conectá con vendedores especializados.</h3>
