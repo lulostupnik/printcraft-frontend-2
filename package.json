@@ -11,6 +11,8 @@
   "dependencies": {
     "@heroicons/react": "^2.1.5",
     "@mercadopago/sdk-react": "^0.0.19",
+    "@react-three/drei": "^9.117.3",
+    "@react-three/fiber": "^8.17.10",
     "framer-motion": "^11.4.0",
     "heroicons": "^2.1.5",
     "lucide-react": "^0.438.0",
