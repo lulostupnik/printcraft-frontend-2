@@ -7,6 +7,7 @@ import Footer from '@/components/Footer';
 import ProductCard from '@/components/ProductCard';
 import StlViewerComponent from '@/components/RotateStlView';
 import { Product } from '@/types/Product';
+import STLViewer from "@/components/RotatingStlView_crazy";
 
 export default function HomePage() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -163,7 +164,7 @@ export default function HomePage() {
               </a>
             </div>
             <div className="w-1/2 h-[400px]">
-              <StlViewerComponent url="/Capybara.stl" />
+              <STLViewer url="/Capybara.stl" rotate />
             </div>
           </div>
         </section>

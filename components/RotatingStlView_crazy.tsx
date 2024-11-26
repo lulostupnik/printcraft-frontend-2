@@ -3,11 +3,27 @@ import * as THREE from 'three';
 import { STLLoader } from 'three-stdlib';
 import { OrbitControls } from 'three-stdlib';
 
-type STLViewerProps = {
-  stlUrl: string;
-};
+interface STLViewerProps {
+  url: string;
+  width?: string | number;  // Optional width
+  height?: string | number; // Optional height
+  containerStyle?: React.CSSProperties; // Optional container styles
+  className?: string; // Optional className for additional styling
+  rotate?: boolean; // Optional parameter to determine if STL should rotate (default false)
+  color?: number; // Optional color for the STL model (default grey)
+  backgroundColor?: number | null; // Optional background color for the scene (default transparent)
+}
 
-const STLViewer: React.FC<STLViewerProps> = ({ stlUrl }) => {
+const STLViewer: React.FC<STLViewerProps> = ({
+  url,
+  width = '100%',
+  height = '100%',
+  containerStyle = {},
+  className,
+  rotate = false,
+  color = 0x808080, // Default to grey
+  backgroundColor = null,
+}) => {
   const mountRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -16,13 +32,13 @@ const STLViewer: React.FC<STLViewerProps> = ({ stlUrl }) => {
 
     // Scene, Camera, and Renderer
     const scene = new THREE.Scene();
-    scene.background = new THREE.Color(0xf0f0f0);
+    scene.background = backgroundColor !== null ? new THREE.Color(backgroundColor) : null;
 
     const camera = new THREE.PerspectiveCamera(75, mount.clientWidth / mount.clientHeight, 0.1, 1000);
-    camera.position.set(0, 0, 60);
+    camera.position.set(0, 10, 100);
 
-    const renderer = new THREE.WebGLRenderer({ antialias: true });
-    renderer.setSize(mount.clientWidth * 0.9, mount.clientHeight * 0.9, false);
+    const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+    renderer.setSize(mount.clientWidth, mount.clientHeight, false);
     mount.appendChild(renderer.domElement);
 
     // Lights
@@ -44,20 +60,27 @@ const STLViewer: React.FC<STLViewerProps> = ({ stlUrl }) => {
     const loader = new STLLoader();
     let mesh: THREE.Mesh;
 
-    loader.load(stlUrl, (geometry) => {
-      const material = new THREE.MeshStandardMaterial({ color: 0x0055ff });
-      mesh = new THREE.Mesh(geometry, material);
-      mesh.rotation.x = -Math.PI / 2; // Rotate 90 degrees up
-      mesh.position.y = -15; // Position STL at the bottom of the container
-      mesh.scale.set(0.4, 0.4, 0.4); // Scale down the model to prevent overflow
-      scene.add(mesh);
-    });
 
+    loader.load(
+      url,
+      (geometry) => {
+        const material = new THREE.MeshStandardMaterial({ color });
+        mesh = new THREE.Mesh(geometry, material);
+        mesh.rotation.x = -Math.PI / 2;
+        mesh.position.y = -20;
+        mesh.scale.set(0.7, 0.7, 0.7);
+        scene.add(mesh);
+      },
+      undefined,
+      (error) => {
+        console.error('Error loading STL file:', error);
+      }
+    );
     // Animation Loop
     const animate = () => {
       requestAnimationFrame(animate);
-      if (mesh) {
-        mesh.rotation.z += 0.01; // Automatic rotation from left to right
+      if (mesh && rotate) {
+        mesh.rotation.z += 0.01; // Automatic rotation from left to right if rotate is true
       }
       controls.update();
       renderer.render(scene, camera);
@@ -67,6 +90,7 @@ const STLViewer: React.FC<STLViewerProps> = ({ stlUrl }) => {
     // Handle Resize
     const handleResize = () => {
       camera.aspect = mount.clientWidth / mount.clientHeight;
+camera.updateProjectionMatrix();
       camera.updateProjectionMatrix();
       renderer.setSize(mount.clientWidth, mount.clientHeight);
     };
@@ -78,9 +102,15 @@ const STLViewer: React.FC<STLViewerProps> = ({ stlUrl }) => {
       window.removeEventListener('resize', handleResize);
       scene.clear();
     };
-  }, [stlUrl]);
+  }, [url, rotate]);
 
-  return <div ref={mountRef} style={{ width: '100%', height: '100%', overflow: 'hidden' }} />;
+  return (
+    <div
+      ref={mountRef}
+      style={{ width, height, display: 'flex', justifyContent: 'center', alignItems: 'flex-end', overflow: 'hidden', ...containerStyle }}
+      className={className}
+    />
+  );
 };
 
 export default STLViewer;
