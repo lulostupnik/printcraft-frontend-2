@@ -1,10 +1,13 @@
+
+
 'use client';
 import { API_URL } from "@/api/api";
 import React, { useEffect, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
-import StlViewerComponent from "@/components/RotateStlView";
+import STLViewer from '@/components/RotatingStlView'
+
 import { Product } from '@/types/Product';
 
 interface ProductDetail {
@@ -162,7 +165,8 @@ const ProductDetailPage = () => {
               <div className={`mb-4 ${product.images.length === 0 ? 'flex justify-center' : ''}`}>
                 <h3 className="text-lg font-bold mb-2">3D Model:</h3>
                 <div className="w-full h-96 bg-gray-700 rounded">
-                  <StlViewerComponent url={product.stl_file_url} />
+                  <STLViewer url={product.stl_file_url}
+                  rotate/>
                 </div>
               </div>
             )}

@@ -5,9 +5,9 @@ import { useRouter } from 'next/navigation';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import ProductCard from '@/components/ProductCard';
-import StlViewerComponent from '@/components/RotateStlView';
+import StlViewerComponent from '@/components/RotateStlView_old';
 import { Product } from '@/types/Product';
-import STLViewer from "@/components/RotatingStlView_crazy";
+import STLViewer from "@/components/RotatingStlView";
 
 export default function HomePage() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -184,7 +184,11 @@ export default function HomePage() {
         <section className="relative mb-12">
           <div className="flex items-center justify-between bg-gray-800 rounded-lg overflow-hidden pl-8">
             <div className="w-1/2 h-[400px]">
-              <StlViewerComponent url="/Printer.stl" />
+              <STLViewer url="/Printer2.stl" 
+              rotate
+              initialZoomOut={1.2}
+              maxZoomOutFactor={0.9}
+              />
             </div>
             <div className="w-1/2 space-y-4 text-center">
               <h2 className="text-4xl font-bold mb-4">Necesitas algo específico?</h2>
