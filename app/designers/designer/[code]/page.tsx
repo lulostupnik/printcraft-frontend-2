@@ -78,7 +78,7 @@ const SellerProfilePage = () => {
   if (loading) {
     return(
         <div className="flex flex-col min-h-screen bg-gray-900 text-white">
-        <Header />
+        <Header showCart={true}/>
         <main className="flex-grow container mx-auto px-4 py-8 flex flex-col lg:flex-row gap-8 pb-24"></main>
         <Footer/>
     </div>);
@@ -90,7 +90,7 @@ const SellerProfilePage = () => {
 
   return (
     <div className="flex flex-col min-h-screen bg-gray-900 text-white">
-      <Header />
+      <Header showCart={true}/>
 
       <main className="flex-grow container mx-auto px-4 py-8 flex flex-col lg:flex-row gap-8 pb-24">
         {/* Seller Profile Section */}

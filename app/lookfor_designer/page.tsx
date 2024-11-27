@@ -61,7 +61,7 @@ export default function DesignerPage() {
 
   return (
     <div className="flex flex-col min-h-screen bg-gray-900 text-white">
-      <Header />
+      <Header showCart={true}/>
       <main className="flex-1 container mx-auto px-4 py-8">
 
         {/* Nueva Sección para realizar un request */}
