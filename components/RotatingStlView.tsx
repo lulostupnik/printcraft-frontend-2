@@ -12,7 +12,9 @@ interface STLViewerProps {
   rotate?: boolean; // Optional parameter to determine if STL should rotate (default false)
   color?: number; // Optional color for the STL model (default grey)
   backgroundColor?: number | null; // Optional background color for the scene (default transparent)
-  initialZoomOut?: number; // New optional prop for initial zoom (default 1)
+  initialZoomOut?: number; // Optional prop for initial zoom (default 1)
+  minZoomOutFactor?: number; // Optional, default 0.5
+  maxZoomOutFactor?: number; // Optional, default 2.5
 }
 
 const STLViewer: React.FC<STLViewerProps> = ({
@@ -25,6 +27,8 @@ const STLViewer: React.FC<STLViewerProps> = ({
   color = 0x808080, // Default to grey
   backgroundColor = null,
   initialZoomOut = 1, // Default zoom multiplier
+  minZoomOutFactor = 0.5, // Default minimum zoom factor
+  maxZoomOutFactor = 2.5, // Default maximum zoom factor
 }) => {
   const mountRef = useRef<HTMLDivElement>(null);
 
@@ -92,7 +96,7 @@ const STLViewer: React.FC<STLViewerProps> = ({
         const maxDim = Math.max(size.x, size.y, size.z);
 
         // Adjust the camera position to fit the model
-        const fov = camera.fov * (Math.PI / 180);
+        const fov = camera.fov * (Math.PI / 180); // Convert vertical fov to radians
         let cameraZ = maxDim / (2 * Math.tan(fov / 2));
         cameraZ *= 1.5 * initialZoomOut; // Add some distance (50% extra), adjusted by initialZoomOut
         camera.position.set(0, 0, cameraZ);
@@ -102,6 +106,11 @@ const STLViewer: React.FC<STLViewerProps> = ({
 
         // Set controls target to the center of the scene
         controls.target.set(0, 0, 0);
+
+        // Set min and max distance for zooming using the provided zoom factors
+        controls.minDistance = cameraZ * minZoomOutFactor;
+        controls.maxDistance = cameraZ * maxZoomOutFactor;
+
         controls.update();
       },
       undefined,
@@ -134,11 +143,21 @@ const STLViewer: React.FC<STLViewerProps> = ({
 
     // Cleanup
     return () => {
-      mount.removeChild(renderer.domElement);
+      if (renderer.domElement && mount.contains(renderer.domElement)) {
+        mount.removeChild(renderer.domElement);
+      }
       window.removeEventListener('resize', handleResize);
       scene.clear();
     };
-  }, [url, rotate, color, backgroundColor, initialZoomOut]);
+  }, [
+    url,
+    rotate,
+    color,
+    backgroundColor,
+    initialZoomOut,
+    minZoomOutFactor,
+    maxZoomOutFactor,
+  ]);
 
   return (
     <div

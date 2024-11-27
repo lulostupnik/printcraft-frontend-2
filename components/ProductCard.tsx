@@ -4,10 +4,10 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/css';
 import 'swiper/css/autoplay';
 import { Autoplay } from 'swiper/modules';
-import StlViewerComponent from '@/components/RotateStlView'; // Ensure correct path
+import StlViewerComponent from '@/components/RotateStlView_old'; // Ensure correct path
 import { useState } from 'react';
 import Image from 'next/image';
-import STLViewer from '@/components/RotatingStlView_crazy'; // Ensure correct path
+import STLViewer from '@/components/RotatingStlView'; // Ensure correct path
 
 
 interface ProductCardProps {
