@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import { Product } from '@/types/Product';
-import StlViewerComponent from '@/components/RotateStlView';
+import STLViewer from '@/components/RotatingStlView'
 
 interface CartProduct extends Product {
   quantity: number;
@@ -88,11 +88,12 @@ const CartPage = () => {
                 <div className="w-40 flex flex-col gap-2">
                   <div className="h-40 mr-3">
                     {product.stl_file_url && viewStl[index] ? (
-                      <StlViewerComponent
+                      <STLViewer
                         url={product.stl_file_url}
                         width="100%"
                         height="100%"
                         containerStyle={{ width: '100%', height: '100%' }}
+                        rotate={true}
                       />
                     ) : product.images_url && product.images_url.length > 0 ? (
                       <img 
