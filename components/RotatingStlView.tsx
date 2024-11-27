@@ -1,20 +1,20 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import * as THREE from 'three';
 import { STLLoader } from 'three-stdlib';
 import { OrbitControls } from 'three-stdlib';
 
 interface STLViewerProps {
   url: string;
-  width?: string | number;  // Optional width
-  height?: string | number; // Optional height
-  containerStyle?: React.CSSProperties; // Optional container styles
-  className?: string; // Optional className for additional styling
-  rotate?: boolean; // Optional parameter to determine if STL should rotate (default false)
-  color?: number; // Optional color for the STL model (default grey)
-  backgroundColor?: number | null; // Optional background color for the scene (default transparent)
-  initialZoomOut?: number; // Optional prop for initial zoom (default 1)
-  minZoomOutFactor?: number; // Optional, default 0.5
-  maxZoomOutFactor?: number; // Optional, default 2.5
+  width?: string | number;
+  height?: string | number;
+  containerStyle?: React.CSSProperties;
+  className?: string;
+  rotate?: boolean;
+  color?: number;
+  backgroundColor?: number | null;
+  initialZoomOut?: number;
+  minZoomOutFactor?: number;
+  maxZoomOutFactor?: number;
 }
 
 const STLViewer: React.FC<STLViewerProps> = ({
@@ -24,13 +24,14 @@ const STLViewer: React.FC<STLViewerProps> = ({
   containerStyle = {},
   className,
   rotate = false,
-  color = 0x808080, // Default to grey
-  backgroundColor = null,
-  initialZoomOut = 1, // Default zoom multiplier
-  minZoomOutFactor = 0.5, // Default minimum zoom factor
-  maxZoomOutFactor = 2.5, // Default maximum zoom factor
+  color = 0x808080,
+  backgroundColor = null, // Set to null for transparent background
+  initialZoomOut = 1,
+  minZoomOutFactor = 0.5,
+  maxZoomOutFactor = 2.5,
 }) => {
   const mountRef = useRef<HTMLDivElement>(null);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const mount = mountRef.current;
@@ -112,10 +113,13 @@ const STLViewer: React.FC<STLViewerProps> = ({
         controls.maxDistance = cameraZ * maxZoomOutFactor;
 
         controls.update();
+
+        setIsLoading(false); // STL is loaded, update loading state
       },
       undefined,
       (error) => {
         console.error('Error loading STL file:', error);
+        setIsLoading(false); // Update loading state even if there is an error
       }
     );
 
@@ -161,16 +165,60 @@ const STLViewer: React.FC<STLViewerProps> = ({
 
   return (
     <div
-      ref={mountRef}
       style={{
+        position: 'relative',
         width,
         height,
-        overflow: 'hidden',
-        position: 'relative',
         ...containerStyle,
       }}
       className={className}
-    />
+    >
+      <div
+        ref={mountRef}
+        style={{
+          width: '100%',
+          height: '100%',
+          overflow: 'hidden',
+        }}
+      />
+      {isLoading && (
+        <div
+          style={{
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            width: '100%',
+            height: '100%',
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            backgroundColor: 'transparent', // Set to transparent
+            zIndex: 1,
+          }}
+        >
+          {/* Simple loading spinner */}
+          <div
+            style={{
+              border: '8px solid rgba(255, 255, 255, 0.2)',
+              borderRadius: '50%',
+              borderTop: '8px solid #3498db',
+              width: '60px',
+              height: '60px',
+              animation: 'spin 2s linear infinite',
+            }}
+          />
+          {/* Keyframes for spinner animation */}
+          <style>
+            {`
+              @keyframes spin {
+                0% { transform: rotate(0deg); }
+                100% { transform: rotate(360deg); }
+              }
+            `}
+          </style>
+        </div>
+      )}
+    </div>
   );
 };
 
