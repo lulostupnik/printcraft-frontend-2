@@ -22,6 +22,10 @@ const nextConfig = {
         pathname: '/**',
       },
     ],
+    domains: [
+      '794e1880-5860-4a69-9aab-68875eb23608-dev.e1-us-cdp-2.choreoapis.dev',
+      'vvvlpyyvmavjdmfrkqvw.supabase.co'
+    ]
   },
 };
 

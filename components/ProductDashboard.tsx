@@ -39,7 +39,7 @@ const ProductDashboard: React.FC = () => {
       });
 
       if (response.ok) {
-        const data: ProductFromBack[] = await response.json();
+        const data: ProductFromBack[] = (await response.json()).results;
 
         // Mapea los datos a SoldProductRequest
         const updatedRequests: SoldProductRequest[] = data.map((product) => ({
