@@ -184,7 +184,9 @@ export default function HomePage() {
         <section className="relative mb-12">
           <div className="flex items-center justify-between bg-gray-800 rounded-lg overflow-hidden pl-8">
             <div className="w-1/2 h-[400px]">
-              <StlViewerComponent url="/Printer.stl" />
+              <STLViewer url="/Printer2.stl" 
+              rotate
+              initialZoomOut={1.3}/>
             </div>
             <div className="w-1/2 space-y-4 text-center">
               <h2 className="text-4xl font-bold mb-4">Necesitas algo específico?</h2>

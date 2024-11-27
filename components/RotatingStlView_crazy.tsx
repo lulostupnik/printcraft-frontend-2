@@ -12,6 +12,7 @@ interface STLViewerProps {
   rotate?: boolean; // Optional parameter to determine if STL should rotate (default false)
   color?: number; // Optional color for the STL model (default grey)
   backgroundColor?: number | null; // Optional background color for the scene (default transparent)
+  initialZoomOut?: number; // New optional prop for initial zoom (default 1)
 }
 
 const STLViewer: React.FC<STLViewerProps> = ({
@@ -23,6 +24,7 @@ const STLViewer: React.FC<STLViewerProps> = ({
   rotate = false,
   color = 0x808080, // Default to grey
   backgroundColor = null,
+  initialZoomOut = 1, // Default zoom multiplier
 }) => {
   const mountRef = useRef<HTMLDivElement>(null);
 
@@ -34,12 +36,20 @@ const STLViewer: React.FC<STLViewerProps> = ({
     const scene = new THREE.Scene();
     scene.background = backgroundColor !== null ? new THREE.Color(backgroundColor) : null;
 
-    const camera = new THREE.PerspectiveCamera(75, mount.clientWidth / mount.clientHeight, 0.1, 1000);
-    camera.position.set(0, 10, 100);
+    const camera = new THREE.PerspectiveCamera(
+      75,
+      mount.clientWidth / mount.clientHeight,
+      0.1,
+      1000
+    );
 
     const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
-    renderer.setSize(mount.clientWidth, mount.clientHeight, false);
+    renderer.setSize(mount.clientWidth, mount.clientHeight);
     mount.appendChild(renderer.domElement);
+
+    // Ensure the renderer's canvas fills the parent div
+    renderer.domElement.style.width = '100%';
+    renderer.domElement.style.height = '100%';
 
     // Lights
     const light1 = new THREE.DirectionalLight(0xffffff, 1);
@@ -60,22 +70,46 @@ const STLViewer: React.FC<STLViewerProps> = ({
     const loader = new STLLoader();
     let mesh: THREE.Mesh;
 
-
     loader.load(
       url,
       (geometry) => {
         const material = new THREE.MeshStandardMaterial({ color });
+
+        // Center the geometry
+        geometry.center();
+
+        // Create the mesh
         mesh = new THREE.Mesh(geometry, material);
+        // Adjust rotation if needed
         mesh.rotation.x = -Math.PI / 2;
-        mesh.position.y = -20;
-        mesh.scale.set(0.7, 0.7, 0.7);
         scene.add(mesh);
+
+        // Compute the bounding box to get the size
+        geometry.computeBoundingBox();
+        const bbox = geometry.boundingBox;
+        const size = new THREE.Vector3();
+        bbox?.getSize(size);
+        const maxDim = Math.max(size.x, size.y, size.z);
+
+        // Adjust the camera position to fit the model
+        const fov = camera.fov * (Math.PI / 180);
+        let cameraZ = maxDim / (2 * Math.tan(fov / 2));
+        cameraZ *= 1.5 * initialZoomOut; // Add some distance (50% extra), adjusted by initialZoomOut
+        camera.position.set(0, 0, cameraZ);
+
+        // Ensure the camera looks at the center of the scene
+        camera.lookAt(0, 0, 0);
+
+        // Set controls target to the center of the scene
+        controls.target.set(0, 0, 0);
+        controls.update();
       },
       undefined,
       (error) => {
         console.error('Error loading STL file:', error);
       }
     );
+
     // Animation Loop
     const animate = () => {
       requestAnimationFrame(animate);
@@ -89,10 +123,12 @@ const STLViewer: React.FC<STLViewerProps> = ({
 
     // Handle Resize
     const handleResize = () => {
-      camera.aspect = mount.clientWidth / mount.clientHeight;
-camera.updateProjectionMatrix();
+      if (!mount) return;
+      const width = mount.clientWidth;
+      const height = mount.clientHeight;
+      camera.aspect = width / height;
       camera.updateProjectionMatrix();
-      renderer.setSize(mount.clientWidth, mount.clientHeight);
+      renderer.setSize(width, height);
     };
     window.addEventListener('resize', handleResize);
 
@@ -102,12 +138,18 @@ camera.updateProjectionMatrix();
       window.removeEventListener('resize', handleResize);
       scene.clear();
     };
-  }, [url, rotate]);
+  }, [url, rotate, color, backgroundColor, initialZoomOut]);
 
   return (
     <div
       ref={mountRef}
-      style={{ width, height, display: 'flex', justifyContent: 'center', alignItems: 'flex-end', overflow: 'hidden', ...containerStyle }}
+      style={{
+        width,
+        height,
+        overflow: 'hidden',
+        position: 'relative',
+        ...containerStyle,
+      }}
       className={className}
     />
   );
