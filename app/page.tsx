@@ -36,7 +36,7 @@ export default function HomePage() {
       try {
         const response = await fetch(`${API_URL}/products/`);
         if (response.ok) {
-          const data = await response.json();
+          const data = (await response.json()).results;
 
           // Transform data to match Product interface if needed
           const transformedProducts: Product[] = data.map((item: any) => ({

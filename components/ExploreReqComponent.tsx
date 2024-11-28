@@ -35,7 +35,7 @@ const ExploreReqComponent: React.FC<ExploreReqComponentProps> = ({ type }) => {
             : `${API_URL}/design-reverse-auctions/open/`; // Design requests endpoint
 
         const response = await fetch(endpoint);
-        const data = await response.json();
+        const data = (await response.json()).results;
         setRequests(data);
       } catch (error) {
         console.error('Error fetching reverse auction requests:', error);

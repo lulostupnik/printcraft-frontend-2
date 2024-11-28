@@ -17,7 +17,7 @@ const PublishedProducts: React.FC = () => {
       if (!response.ok) {
         throw new Error('Failed to fetch seller products');
       }
-      const data = await response.json();
+      const data = (await response.json()).results;
       // Transform data to match the Product interface
       const transformedProducts: Product[] = data.map((item: any) => ({
         code: item.code.toString(),
