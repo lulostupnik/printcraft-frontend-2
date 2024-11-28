@@ -66,11 +66,6 @@ export default function Footer({ className = '' }: FooterProps) {
           </ul>
         </div>
         <div>
-          <ul>
-            <li className="mb-2">FAQ</li>
-            <li className="mb-2">Terminos y Condiciones</li>
-            <li className="mb-2">Politica de Privacidad</li>
-          </ul>
         </div>
         <div>
           <h3 className="text-lg font-semibold mb-4 text-right">&copy; 2023 Printcraft.<br/> All rights reserved.</h3>
