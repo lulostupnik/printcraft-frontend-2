@@ -64,65 +64,26 @@ const ProductForm: React.FC<ProductFormProps> = ({ onProductPublished }) => {
     setIsLoading(true);
 
     try {
-      const accessToken = localStorage.getItem('accessToken');
-      if (!accessToken) {
-        alert("No hay sesión activa. Por favor, inicie sesión nuevamente.");
-        // Opcionalmente, redirigir al usuario a la página de inicio de sesión
-        window.location.href = '/login';
-        return;
-      }
-
-      // Validar el token antes de continuar
-      try {
-        const validateResponse = await fetch(`${API_URL}/auth/validate-token/`, {
-          method: 'GET',
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
-        });
-
-        if (!validateResponse.ok) {
-          // Si el token no es válido, limpiar el almacenamiento y redirigir
-          localStorage.removeItem('accessToken');
-          alert("Su sesión ha expirado. Por favor, inicie sesión nuevamente.");
-          window.location.href = '/login';
-          return;
-        }
-      } catch (error) {
-        console.error('Error al validar el token:', error);
-        alert("Error de conexión al validar la sesión.");
-        return;
-      }
-
       const formData = new FormData();
       formData.append('name', productData.name);
       formData.append('description', productData.description);
       formData.append('price', productData.price);
       formData.append('material', productData.material);
       formData.append('stock', productData.stock);
-      
-      //formData.append('materials', productData.material); //@TODO fix create
-
-      //formData.append('materials', JSON.stringify([productData.material]));
-
-      
 
       if (productData.stlFile) {
-        formData.append('stl_file', productData.stlFile); // Append the STL file
-      } else {
-        //formData.append('stl_file', 'null');
+        formData.append('stl_file', productData.stlFile);
       }
 
       productData.imageFiles.forEach((file) => {
-        formData.append('image_files', file); // Append each image file
-        
-    });
+        formData.append('image_files', file);
+      });
 
       // Send the formData to create the product
       const response = await fetch(`${API_URL}/products/create/`, {
         method: 'POST',
         headers: {
-          Authorization: `Bearer ${accessToken}`,
+          Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
         },
         body: formData,
       });

@@ -39,16 +39,16 @@ const ProductDashboard: React.FC = () => {
       });
 
       if (response.ok) {
-        const data: ProductFromBack[] = (await response.json()).results;
+        const data: ProductFromBack[] = (await response.json());
 
         // Mapea los datos a SoldProductRequest
         const updatedRequests: SoldProductRequest[] = data.map((product) => ({
           requestID: product.orderid,
-          email: product.user_email, // Asegúrate de que este campo existe
+          email: product.user_email,
           quantity: product.quantity,
-          name: product.product_name, // Asegúrate de que este campo existe
-          date: new Date(product.orderdate).toISOString(), // Convierte a string
-          status: product.status, // Valor por defecto
+          name: product.product_name,
+          date: new Date(product.orderdate).toISOString(),
+          status: product.status,
           productCode: product.productcode,
           price: product.total_price
         }));
@@ -184,7 +184,7 @@ const deliveredRequest = async (request: SoldProductRequest) => {
                 requests={table.requests}
                 isExpanded={false}
                 onExpand={() => setExpandedTable(table.key)}
-                finalizeRequest={table.key === 'proc' ? finalizeRequest : deliveredRequest} // Pasa la función finalizeRequest al componente
+                finalizeRequest={table.key === 'proc' ? finalizeRequest : deliveredRequest}
               />
             ))
           : tables
@@ -196,7 +196,7 @@ const deliveredRequest = async (request: SoldProductRequest) => {
                   requests={table.requests}
                   isExpanded={true}
                   onExpand={() => setExpandedTable(null)}
-                  finalizeRequest={table.key === 'proc' ? finalizeRequest : deliveredRequest} // Pasa la función finalizeRequest al componente
+                  finalizeRequest={table.key === 'proc' ? finalizeRequest : deliveredRequest}
                 />
               ))}
       </section>
