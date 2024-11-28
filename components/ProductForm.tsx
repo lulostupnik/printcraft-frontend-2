@@ -79,7 +79,6 @@ const ProductForm: React.FC<ProductFormProps> = ({ onProductPublished }) => {
         formData.append('image_files', file);
       });
 
-      // Send the formData to create the product
       const response = await fetch(`${API_URL}/products/create/`, {
         method: 'POST',
         headers: {
@@ -88,16 +87,14 @@ const ProductForm: React.FC<ProductFormProps> = ({ onProductPublished }) => {
         body: formData,
       });
 
-      if (response.ok) {
-        const result = await response.json();
-        alert("Producto publicado con éxito!");
+      const result = await response.json();
 
-        // Call optional callback with the published product data
+      if (response.ok) {
+        alert("Producto publicado con éxito!");
         if (onProductPublished) {
           onProductPublished(result);
         }
 
-        // Reset form
         setProductData({
           name: '',
           description: '',
