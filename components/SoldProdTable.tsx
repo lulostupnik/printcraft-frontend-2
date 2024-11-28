@@ -24,7 +24,14 @@ const SoldProdTable: React.FC<SoldProdTableProps> = ({
   const [tooltipPosition, setTooltipPosition] = useState({ x: 0, y: 0 });
   const timeoutRef = useRef<NodeJS.Timeout>();
 
-  const handleMouseEnter = async (event: React.MouseEvent<HTMLAnchorElement>, productCode: number) => {
+  const handleMouseEnter = async (event: React.MouseEvent, productCode: number) => {
+    // Capturar las coordenadas inmediatamente cuando ocurre el evento
+    const rect = event.currentTarget.getBoundingClientRect();
+    const position = {
+      x: rect.left - 410,
+      y: rect.top
+    };
+
     if (timeoutRef.current) {
       clearTimeout(timeoutRef.current);
     }
@@ -45,12 +52,9 @@ const SoldProdTable: React.FC<SoldProdTableProps> = ({
           images_url: data.images?.map((img: any) => img.image_url) || []
         };
 
-        const rect = event.currentTarget.getBoundingClientRect();
-        setTooltipPosition({
-          x: rect.left - 410,
-          y: rect.top
-        });
         setTooltipProduct(product);
+        
+        setTooltipPosition(position);
       }
     } catch (error) {
       console.error('Error fetching product:', error);
@@ -120,14 +124,13 @@ const SoldProdTable: React.FC<SoldProdTableProps> = ({
                     <td className="px-4 py-2 text-center">{request.quantity}</td>
                     <td className="px-4 py-2 text-center">{request.name}</td>
                     <td className="px-4 py-2 text-center">
-                      <a 
-                        href={`/products/${request.productCode}`}
-                        className="text-blue-500 underline hover:text-blue-700"
+                      <div 
+                        className="text-blue-500 underline hover:text-blue-700 cursor-pointer"
                         onMouseEnter={(e) => handleMouseEnter(e, request.productCode)}
                         onMouseLeave={handleMouseLeave}
                       >
                         Ver producto aquí
-                      </a>
+                      </div>
                     </td>
                     <td className="px-4 py-2 text-center">{request.price} €</td>
                     <td className="px-4 py-2 text-center">
@@ -176,7 +179,7 @@ const SoldProdTable: React.FC<SoldProdTableProps> = ({
       {/* Tooltip modificado */}
       {tooltipProduct && (
         <div 
-          className="fixed z-[9999] shadow-xl" // Aumentado z-index y sombra
+          className="fixed z-50"
           style={{
             left: `${tooltipPosition.x}px`,
             top: `${tooltipPosition.y}px`,
