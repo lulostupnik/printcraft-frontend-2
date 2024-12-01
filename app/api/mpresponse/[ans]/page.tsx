@@ -2,6 +2,8 @@
 
 import React, { useEffect, useState } from 'react';
 import { useSearchParams } from 'next/navigation';
+import Header from '@/components/Header';
+import Footer from '@/components/Footer';
 
 export default function MPResponsePage() {
   const searchParams = useSearchParams(); // Access query parameters
@@ -15,7 +17,11 @@ export default function MPResponsePage() {
   }, []);
 
   return (
+    <div className="min-h-screen flex flex-col bg-gray-900 text-white">
+      <Header showCart={false} />
+
     <div className="min-h-screen flex flex-col items-center justify-center bg-gray-900 text-white">
+
       <h1 className="text-3xl font-bold mb-6">Payment Response</h1>
       
       {/* Display status message */}
@@ -46,7 +52,11 @@ export default function MPResponsePage() {
           ))}
         </ul>
       </div>
+      </div>
+      <Footer />
+
     </div>
+    
   );
 }
 
