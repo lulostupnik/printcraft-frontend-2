@@ -22,7 +22,7 @@ export default function PaymentPage() {
     } else if (urlPreferenceId) {
       setPreferenceId(urlPreferenceId); // Use the extracted string value
     } else {
-      console.error('Preference ID not found in the URL');
+      console.c('Preference ID not found in the URL');
     }
   }, [urlPreferenceId]);
 
