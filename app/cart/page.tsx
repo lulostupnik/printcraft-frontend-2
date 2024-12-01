@@ -337,8 +337,9 @@ const CartPage = () => {
       );
       setCartItems(remainingItems);
       localStorage.setItem('cart', JSON.stringify(remainingItems));
-
-      alert('Orden creada exitosamente');
+      
+      const data = await response.json();
+      router.push(`/mp_pref/${data.preference_id}`);
     } catch (error) {
       console.error(error);
       alert('Hubo un problema al procesar tu orden.');
