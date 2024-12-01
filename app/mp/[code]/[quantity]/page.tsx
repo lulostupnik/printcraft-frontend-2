@@ -38,18 +38,21 @@ export default function PaymentPage() {
       const fetchPreferenceId = async () => {
         try {
           const accessToken = localStorage.getItem('accessToken');
-
-          const response = await fetch(`${API_URL}/payment/`, {
+         
+          const order_products = [
+            {
+              product: String(code), // Convert 'code' to string
+              quantity: String(quantity), // Convert 'quantity' to string
+            },
+          ];
+  
+          const response = await fetch(`${API_URL}/orders/create/`, {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
-              'Authorization': `Bearer ${accessToken}`, // Send the access token in the Authorization header
+              Authorization: `Bearer ${accessToken}`, // Include the token in Authorization header
             },
-            body: JSON.stringify({
-              product_id: code, // Use the code from the URL params as a string
-              quantity: quantity, // Use the quantity from the URL params as a string
-           
-            }),
+            body: JSON.stringify({ order_products }), // Send the products array
           });
 
           if (!response.ok) {
