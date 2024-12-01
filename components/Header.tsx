@@ -43,7 +43,8 @@ export default function Header({ showCart = false }: HeaderProps) {
     localStorage.removeItem('lastName');
     localStorage.removeItem('email');
     localStorage.removeItem('profilePicture');
-    
+    localStorage.removeItem('isSeller');
+
     window.location.href = '/';
   };
 

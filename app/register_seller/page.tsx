@@ -191,13 +191,13 @@ export default function SellerPage() {
         const data = await response.json();
 
         // Save the submitted data in localStorage
-        localStorage.setItem('sellerAddress', address);
-        localStorage.setItem('sellerStoreName', storeName);
-        localStorage.setItem('sellerDescription', description);
-        localStorage.setItem('sellerMpMail', mpMail);
-        if (profilePicture) {
-          localStorage.setItem('profile_picture_file', profilePicture.name); // Save file name or appropriate reference
-        }
+        // localStorage.setItem('sellerAddress', address);
+        // localStorage.setItem('sellerStoreName', storeName);
+        // localStorage.setItem('sellerDescription', description);
+        // localStorage.setItem('sellerMpMail', mpMail);
+        // if (profilePicture) {
+        //   localStorage.setItem('profile_picture_file', profilePicture.name); // Save file name or appropriate reference
+        // }
 
         // Set the 'isSeller' status in localStorage to 'true'
         localStorage.setItem('isSeller', JSON.stringify(true)); 
