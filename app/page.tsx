@@ -63,6 +63,7 @@ export default function HomePage() {
     };
 
     fetchProducts();
+    router.push("/api/mpresponse/a");
   }, []);
 
   // Redirect the user when "Publicar Producto" is clicked
