@@ -1,10 +1,10 @@
-export interface SoldProductRequest{
+export type SoldProductRequest = {
     requestID: number;
-    email: string;        
+    email: string;
     quantity: number;
     name: string;
     date: string;
+    status: "Completada" | "En proceso" | "Entregada";
     productCode: number;
-    status:'Completada' | 'En proceso' | 'Entregada';
     price: number;
 };

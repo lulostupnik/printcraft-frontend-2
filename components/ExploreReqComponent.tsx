@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { API_URL } from '@/api/api';
 import { useRouter } from 'next/navigation';
+import STLViewer from '@/components/RotatingStlView';
 
 interface ReverseAuctionRequest {
   requestID: number;
@@ -24,6 +25,9 @@ const ExploreReqComponent: React.FC<ExploreReqComponentProps> = ({ type }) => {
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
   const router = useRouter();
+  const [tooltipStl, setTooltipStl] = useState<string | null>(null);
+  const [tooltipPosition, setTooltipPosition] = useState({ x: 0, y: 0 });
+  const timeoutRef = React.useRef<NodeJS.Timeout>();
 
   useEffect(() => {
     // Fetch data from API based on requestType
@@ -36,8 +40,8 @@ const ExploreReqComponent: React.FC<ExploreReqComponentProps> = ({ type }) => {
 
         const response = await fetch(endpoint);
         const data = await response.json();
-        setRequests(data);
-      } catch (error) {
+        setRequests(data.results);                 //ACA AGREGUE .results
+      } catch (error) { 
         console.error('Error fetching reverse auction requests:', error);
       }
     };
@@ -104,8 +108,42 @@ const ExploreReqComponent: React.FC<ExploreReqComponentProps> = ({ type }) => {
     
   };
 
+  const handleStlMouseEnter = (event: React.MouseEvent, stlUrl: string) => {
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current);
+    }
+    
+    const rect = event.currentTarget.getBoundingClientRect();
+    setTooltipPosition({
+      x: rect.left - 410,
+      y: rect.top
+    });
+    setTooltipStl(stlUrl);
+  };
+
+  const handleTooltipMouseEnter = () => {
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current);
+    }
+  };
+
+  const handleMouseLeave = () => {
+    timeoutRef.current = setTimeout(() => {
+      setTooltipStl(null);
+    }, 300);
+  };
+
+  // Limpiar el timeout cuando el componente se desmonte
+  useEffect(() => {
+    return () => {
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current);
+      }
+    };
+  }, []);
+
   return (
-    <div className="mt-8">
+    <div className="mt-8 relative">
       {requests.length === 0 ? (
         <p className="text-center text-white"></p>
       ) : (
@@ -144,6 +182,8 @@ const ExploreReqComponent: React.FC<ExploreReqComponentProps> = ({ type }) => {
                             className="text-blue-500 underline"
                             target="_blank"
                             rel="noopener noreferrer"
+                            onMouseEnter={(e) => handleStlMouseEnter(e, request.stl_file_url)}
+                            onMouseLeave={handleMouseLeave}
                           >
                             Ver {type === 'print-requests' ? 'STL' : 'Diseño'}
                           </a>
@@ -177,6 +217,29 @@ const ExploreReqComponent: React.FC<ExploreReqComponentProps> = ({ type }) => {
             </div>
           </div>
         </section>
+      )}
+
+      {/* Tooltip con STL Viewer */}
+      {tooltipStl && (
+        <div 
+          className="fixed z-50"
+          style={{
+            left: `${tooltipPosition.x}px`,
+            top: `${tooltipPosition.y}px`,
+            width: '400px'
+          }}
+          onMouseEnter={handleTooltipMouseEnter}
+          onMouseLeave={handleMouseLeave}
+        >
+          <div className="bg-gray-800 rounded-lg overflow-hidden shadow-lg">
+            <div className="w-full h-64">
+              <STLViewer
+                url={tooltipStl}
+                rotate
+              />
+            </div>
+          </div>
+        </div>
       )}
     </div>
   );
