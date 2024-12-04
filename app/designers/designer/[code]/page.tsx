@@ -94,35 +94,32 @@ const SellerProfilePage = () => {
 
       <main className="flex-grow container mx-auto px-4 py-8 flex flex-col lg:flex-row gap-8 pb-24">
         {/* Seller Profile Section */}
-        <div className="w-full lg:w-1/3 bg-gray-800 p-6 rounded-lg flex flex-col items-center">
-          <div className="w-24 h-24 rounded-full bg-blue-500 mb-4">
-            {/* Placeholder for profile picture */}
-            {sellerProfile.profile_picture ? (
-              <img
-                src={sellerProfile.profile_picture}
-                alt={sellerProfile.store_name}
-                className="w-full h-full rounded-full object-cover"
-              />
-            ) : (
-              <div className="w-full h-full flex items-center justify-center text-gray-400">
-                Sin Imagen
-              </div>
-            )}
-          </div>
-          <h1 className="text-4xl font-bold mb-2">{sellerProfile.store_name}</h1>
-          <p className="text-sm text-gray-400 mb-2">{sellerProfile.address}</p>
-          <p className="text-center text-gray-300 mb-4">{sellerProfile.description}</p>
-          <p className="text-lg font-bold">Rating: ⭐ 1.0/5.0</p>
-          <p className="text-gray-400 mb-6">Response Time: 4</p>
+        <div className="w-full lg:w-1/3 bg-gray-800 p-8 rounded-lg flex flex-col items-center justify-center max-h-[500px]">
+  <div className="w-24 h-24 rounded-full bg-blue-500 mb-4">
+    {/* Placeholder for profile picture */}
+    {sellerProfile.profile_picture ? (
+      <img
+        src={sellerProfile.profile_picture}
+        alt={sellerProfile.store_name}
+        className="w-full h-full rounded-full object-cover"
+      />
+    ) : (
+      <div className="w-full h-full flex items-center justify-center text-gray-400">
+        Sin Imagen
+      </div>
+    )}
+  </div>
+  <h1 className="text-4xl font-bold text-center mb-2">{sellerProfile.store_name}</h1>
+  <p className="text-sm text-gray-400 text-center mb-2">{sellerProfile.address}</p>
+  <p className="text-center text-gray-300 mb-4">{sellerProfile.description}</p>
+  <button
+    onClick={() => router.push(`/designers/contact/${sellerProfile.userId}`)}
+    className="bg-blue-600 text-white py-3 px-6 rounded-lg font-bold hover:bg-blue-500 mt-4"
+  >
+    Contactar
+  </button>
+</div>
 
-          {/* Contact Seller Button */}
-          <button
-            onClick={() => router.push(`/designers/contact/${sellerProfile.userId}`)} // Redirect using userId from sellerProfile
-            className="bg-blue-600 text-white py-4 px-8 rounded-lg font-bold hover:bg-blue-500"
-          >
-            Contactar
-          </button>
-        </div>
 
         {/* Seller's Products Section */}
         <div className="w-full lg:w-2/3">

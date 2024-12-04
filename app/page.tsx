@@ -85,50 +85,6 @@ export default function HomePage() {
         router.push('/register_seller');
       } else {
         router.push(`/seller_landing`);
-        // Check if userId is available in localStorage
-        // let userId = localStorage.getItem('userId');
-    
-        // // If userId is not in localStorage, fetch it
-        // if (!userId) {
-        //   try {
-        //     const accessToken = localStorage.getItem('accessToken'); // Ensure the user is authorized
-        //     if (!accessToken) {
-        //       router.push('/login');
-        //       return;
-        //     }
-    
-        //     const response = await fetch(`${API_URL}/user/data/`, {
-        //       method: 'GET',
-        //       headers: {
-        //         'Content-Type': 'application/json',
-        //         'Authorization': `Bearer ${accessToken}`,
-        //       },
-        //     });
-    
-        //     if (response.ok) {
-        //       const data = await response.json();
-        //       userId = data.id; // Assuming the response includes `id` as the userId
-        //       if (userId) {
-        //         // Store userId in localStorage
-        //         localStorage.setItem('userId', userId);
-        //       } else {
-        //         throw new Error('User ID is missing in the response');
-        //       }
-        //     } else {
-        //       // Handle case when fetching userId fails
-        //       alert('Error al obtener el ID de usuario. Por favor, intente nuevamente.');
-        //       return;
-        //     }
-        //   } catch (error) {
-        //     alert('Ocurrió un error al obtener los datos del usuario. Por favor, intente nuevamente.');
-        //     return;
-        //   }
-        // }
-    
-        // // At this point, userId is guaranteed to be a string
-        // if (userId) {
-        //   router.push(`/seller_home/${userId}`);
-        // }
       }
     };
     
