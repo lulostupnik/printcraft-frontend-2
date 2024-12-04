@@ -143,7 +143,7 @@ export default function HomePage() {
 
   return (
     <div className="min-h-screen bg-gray-900 text-white">
-      <Header showCart={true}/>
+      <Header showCart={true} showSearchBar/>
 
       <main className="container mx-auto px-4 py-8">
         <section className="relative mb-12 bg-gray-800">
