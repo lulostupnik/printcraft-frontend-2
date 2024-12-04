@@ -28,7 +28,7 @@ export default function CatalogPage() {
 
         // Construir URL basada en si estamos buscando o no
         let url = isSearching 
-          ? `${API_URL}/products/search/?search=${encodeURIComponent(searchQuery)}&ordering=price`
+          ? `${API_URL}/products/search/?search=${encodeURIComponent(searchQuery)}&ordering=price&page=${currentPage}`
           : `${API_URL}/products/?page=${currentPage}`;
 
         const response = await fetch(url);
@@ -38,11 +38,10 @@ export default function CatalogPage() {
 
         const data = await response.json();
 
-        // Solo calcular páginas cuando no estamos buscando
-        if (!isSearching) {
-          const totalProducts = data.count;
-          setTotalPages(Math.ceil(totalProducts / pageSize));
-        }
+        const totalProducts = data.count;
+        setTotalPages(Math.ceil(totalProducts / pageSize));
+
+   
 
         // Transform data to match the Product interface
         const transformedProducts: Product[] = data.results.map((item: any) => ({
@@ -185,32 +184,47 @@ export default function CatalogPage() {
           )}
         </div>
 
-        {/* Pagination Controls */}
-        {!isSearching && (
-          <div className="mt-8">
-            <div className="flex justify-center items-center">
-              <button
-                onClick={handlePreviousPage}
-                disabled={currentPage === 1}
-                className="bg-gray-700 text-white rounded px-4 py-2 mr-2 disabled:opacity-50"
-              >
-                Previous
-              </button>
+           {/* Pagination Controls */}
+           <div className="mt-8">
+          <div className="flex justify-center items-center">
+            <button
+              onClick={handlePreviousPage}
+              disabled={currentPage === 1}
+              className="bg-gray-700 text-white rounded px-4 py-2 mr-2 disabled:opacity-50"
+            >
+              Previous
+            </button>
 
-              <div className="flex items-center">
-                <span className="mx-2">Page {currentPage} of {totalPages}</span>
-              </div>
-
+            {/* Page Numbers */}
+            <div className="flex items-center">
+              <span className="mr-2">Page</span>
+              <input
+                type="number"
+                min="1"
+                max={totalPages}
+                value={inputPage}
+                onChange={handlePageInputChange}
+                className="w-16 bg-gray-800 text-white text-center rounded px-2 py-1"
+              />
+              <span className="mx-2">of {totalPages}</span>
               <button
-                onClick={handleNextPage}
-                disabled={currentPage === totalPages}
-                className="bg-gray-700 text-white rounded px-4 py-2 ml-2 disabled:opacity-50"
+                onClick={handleGoToPage}
+                className="bg-gray-700 text-white rounded px-2 py-1"
               >
-                Next
+                Go
               </button>
             </div>
+
+            <button
+              onClick={handleNextPage}
+              disabled={currentPage === totalPages}
+              className="bg-gray-700 text-white rounded px-4 py-2 ml-2 disabled:opacity-50"
+            >
+              Next
+            </button>
           </div>
-        )}
+        </div>
+
       </main>
 
       <Footer />
