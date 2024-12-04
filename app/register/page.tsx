@@ -4,6 +4,7 @@ import { useRouter } from 'next/navigation';
 import SimpleHeader from '@/components/SimpleHeader';
 import Footer from '@/components/Footer';
 import { API_URL } from "@/api/api"
+import { Suspense } from "react";
 
 
 export default function RegisterPage() {

@@ -4,6 +4,7 @@ import { API_URL } from "@/api/api";
 import Footer from '@/components/Footer';
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { Suspense } from "react";
 
 interface Designer {
   userId: number;
@@ -61,7 +62,9 @@ export default function DesignerPage() {
 
   return (
     <div className="flex flex-col min-h-screen bg-gray-900 text-white">
-      <Header showCart={true}/>
+      <Suspense fallback={<div></div>}>
+          <Header showCart={true} showSearchBar={true}/>
+      </Suspense>
       <main className="flex-1 container mx-auto px-4 py-8">
 
         {/* Nueva Sección para realizar un request */}

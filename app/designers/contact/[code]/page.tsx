@@ -4,6 +4,7 @@ import { useParams } from 'next/navigation';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import { API_URL } from '@/api/api';
+import { Suspense } from "react";
 
 const ContactPage = () => {
   const [hasDesign, setHasDesign] = useState<boolean>(false);
@@ -62,17 +63,6 @@ const ContactPage = () => {
         : `${API_URL}/print-reverse-auction/create/`)
       : `${API_URL}/${reqType}/create/`;
 
-      // if(code == 'all'){
-      //   if(reqType == 'design-requests' ){
-      //     setUrlFetch(`${API_URL}/design-reverse-auction/create/`);
-      //   }else{
-      //     setUrlFetch(`${API_URL}/print-reverse-auction/create/`);
-      //   }
-      
-      // }else{
-      //   setUrlFetch(`${API_URL}/${reqType}/create/`);
-      // }
-
       const response = await fetch(finalUrl, {
         method: 'POST',
         headers: {
@@ -94,7 +84,11 @@ const ContactPage = () => {
 
   return (
     <div className="flex flex-col min-h-screen bg-gray-900 text-white">
-      <Header showCart={true}/>
+  <Suspense fallback={<div></div>}>
+          <Header showCart={true} showSearchBar={true}/>
+      </Suspense>
+
+
       <main className="flex-grow container mx-auto px-4 py-8">
         <h1 className="text-4xl font-bold mb-6">Contactar vendedor</h1>
 

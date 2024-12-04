@@ -177,10 +177,10 @@ function CatalogPageContent() {
 export default function CatalogPage() {
   return (
     <div className="flex flex-col min-h-screen bg-gray-900 text-white">
-      <Header
-        showCart={true}
-        showSearchBar={true}
-      />
+      <Suspense fallback={<div></div>}>
+          <Header showCart={true} showSearchBar={true}/>
+      </Suspense>
+
       <Suspense fallback={<div>Loading...</div>}>
         <CatalogPageContent />
       </Suspense>

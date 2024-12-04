@@ -7,6 +7,7 @@ import { useRouter } from 'next/navigation';
 import { API_URL } from "@/api/api";
 import ProductCard from '@/components/ProductCard';
 import { Product } from '@/types/Product';
+import { Suspense } from "react";
 
 export default function ProfilePage() {
   const [username, setUsername] = useState<string | null>(null);
@@ -68,7 +69,10 @@ export default function ProfilePage() {
 
   return (
     <div className="flex flex-col min-h-screen bg-gray-900 text-white">
-      <Header />
+        <Suspense fallback={<div></div>}>
+          <Header showCart={true} showSearchBar={true}/>
+      </Suspense>
+
 
       <main className="flex-grow container mx-auto px-4 py-8">
         <section className="mb-12">

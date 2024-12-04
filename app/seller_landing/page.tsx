@@ -10,7 +10,7 @@ import { Cantarell } from 'next/font/google';
 import { totalmem } from 'os';
 import ProductDashboard from '@/components/ProductDashboard';
 import PublishedProducts from '@/components/PublishedProducts';
-
+import { Suspense } from "react";
 
 const SellerDashboardPage: React.FC = () => {
   const [selectedDashboard, setSelectedDashboard] = useState<'print' | 'design' | 'sell' | 'products' | 'published'>('sell');
@@ -48,7 +48,10 @@ const SellerDashboardPage: React.FC = () => {
   return (
     <div className="min-h-screen flex flex-col bg-gray-900 text-white">
       {/* Header */}
-      <Header />
+      <Suspense fallback={<div></div>}>
+          <Header showCart={true} showSearchBar={true}/>
+      </Suspense>
+
       
       {/* Flex container for sidebar and main content */}
       <div className="flex flex-grow h-full">

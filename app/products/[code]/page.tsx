@@ -5,7 +5,7 @@ import { useParams, useRouter } from 'next/navigation';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import STLViewer from '@/components/RotatingStlView'
-
+import { Suspense } from "react";
 interface ProductDetail {
   id: number;
   code: number;
@@ -120,7 +120,9 @@ const ProductDetailPage = () => {
 
   return (
     <div className="flex flex-col min-h-screen bg-gray-900 text-white">
-      <Header showCart={true}/>
+       <Suspense fallback={<div></div>}>
+          <Header showCart={true} showSearchBar={true}/>
+      </Suspense>
 
       <main className="flex-grow container mx-auto px-4 py-8 flex flex-col lg:flex-row gap-8">
         

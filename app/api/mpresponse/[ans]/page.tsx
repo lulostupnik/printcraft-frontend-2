@@ -243,7 +243,7 @@ export default function MPResponsePage() {
   return (
     <div className="min-h-screen flex flex-col bg-gray-900 text-white">
       <Header showCart={false} />
-
+ 
       <div className="min-h-screen flex flex-col items-center justify-center bg-gray-900 text-white">
         <h1 className="text-3xl font-bold mb-6">Payment Response</h1>
 

@@ -7,6 +7,8 @@ import Footer from '@/components/Footer';
 import { API_URL } from '@/api/api';
 import ProductCard from '@/components/ProductCard'; // Import ProductCard component
 import { Product } from '@/types/Product'; // Ensure this path is correct
+import { Suspense } from "react";
+
 
 interface SellerProfile {
   userId: number;
@@ -78,7 +80,9 @@ const SellerProfilePage = () => {
   if (loading) {
     return(
         <div className="flex flex-col min-h-screen bg-gray-900 text-white">
-        <Header showCart={true}/>
+         <Suspense fallback={<div></div>}>
+          <Header showCart={true} showSearchBar={true}/>
+          </Suspense>
         <main className="flex-grow container mx-auto px-4 py-8 flex flex-col lg:flex-row gap-8 pb-24"></main>
         <Footer/>
     </div>);
@@ -90,7 +94,10 @@ const SellerProfilePage = () => {
 
   return (
     <div className="flex flex-col min-h-screen bg-gray-900 text-white">
-      <Header showCart={true}/>
+      <Suspense fallback={<div></div>}>
+          <Header showCart={true} showSearchBar={true}/>
+      </Suspense>
+
 
       <main className="flex-grow container mx-auto px-4 py-8 flex flex-col lg:flex-row gap-8 pb-24">
         {/* Seller Profile Section */}

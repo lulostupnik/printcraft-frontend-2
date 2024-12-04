@@ -8,6 +8,7 @@ import ProductCard from '@/components/ProductCard';
 import StlViewerComponent from '@/components/RotateStlView_old';
 import { Product } from '@/types/Product';
 import STLViewer from "@/components/RotatingStlView";
+import { Suspense } from "react";
 
 export default function HomePage() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -99,7 +100,10 @@ export default function HomePage() {
 
   return (
     <div className="min-h-screen bg-gray-900 text-white">
-      <Header showCart={true} showSearchBar/>
+  
+      <Suspense fallback={<div></div>}>
+          <Header showCart={true} showSearchBar={true}/>
+      </Suspense>
 
       <main className="container mx-auto px-4 py-8">
         <section className="relative mb-12 bg-gray-800">

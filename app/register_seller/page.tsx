@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import { API_URL } from "@/api/api"
+import { Suspense } from "react";
 
 export default function SellerPage() {
   const [address, setAddress] = useState<string>('');
@@ -94,7 +95,10 @@ export default function SellerPage() {
 
   return (
     <div className="flex flex-col min-h-screen bg-gray-900 text-white">
-      <Header />
+      <Suspense fallback={<div></div>}>
+          <Header showCart={true} showSearchBar={true}/>
+      </Suspense>
+
 
       <main className="flex-grow container mx-auto px-4 py-8">
         <h1 className="text-4xl font-bold mb-6">Convertirme en Vendedor</h1>
