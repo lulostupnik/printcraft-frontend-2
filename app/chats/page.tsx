@@ -1,6 +1,5 @@
 'use client';
 import React, { useState } from 'react';
-import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 
 interface Message {
@@ -81,7 +80,7 @@ const ChatPage = () => {
 
   return (
     <div className="flex flex-col min-h-screen bg-gray-900 text-white">
-      <Header />
+
 
       <main className="flex-grow container mx-auto px-4 py-8 flex gap-6">
         {/* Sidebar */}
