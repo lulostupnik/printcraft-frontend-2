@@ -61,6 +61,13 @@ const ProductForm: React.FC<ProductFormProps> = ({ onProductPublished }) => {
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    
+    // Agregar validación para imágenes
+    if (productData.imageFiles.length === 0) {
+      alert("Debes subir al menos una imagen del producto");
+      return;
+    }
+
     setIsLoading(true);
 
     try {
@@ -189,7 +196,7 @@ const ProductForm: React.FC<ProductFormProps> = ({ onProductPublished }) => {
         />
       </div>
       <div className="mb-4">
-        <label htmlFor="imageFiles" className="block text-sm font-medium">Imágenes del Producto (obligatorio si no hay archivo STL)</label>
+        <label htmlFor="imageFiles" className="block text-sm font-medium">Imágenes del Producto (mínimo una imagen)*</label>
         <input
           type="file"
           id="imageFiles"
@@ -198,6 +205,7 @@ const ProductForm: React.FC<ProductFormProps> = ({ onProductPublished }) => {
           multiple
           onChange={handleImageFileChange}
           className="w-full mt-1 p-2 bg-gray-700 border border-gray-600 rounded"
+          required
         />
       </div>
 
