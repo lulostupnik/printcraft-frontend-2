@@ -98,64 +98,51 @@ const ContactPage = () => {
       <main className="flex-grow container mx-auto px-4 py-8">
         <h1 className="text-4xl font-bold mb-6">Contactar vendedor</h1>
 
-        {/* Form Section */}
-        <form onSubmit={handleSubmit} className="bg-gray-700 p-6 rounded-lg mb-8">
-          <label className="flex items-center mb-4">
-            <input
-              type="checkbox"
-              className="mr-2"
-              checked={hasDesign}
-              onChange={() => {setHasDesign(!hasDesign); 
-                setReqType(!hasDesign ? 'print-requests' : 'design-requests');
-                              ;} }
-            />
-            <span>Ya tengo un diseño (archivo STL)</span>
-          </label>
+        {/* Form Section - Updated styling */}
+        <form onSubmit={handleSubmit} className="bg-gray-800 p-6 rounded-lg">
+          <div className="mb-4">
+            <label className="flex items-center">
+              <input
+                type="checkbox"
+                className="mr-2 bg-gray-700 border border-gray-600"
+                checked={hasDesign}
+                onChange={() => {
+                  setHasDesign(!hasDesign);
+                  setReqType(!hasDesign ? 'print-requests' : 'design-requests');
+                }}
+              />
+              <span className="text-sm font-medium">Ya tengo un diseño (archivo STL)</span>
+            </label>
+          </div>
 
           {/* Description Section */}
-          <div className="mb-8">
-            {hasDesign ? (
-              <div>
-                <h3 className="text-2xl font-bold mb-2">Información adicional</h3>
-                <p className="text-gray-300 mb-4">
-                  Aquí se puede agregar información adicional sobre su diseño.
-                </p>
-                <textarea
-                  className="w-full p-2 rounded text-gray-900"
-                  placeholder="Incluya la información adicional pertinente..."
-                  rows={4}
-                  value={description}
-                  onChange={(e) => setDescription(e.target.value)}
-                  required
-                />
-              </div>
-            ) : (
-              <div>
-                <h3 className="text-2xl font-bold mb-2">Descripción de su idea</h3>
-                <p className="text-gray-300 mb-4">
-                  Por favor denos una descripción detallada de su idea, para que podamos ayudar con un diseño y su consecuente impresión.
-                </p>
-                <textarea
-                  className="w-full p-2 rounded text-gray-900"
-                  placeholder="Describa su idea..."
-                  rows={4}
-                  value={description}
-                  onChange={(e) => setDescription(e.target.value)}
-                  required
-                />
-              </div>
-            )}
+          <div className="mb-4">
+            <label className="block text-sm font-medium mb-2">
+              {hasDesign ? 'Información adicional' : 'Descripción de su idea'}
+            </label>
+            <p className="text-gray-400 text-sm mb-2">
+              {hasDesign 
+                ? 'Aquí se puede agregar información adicional sobre su diseño.'
+                : 'Por favor denos una descripción detallada de su idea, para que podamos ayudar con un diseño y su consecuente impresión.'}
+            </p>
+            <textarea
+              className="w-full mt-1 p-2 bg-gray-700 border border-gray-600 rounded"
+              placeholder={hasDesign ? "Incluya la información adicional pertinente..." : "Describa su idea..."}
+              rows={4}
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+              required
+            />
           </div>
 
           {/* STL Upload Section */}
           {hasDesign && (
-            <div className="mb-8">
-              <h3 className="text-2xl font-bold mb-2">Aquí puede subir su diseño</h3>
-              <p className="text-gray-300 mb-4">Inserte su archivo de tipo .stl.</p>
+            <div className="mb-4">
+              <label className="block text-sm font-medium mb-2">Archivo STL</label>
               <input
                 type="file"
                 accept=".stl"
-                className="mb-4 text-gray-900"
+                className="w-full mt-1 p-2 bg-gray-700 border border-gray-600 rounded"
                 onChange={(e) => {
                   if (e.target.files && e.target.files.length > 0) {
                     setStlFile(e.target.files[0]);
@@ -167,19 +154,16 @@ const ContactPage = () => {
 
           {/* Reference Image Section */}
           {!hasDesign && (
-            <div className="mb-8">
-              <h3 className="text-2xl font-bold mb-2">Imagen de referencia (Opcional)</h3>
-              <p className="text-gray-300 mb-4">
-                Si cuenta con una imagen de referencia, puede subirla aquí.
-              </p>
+            <div className="mb-4">
+              <label className="block text-sm font-medium mb-2">Imagen de referencia (Opcional)</label>
               <input
                 type="file"
                 accept="image/*"
-                multiple // Allow multiple file uploads
-                className="mb-4 text-gray-900"
+                multiple
+                className="w-full mt-1 p-2 bg-gray-700 border border-gray-600 rounded"
                 onChange={(e) => {
                   if (e.target.files && e.target.files.length > 0) {
-                    setDesignImages(Array.from(e.target.files)); // Store multiple images
+                    setDesignImages(Array.from(e.target.files));
                   }
                 }}
               />
@@ -187,28 +171,26 @@ const ContactPage = () => {
           )}
 
           {/* Material Section */}
-          <div className="mb-8">
-            <h3 className="text-2xl font-bold mb-2">Material</h3>
-            <p className="text-gray-300 mb-4">Especifique el material que desea utilizar.</p>
+          <div className="mb-4">
+            <label className="block text-sm font-medium mb-2">Material</label>
             <input
               type="text"
               value={material}
               onChange={(e) => setMaterial(e.target.value)}
-              className="w-full px-4 py-2 rounded bg-gray-700 text-white"
+              className="w-full mt-1 p-2 bg-gray-700 border border-gray-600 rounded"
               placeholder="Especifique el material..."
               required
             />
           </div>
 
           {/* Quantity Section */}
-          <div className="mb-8">
-            <h3 className="text-2xl font-bold mb-2">Cantidad</h3>
-            <p className="text-gray-300 mb-4">Ingrese la cantidad de piezas que desea.</p>
+          <div className="mb-4">
+            <label className="block text-sm font-medium mb-2">Cantidad</label>
             <input
               type="number"
               value={quantity}
               onChange={(e) => setQuantity(parseInt(e.target.value))}
-              className="w-full px-4 py-2 rounded bg-gray-700 text-white"
+              className="w-full mt-1 p-2 bg-gray-700 border border-gray-600 rounded"
               min="1"
               required
             />
@@ -217,9 +199,9 @@ const ContactPage = () => {
           {/* Submit Button */}
           <button
             type="submit"
-            className="bg-blue-600 text-white py-2 px-4 rounded font-bold hover:bg-blue-500"
+            className="bg-green-600 text-white py-2 px-4 rounded-full font-bold hover:bg-green-500"
           >
-            Enviar
+            Enviar Solicitud
           </button>
         </form>
       </main>
