@@ -17,7 +17,7 @@ const PublishedProducts: React.FC = () => {
       if (!response.ok) {
         throw new Error('Failed to fetch seller products');
       }
-      const data = (await response.json()).results;
+      const data = await response.json();
       const transformedProducts: Product[] = data.map((item: any) => ({
         code: item.code.toString(),
         name: item.name,

@@ -29,7 +29,17 @@ const ProductDashboard: React.FC = () => {
   const fetchRequests = async () => {
     const token = getAccessToken();
 
+    if (!token) {
+      console.error('No hay token de acceso');
+      return;
+    }
+
+    console.log('Token:', token.substring(0, 10) + '...'); // Solo muestra los primeros 10 caracteres por seguridad
+
     try {
+      // Agregar log para verificar el token
+      console.log('Token being used:', token);
+
       const response = await fetch(`${API_URL}/seller-orders/`, {
         method: 'GET',
         headers: {
@@ -38,10 +48,15 @@ const ProductDashboard: React.FC = () => {
         },
       });
 
-      if (response.ok) {
-        const data: ProductFromBack[] = (await response.json());
+      // Agregar logs para depuración
+      console.log('Response status:', response.status);
+      const responseText = await response.text();
+      console.log('Response body:', responseText);
 
-        // Mapea los datos a SoldProductRequest
+      if (response.ok) {
+        // Intentar parsear el texto como JSON
+        const data: ProductFromBack[] = JSON.parse(responseText);
+        
         const updatedRequests: SoldProductRequest[] = data.map((product) => ({
           requestID: product.orderid,
           email: product.user_email,
@@ -55,10 +70,14 @@ const ProductDashboard: React.FC = () => {
 
         setRequests(updatedRequests);
       } else {
-        console.error('Error al obtener las solicitudes');
+        console.error('Error en la respuesta del servidor:', {
+          status: response.status,
+          statusText: response.statusText,
+          body: responseText
+        });
       }
     } catch (error) {
-      console.error('Error en el fetch:', error);
+      console.error('Error detallado en el fetch:', error);
     }
   };
 

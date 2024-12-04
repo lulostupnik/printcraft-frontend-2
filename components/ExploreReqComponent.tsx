@@ -40,7 +40,7 @@ const ExploreReqComponent: React.FC<ExploreReqComponentProps> = ({ type }) => {
 
         const response = await fetch(endpoint);
         const data = await response.json();
-        setRequests(data.results);                 //ACA AGREGUE .results
+        setRequests(data);
       } catch (error) { 
         console.error('Error fetching reverse auction requests:', error);
       }
