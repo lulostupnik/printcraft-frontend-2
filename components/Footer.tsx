@@ -46,9 +46,8 @@ export default function Footer({ className = '' }: FooterProps) {
         router.push('/offer_services');
       }
     };
-
   return (
-    <footer className="bg-gray-800 text-gray-300 py-8">
+    <footer className="bg-gray-800 text-gray-300 py-8 mt-auto">
     <div className="max-w-7xl mx-auto px-4">
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-8">
         {/* Comprar Section */}

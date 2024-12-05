@@ -99,7 +99,8 @@ export default function HomePage() {
   // }
 
   return (
-    <div className="min-h-screen bg-gray-900 text-white">
+
+    <div className="min-h-screen flex flex-col  bg-gray-900 text-white">
   
       <Suspense fallback={<div></div>}>
           <Header showCart={true} showSearchBar={true}/>
@@ -179,7 +180,7 @@ export default function HomePage() {
         </section>
       </main>
 
-      <Footer />
+      <Footer className="mt-auto" />
     </div>
   );
 }
