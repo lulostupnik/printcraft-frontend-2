@@ -80,6 +80,12 @@ const MisComprasPage: React.FC = () => {
 
   // Renderizado de productos
   const renderProducts = () => {
+    for(let i = 0; i < products.length; i++){
+      console.log(products[i]);
+    }
+
+
+
     return (
       <div className="mt-8">
         {loading ? (
@@ -139,20 +145,24 @@ const MisComprasPage: React.FC = () => {
     );
   };
 
+  //<UserPrintReqDashboard requestType="design-requests" />
+  //<AuctionRequestComponent type="design-requests"></AuctionRequestComponent>
+
   const renderDesignRequests = () => {
     return (
     <div>
-       <UserPrintReqDashboard requestType="design-requests" />
-        <AuctionRequestComponent type="design-requests"></AuctionRequestComponent>
+      <UserPrintReqDashboard requestType="design-requests" />
     </div>
     );
   };
+
+  //<UserPrintReqDashboard requestType="print-requests" />
+  //<AuctionRequestComponent type="print-requests"></AuctionRequestComponent>
 
   const renderPrintRequests = () => {
     return (
     <div>
     <UserPrintReqDashboard requestType="print-requests" />
-     <AuctionRequestComponent type="print-requests"></AuctionRequestComponent>
  </div>)
   };
  

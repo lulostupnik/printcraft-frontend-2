@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useState, useRef } from 'react';
 import { PrintRequest } from '@/types/PrintRequests';
 import { PlusCircleIcon, MinusCircleIcon } from '@heroicons/react/24/solid'; // Heroicons v2 import path
+import STLViewer from '@/components/RotatingStlView';  // Importamos STLViewer
 
 type RequestsTableProps = {
   title: string;
@@ -31,6 +32,52 @@ const RequestsTable: React.FC<RequestsTableProps> = ({
   handleMarkAsDelivered,
   requestType
 }) => {
+  const [tooltipStl, setTooltipStl] = useState<string | null>(null);
+  const [tooltipImage, setTooltipImage] = useState<string | null>(null);
+  const [tooltipPosition, setTooltipPosition] = useState({ x: 0, y: 0 });
+  const timeoutRef = useRef<NodeJS.Timeout>();
+
+  const handleStlMouseEnter = (event: React.MouseEvent, stlUrl: string) => {
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current);
+    }
+    
+    const rect = event.currentTarget.getBoundingClientRect();
+    setTooltipPosition({
+      x: rect.left - 410,
+      y: rect.top
+    });
+    setTooltipStl(stlUrl);
+    setTooltipImage(null); // Aseguramos que solo se muestre un tooltip a la vez
+  };
+
+  const handleImageMouseEnter = (event: React.MouseEvent, imageUrl: string) => {
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current);
+    }
+    
+    const rect = event.currentTarget.getBoundingClientRect();
+    setTooltipPosition({
+      x: rect.left - 410,
+      y: rect.top
+    });
+    setTooltipImage(imageUrl);
+    setTooltipStl(null); // Aseguramos que solo se muestre un tooltip a la vez
+  };
+
+  const handleTooltipMouseEnter = () => {
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current);
+    }
+  };
+
+  const handleMouseLeave = () => {
+    timeoutRef.current = setTimeout(() => {
+      setTooltipStl(null);
+      setTooltipImage(null);
+    }, 300);
+  };
+
   // Determine the max height based on the expanded state
   const maxHeight = isExpanded ? 'max-h-[24rem]' : 'max-h-[12rem]';
 
@@ -100,6 +147,8 @@ const RequestsTable: React.FC<RequestsTableProps> = ({
                               className="text-blue-500 underline"
                               target="_blank"
                               rel="noopener noreferrer"
+                              onMouseEnter={(e) => handleStlMouseEnter(e, request.stl_url  || '')}
+                              onMouseLeave={handleMouseLeave}
                             >
                               Ver STL
                             </a>
@@ -107,27 +156,22 @@ const RequestsTable: React.FC<RequestsTableProps> = ({
                             'No disponible'
                           )
                         ) : (
-                          // For 'design-requests', display something else (e.g., link to image files)
                           request.design_images && request.design_images.length > 0 ? (
-                             
                             <div>
-                            {request.design_images.map((file, index) => {
-                              console.log(request.design_images);
-                            //console.log(`Image URL ${index}: ${request.design_images[index]}`); // Log each URL
-                              //console.log(`Image URL ${index}: ${file}`); //
-                              return (
+                              {request.design_images.map((file, index) => (
                                 <a
                                   key={index}
-                                  href={file.image_url}  // Should be a string URL
+                                  href={file.image_url}
                                   className="text-blue-500 underline block"
                                   target="_blank"
                                   rel="noopener noreferrer"
+                                  onMouseEnter={(e) => handleImageMouseEnter(e, file.image_url)}
+                                  onMouseLeave={handleMouseLeave}
                                 >
                                   Ver Imagen {index + 1}
                                 </a>
-                              );
-                            })}
-                          </div>
+                              ))}
+                            </div>
                           ) : (
                             'No disponible'
                           )
@@ -198,6 +242,55 @@ const RequestsTable: React.FC<RequestsTableProps> = ({
                 ))}
               </tbody>
             </table>
+          </div>
+        </div>
+      )}
+
+      {/* Tooltip para STL */}
+      {tooltipStl && (
+        <div 
+          className="fixed z-[9999]"
+          style={{
+            left: `${tooltipPosition.x}px`,
+            top: `${tooltipPosition.y}px`,
+            width: '400px',
+            pointerEvents: 'auto'
+          }}
+          onMouseEnter={handleTooltipMouseEnter}
+          onMouseLeave={handleMouseLeave}
+        >
+          <div className="bg-gray-800 rounded-lg overflow-hidden shadow-lg">
+            <div className="w-full h-64">
+              <STLViewer
+                url={tooltipStl}
+                rotate
+              />
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Tooltip para imágenes */}
+      {tooltipImage && (
+        <div 
+          className="fixed z-[9999]"
+          style={{
+            left: `${tooltipPosition.x}px`,
+            top: `${tooltipPosition.y}px`,
+            width: '400px',
+            pointerEvents: 'auto'
+          }}
+          onMouseEnter={handleTooltipMouseEnter}
+          onMouseLeave={handleMouseLeave}
+        >
+          <div className="bg-gray-800 rounded-lg overflow-hidden shadow-lg">
+            <div className="w-full h-64 flex items-center justify-center">
+              <img 
+                src={tooltipImage} 
+                alt="Preview"
+                className="max-w-full max-h-full object-contain"
+              />
+            </div>
           </div>
         </div>
       )}
