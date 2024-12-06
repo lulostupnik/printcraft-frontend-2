@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useState, useRef } from 'react';
 import { PlusCircleIcon, MinusCircleIcon } from '@heroicons/react/24/solid';
 import { PrintRequestUser } from '@/types/UserPrintRequests2'; // Import your actual type
 import { useRouter } from 'next/navigation';
+import STLViewer from '@/components/RotatingStlView';  // Importamos STLViewer
 
 type UserRequestsTableProps = {
   title: string;
@@ -29,13 +30,57 @@ const UserRequestsTable: React.FC<UserRequestsTableProps> = ({
   requestType,
 }) => {
   const maxHeight = isExpanded ? 'max-h-[24rem]' : 'max-h-[12rem]';
+  const [tooltipStl, setTooltipStl] = useState<string | null>(null);
+  const [tooltipImage, setTooltipImage] = useState<string | null>(null);
+  const [tooltipPosition, setTooltipPosition] = useState({ x: 0, y: 0 });
+  const timeoutRef = useRef<NodeJS.Timeout>();
   const router = useRouter();
 
   const handleNavigateToDesigner = (sellerID: number) => {
     router.push(`/designers/designer/${sellerID}`);
   };
 
-  
+  const handleStlMouseEnter = (event: React.MouseEvent, stlUrl: string) => {
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current);
+    }
+    
+    const rect = event.currentTarget.getBoundingClientRect();
+    setTooltipPosition({
+      x: rect.left - 410,
+      y: rect.top
+    });
+    setTooltipStl(stlUrl);
+    setTooltipImage(null);
+  };
+
+  const handleImageMouseEnter = (event: React.MouseEvent, imageUrl: string) => {
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current);
+    }
+    
+    const rect = event.currentTarget.getBoundingClientRect();
+    setTooltipPosition({
+      x: rect.left - 410,
+      y: rect.top
+    });
+    setTooltipImage(imageUrl);
+    setTooltipStl(null);
+  };
+
+  const handleTooltipMouseEnter = () => {
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current);
+    }
+  };
+
+  const handleMouseLeave = () => {
+    timeoutRef.current = setTimeout(() => {
+      setTooltipStl(null);
+      setTooltipImage(null);
+    }, 300);
+  };
+
   return (
     <div className="mt-8">
       {requests.length === 0 ? null : (
@@ -101,6 +146,8 @@ const UserRequestsTable: React.FC<UserRequestsTableProps> = ({
                             className="text-blue-500 underline"
                             target="_blank"
                             rel="noopener noreferrer"
+                            onMouseEnter={(e) => handleStlMouseEnter(e, request.stl_url || '')}
+                            onMouseLeave={handleMouseLeave}
                           >
                             Ver STL
                           </a>
@@ -116,6 +163,8 @@ const UserRequestsTable: React.FC<UserRequestsTableProps> = ({
                               className="text-blue-500 underline block"
                               target="_blank"
                               rel="noopener noreferrer"
+                              onMouseEnter={(e) => handleImageMouseEnter(e, file.image_url)}
+                              onMouseLeave={handleMouseLeave}
                             >
                               Ver Imagen {index + 1}
                             </a>
@@ -203,6 +252,55 @@ const UserRequestsTable: React.FC<UserRequestsTableProps> = ({
                 ))}
               </tbody>
             </table>
+          </div>
+        </div>
+      )}
+
+      {/* Tooltip con STL Viewer */}
+      {tooltipStl && (
+        <div 
+          className="fixed z-[9999]"
+          style={{
+            left: `${tooltipPosition.x}px`,
+            top: `${tooltipPosition.y}px`,
+            width: '400px',
+            pointerEvents: 'auto'
+          }}
+          onMouseEnter={handleTooltipMouseEnter}
+          onMouseLeave={handleMouseLeave}
+        >
+          <div className="bg-gray-800 rounded-lg overflow-hidden shadow-lg">
+            <div className="w-full h-64">
+              <STLViewer
+                url={tooltipStl}
+                rotate
+              />
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Tooltip con Imagen */}
+      {tooltipImage && (
+        <div 
+          className="fixed z-[9999]"
+          style={{
+            left: `${tooltipPosition.x}px`,
+            top: `${tooltipPosition.y}px`,
+            width: '400px',
+            pointerEvents: 'auto'
+          }}
+          onMouseEnter={handleTooltipMouseEnter}
+          onMouseLeave={handleMouseLeave}
+        >
+          <div className="bg-gray-800 rounded-lg overflow-hidden shadow-lg">
+            <div className="w-full h-64">
+              <img
+                src={tooltipImage}
+                alt="Imagen de diseño"
+                className="w-full h-full object-cover"
+              />
+            </div>
           </div>
         </div>
       )}

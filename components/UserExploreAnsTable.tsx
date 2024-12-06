@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { API_URL } from '@/api/api';
 import { useRouter } from 'next/navigation';
-
+import STLViewer from '@/components/RotatingStlView';
 
 interface AuctionResponse {
   responseID: number;
@@ -37,6 +37,51 @@ const AuctionRequestComponent: React.FC<AuctionRequestComponentProps> = ({ type 
   const [error, setError] = useState<string | null>(null);
   const [acceptingResponse, setAcceptingResponse] = useState<boolean>(false);
   const router = useRouter(); 
+  const [tooltipRequest, setTooltipRequest] = useState<any | null>(null);
+  const [tooltipStl, setTooltipStl] = useState<string | null>(null);
+  const [tooltipPosition, setTooltipPosition] = useState({ x: 0, y: 0 });
+  const timeoutRef = React.useRef<NodeJS.Timeout>();
+
+  console.log('Componente renderizado');
+
+  const testHover = (e: React.MouseEvent) => {
+    console.log('Hover detectado');
+  };
+
+  const handleStlMouseEnter = (event: React.MouseEvent, stlUrl: string) => {
+    console.log('Mouse Enter - STL URL:', stlUrl);
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current);
+    }
+    
+    const rect = event.currentTarget.getBoundingClientRect();
+    setTooltipPosition({
+      x: rect.left - 410,
+      y: rect.top
+    });
+    setTooltipStl(stlUrl);
+  };
+
+  const handleTooltipMouseEnter = () => {
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current);
+    }
+  };
+
+  const handleMouseLeave = () => {
+    timeoutRef.current = setTimeout(() => {
+      setTooltipStl(null);
+    }, 300);
+  };
+
+  useEffect(() => {
+    return () => {
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current);
+      }
+    };
+  }, []);
+
   useEffect(() => {
     const fetchRequests = async () => {
       try {
@@ -135,7 +180,7 @@ const AuctionRequestComponent: React.FC<AuctionRequestComponentProps> = ({ type 
   const respondedRequests = requests.filter(request => request.response_count > 0);
 
   return (
-    <div className="mt-8">
+    <div className="mt-8 relative">
       {error && <p className="text-red-500">{error}</p>}
       {requests.length === 0 ? (
         null
@@ -160,18 +205,21 @@ const AuctionRequestComponent: React.FC<AuctionRequestComponentProps> = ({ type 
                       <td className="px-4 py-2 text-center">{request.quantity}</td>
                       <td className="px-4 py-2 text-center">{request.material}</td>
                       <td className="px-4 py-2 text-center">
-                        {request.stl_file_url ? (
-                          <a
-                            href={request.stl_file_url}
-                            className="text-blue-500 underline"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                          >
-                            Ver STL
-                          </a>
-                        ) : (
-                          'No disponible'
-                        )}
+                        <a
+                          href={request.stl_file_url}
+                          className="text-blue-500 underline hover:text-blue-700"
+                          onMouseEnter={(e) => {
+                            console.log('Mouse Enter en STL');
+                            testHover(e);
+                          }}
+                          onMouseMove={(e) => console.log('Mouse moving')}
+                          onClick={() => console.log('Clicked')}
+                          onMouseLeave={() => console.log('Mouse left')}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
+                          Ver STL
+                        </a>
                       </td>
                     </tr>
                   ))}
@@ -201,18 +249,21 @@ const AuctionRequestComponent: React.FC<AuctionRequestComponentProps> = ({ type 
                         <td className="px-4 py-2 text-center">{request.quantity}</td>
                         <td className="px-4 py-2 text-center">{request.material}</td>
                         <td className="px-4 py-2 text-center">
-                          {request.stl_file_url ? (
-                            <a
-                              href={request.stl_file_url}
-                              className="text-blue-500 underline"
-                              target="_blank"
-                              rel="noopener noreferrer"
-                            >
-                              Ver STL
-                            </a>
-                          ) : (
-                            'No disponible'
-                          )}
+                          <a
+                            href={request.stl_file_url}
+                            className="text-blue-500 underline hover:text-blue-700"
+                            onMouseEnter={(e) => {
+                              console.log('Mouse Enter en STL');
+                              testHover(e);
+                            }}
+                            onMouseMove={(e) => console.log('Mouse moving')}
+                            onClick={() => console.log('Clicked')}
+                            onMouseLeave={() => console.log('Mouse left')}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                          >
+                            Ver STL
+                          </a>
                         </td>
                         <td className="px-4 py-2 text-center">
                           <button
@@ -282,6 +333,29 @@ const AuctionRequestComponent: React.FC<AuctionRequestComponentProps> = ({ type 
                 </tbody>
               </table>
             </section>
+          )}
+
+          {tooltipStl && (
+            <div 
+              className="fixed z-[9999]"
+              style={{
+                left: `${tooltipPosition.x}px`,
+                top: `${tooltipPosition.y}px`,
+                width: '400px',
+                pointerEvents: 'auto'
+              }}
+              onMouseEnter={handleTooltipMouseEnter}
+              onMouseLeave={handleMouseLeave}
+            >
+              <div className="bg-gray-800 rounded-lg overflow-hidden shadow-lg">
+                <div className="w-full h-64">
+                  <STLViewer
+                    url={tooltipStl}
+                    rotate
+                  />
+                </div>
+              </div>
+            </div>
           )}
         </>
       )}
