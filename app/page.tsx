@@ -35,9 +35,9 @@ export default function HomePage() {
     
     const fetchProducts = async () => {
       try {
-        const response = await fetch(`${API_URL}/products/`);
+        const response = await fetch(`${API_URL}/products/recommended/`);
         if (response.ok) {
-          const data = (await response.json()).results;
+          const data = (await response.json());
 
           // Transform data to match Product interface if needed
           const transformedProducts: Product[] = data.map((item: any) => ({
@@ -89,14 +89,6 @@ export default function HomePage() {
       }
     };
     
-  // Show a loading screen while data is being fetched
-  // if (loading) {
-  //   return (
-  //     <div className="min-h-screen flex justify-center items-center bg-gray-900 text-white">
-  //       <div className="text-lg font-bold">Loading...</div>
-  //     </div>
-  //   );
-  // }
 
   return (
 
@@ -135,7 +127,7 @@ export default function HomePage() {
           <section className="mb-12">
             <h3 className="text-2xl font-bold mb-4">Elegidos para vos</h3>
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-              {products.slice(0, 4).map((product) => (
+              {products.map((product) => (
                 <ProductCard key={product.code} product={product} rotate={true} />
               ))}
             </div>
