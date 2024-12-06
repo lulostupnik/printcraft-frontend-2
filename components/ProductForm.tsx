@@ -23,9 +23,10 @@ const ProductForm: React.FC<ProductFormProps> = ({ onProductPublished }) => {
     price: '',
     material: '',
     stock: '',
-    stlFile: null,  // Initialize STL file as null
+    stlFile: null,
     imageFiles: [],
   });
+
   const [isLoading, setIsLoading] = useState(false);
   const [imagePreviews, setImagePreviews] = useState<string[]>([]);
 
@@ -37,7 +38,7 @@ const ProductForm: React.FC<ProductFormProps> = ({ onProductPublished }) => {
   const handleImageFileChange = (e: ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
       const files = Array.from(e.target.files);
-      setProductData({ ...productData, imageFiles: files });
+      setProductData((prev) => ({ ...prev, imageFiles: files }));
 
       // Generate previews for each selected file
       const previews = files.map(file => {
@@ -55,14 +56,13 @@ const ProductForm: React.FC<ProductFormProps> = ({ onProductPublished }) => {
   const handleSTLFileChange = (e: ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files.length > 0) {
       const file = e.target.files[0];
-      setProductData({ ...productData, stlFile: file });
+      setProductData((prev) => ({ ...prev, stlFile: file }));
     }
   };
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     
-    // Agregar validación para imágenes
     if (productData.imageFiles.length === 0) {
       alert("Debes subir al menos una imagen del producto");
       return;
@@ -102,6 +102,7 @@ const ProductForm: React.FC<ProductFormProps> = ({ onProductPublished }) => {
           onProductPublished(result);
         }
 
+        // Reset the form
         setProductData({
           name: '',
           description: '',
@@ -113,8 +114,9 @@ const ProductForm: React.FC<ProductFormProps> = ({ onProductPublished }) => {
         });
         setImagePreviews([]);
       } else {
-        const errorData = await response.json();
-        alert(`Error al publicar el producto: ${errorData.detail || 'Error desconocido'}`);
+        // If there's an error detail in the response, show it
+        const errorMessage = result?.detail || 'Error desconocido';
+        alert(`Error al publicar el producto: ${errorMessage}`);
       }
     } catch (error) {
       console.error('Error al publicar el producto:', error);
@@ -125,107 +127,116 @@ const ProductForm: React.FC<ProductFormProps> = ({ onProductPublished }) => {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="bg-gray-800 p-6 rounded-lg">
-      <div className="mb-4">
-        <label htmlFor="name" className="block text-sm font-medium">Nombre del Producto</label>
-        <input
-          type="text"
-          id="name"
-          name="name"
-          value={productData.name}
-          onChange={handleChange}
-          className="w-full mt-1 p-2 bg-gray-700 border border-gray-600 rounded"
-          required
-        />
-      </div>
-      <div className="mb-4">
-        <label htmlFor="description" className="block text-sm font-medium">Descripción (opcional)</label>
-        <textarea
-          id="description"
-          name="description"
-          value={productData.description}
-          onChange={handleChange}
-          className="w-full mt-1 p-2 bg-gray-700 border border-gray-600 rounded"
-        />
-      </div>
-      <div className="mb-4">
-        <label htmlFor="price" className="block text-sm font-medium">Precio</label>
-        <input
-          type="number"
-          id="price"
-          name="price"
-          value={productData.price}
-          onChange={handleChange}
-          className="w-full mt-1 p-2 bg-gray-700 border border-gray-600 rounded"
-          required
-        />
-      </div>
-      <div className="mb-4">
-        <label htmlFor="material" className="block text-sm font-medium">Material</label>
-        <input
-          type="text"
-          id="material"
-          name="material"
-          value={productData.material}
-          onChange={handleChange}
-          className="w-full mt-1 p-2 bg-gray-700 border border-gray-600 rounded"
-          required
-        />
-      </div>
-      <div className="mb-4">
-        <label htmlFor="stock" className="block text-sm font-medium">Stock</label>
-        <input
-          type="number"
-          id="stock"
-          name="stock"
-          value={productData.stock}
-          onChange={handleChange}
-          className="w-full mt-1 p-2 bg-gray-700 border border-gray-600 rounded"
-          required
-        />
-      </div>
-      <div className="mb-4">
-        <label htmlFor="stlFile" className="block text-sm font-medium">Archivo STL (opcional)</label>
-        <input
-          type="file"
-          id="stlFile"
-          name="stlFile"
-          accept=".stl"
-          onChange={handleSTLFileChange}
-          className="w-full mt-1 p-2 bg-gray-700 border border-gray-600 rounded"
-        />
-      </div>
-      <div className="mb-4">
-        <label htmlFor="imageFiles" className="block text-sm font-medium">Imágenes del Producto (mínimo una imagen)*</label>
-        <input
-          type="file"
-          id="imageFiles"
-          name="imageFiles"
-          accept="image/*"
-          multiple
-          onChange={handleImageFileChange}
-          className="w-full mt-1 p-2 bg-gray-700 border border-gray-600 rounded"
-          required
-        />
-      </div>
-
-      {/* Display image previews */}
-      {imagePreviews.length > 0 && (
-        <div className="mb-4">
-          {imagePreviews.map((preview, index) => (
-            <img key={index} src={preview} alt={`Vista previa ${index + 1}`} className="max-w-full h-auto rounded mb-2" />
-          ))}
+    <div className="relative">
+      {/* If loading, show an overlay */}
+      {isLoading && (
+        <div className="absolute inset-0 bg-gray-900 bg-opacity-75 flex items-center justify-center z-50">
+          <div className="text-white text-xl">Cargando...</div>
         </div>
       )}
 
-      <button
-        type="submit"
-        className={`bg-green-600 text-white py-2 px-4 rounded-full font-bold hover:bg-green-500 ${isLoading ? 'cursor-not-allowed' : ''}`}
-        disabled={isLoading}
-      >
-        {isLoading ? 'Publicando...' : 'Publicar Producto'}
-      </button>
-    </form>
+      <form onSubmit={handleSubmit} className="bg-gray-800 p-6 rounded-lg">
+        <div className="mb-4">
+          <label htmlFor="name" className="block text-sm font-medium">Nombre del Producto</label>
+          <input
+            type="text"
+            id="name"
+            name="name"
+            value={productData.name}
+            onChange={handleChange}
+            className="w-full mt-1 p-2 bg-gray-700 border border-gray-600 rounded"
+            required
+          />
+        </div>
+        <div className="mb-4">
+          <label htmlFor="description" className="block text-sm font-medium">Descripción (opcional)</label>
+          <textarea
+            id="description"
+            name="description"
+            value={productData.description}
+            onChange={handleChange}
+            className="w-full mt-1 p-2 bg-gray-700 border border-gray-600 rounded"
+          />
+        </div>
+        <div className="mb-4">
+          <label htmlFor="price" className="block text-sm font-medium">Precio</label>
+          <input
+            type="number"
+            id="price"
+            name="price"
+            value={productData.price}
+            onChange={handleChange}
+            className="w-full mt-1 p-2 bg-gray-700 border border-gray-600 rounded"
+            required
+          />
+        </div>
+        <div className="mb-4">
+          <label htmlFor="material" className="block text-sm font-medium">Material</label>
+          <input
+            type="text"
+            id="material"
+            name="material"
+            value={productData.material}
+            onChange={handleChange}
+            className="w-full mt-1 p-2 bg-gray-700 border border-gray-600 rounded"
+            required
+          />
+        </div>
+        <div className="mb-4">
+          <label htmlFor="stock" className="block text-sm font-medium">Stock</label>
+          <input
+            type="number"
+            id="stock"
+            name="stock"
+            value={productData.stock}
+            onChange={handleChange}
+            className="w-full mt-1 p-2 bg-gray-700 border border-gray-600 rounded"
+            required
+          />
+        </div>
+        <div className="mb-4">
+          <label htmlFor="stlFile" className="block text-sm font-medium">Archivo STL (opcional)</label>
+          <input
+            type="file"
+            id="stlFile"
+            name="stlFile"
+            accept=".stl"
+            onChange={handleSTLFileChange}
+            className="w-full mt-1 p-2 bg-gray-700 border border-gray-600 rounded"
+          />
+        </div>
+        <div className="mb-4">
+          <label htmlFor="imageFiles" className="block text-sm font-medium">Imágenes del Producto (mínimo una imagen)*</label>
+          <input
+            type="file"
+            id="imageFiles"
+            name="imageFiles"
+            accept="image/*"
+            multiple
+            onChange={handleImageFileChange}
+            className="w-full mt-1 p-2 bg-gray-700 border border-gray-600 rounded"
+            required
+          />
+        </div>
+
+        {/* Display image previews */}
+        {imagePreviews.length > 0 && (
+          <div className="mb-4">
+            {imagePreviews.map((preview, index) => (
+              <img key={index} src={preview} alt={`Vista previa ${index + 1}`} className="max-w-full h-auto rounded mb-2" />
+            ))}
+          </div>
+        )}
+
+        <button
+          type="submit"
+          className={`bg-green-600 text-white py-2 px-4 rounded-full font-bold hover:bg-green-500 ${isLoading ? 'cursor-not-allowed opacity-50' : ''}`}
+          disabled={isLoading}
+        >
+          {isLoading ? 'Publicando...' : 'Publicar Producto'}
+        </button>
+      </form>
+    </div>
   );
 };
 

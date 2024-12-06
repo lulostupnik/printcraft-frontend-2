@@ -1,7 +1,8 @@
 import React from 'react';
 import RequestsTable from '@/components/RequestsTable';
 import usePrintRequests from '@/hooks/usePrintRequest';
-import ExploreReqComponent from './ExploreReqComponent';
+import ExploreReqComponent from '@/components/ExploreReqComponent';
+
 
 type TableType = 'pending' | 'quoted' | 'accepted' | 'finalized' | 'delivered';
 
@@ -25,6 +26,7 @@ const PrintReqDashboard: React.FC<PrintReqDashboardProps> = ({ requestType }) =>
     handleDeclineRequest,
     handleFinalizeRequest,
     handleMarkAsDelivered,
+    loading
   } = usePrintRequests(requestType); 
 
   const tables: {
@@ -76,38 +78,20 @@ const PrintReqDashboard: React.FC<PrintReqDashboardProps> = ({ requestType }) =>
       type: 'delivered',
     },
   ];
-
-
   return (
     <div className="container mx-auto">
-        
       <section className="mb-12 bg-gray-800 p-8 rounded-lg">
-   
         <h2 className="text-4xl font-bold mb-4 text-center">
           {requestType === 'design-requests' ? 'Design Request Dashboard' : 'Print Request Dashboard'}
-        </h2> 
+        </h2>
 
-        {expandedTable === null
-          ? tables.map((table) => (
-              <RequestsTable
-                key={table.key}
-                title={table.title}
-                requests={table.requests}
-                type={table.type}
-                priceInputs={table.priceInputs}
-                handlePriceChange={table.handlePriceChange}
-                handleAcceptRequest={table.handleAcceptRequest}
-                handleDeclineRequest={table.handleDeclineRequest}
-                handleFinalizeRequest={table.handleFinalizeRequest}
-                handleMarkAsDelivered={table.handleMarkAsDelivered}
-                isExpanded={false}
-                onExpand={() => setExpandedTable(table.key)}
-                requestType={requestType} // Pass requestType here
-              />
-            ))
-          : tables
-              .filter((table) => table.key === expandedTable)
-              .map((table) => (
+        {loading ? (
+          <div className="flex justify-center items-center h-64">
+            <div className="text-white">Cargando datos...</div>
+          </div>
+        ) : (
+          expandedTable === null
+            ? tables.map((table) => (
                 <RequestsTable
                   key={table.key}
                   title={table.title}
@@ -119,16 +103,47 @@ const PrintReqDashboard: React.FC<PrintReqDashboardProps> = ({ requestType }) =>
                   handleDeclineRequest={table.handleDeclineRequest}
                   handleFinalizeRequest={table.handleFinalizeRequest}
                   handleMarkAsDelivered={table.handleMarkAsDelivered}
-                  isExpanded={true}
-                  onExpand={() => setExpandedTable(null)}
-                  requestType={requestType} // Pass requestType here
+                  isExpanded={false}
+                  onExpand={() => setExpandedTable(table.key)}
+                  requestType={requestType}
                 />
-              ))}
+              ))
+            : tables
+                .filter((table) => table.key === expandedTable)
+                .map((table) => (
+                  <RequestsTable
+                    key={table.key}
+                    title={table.title}
+                    requests={table.requests}
+                    type={table.type}
+                    priceInputs={table.priceInputs}
+                    handlePriceChange={table.handlePriceChange}
+                    handleAcceptRequest={table.handleAcceptRequest}
+                    handleDeclineRequest={table.handleDeclineRequest}
+                    handleFinalizeRequest={table.handleFinalizeRequest}
+                    handleMarkAsDelivered={table.handleMarkAsDelivered}
+                    isExpanded={true}
+                    onExpand={() => setExpandedTable(null)}
+                    requestType={requestType}
+                  />
+                ))
+        )}
       </section>
 
       <section className="mb-12 bg-gray-800 p-8 rounded-lg">
-        <ExploreReqComponent type={requestType}></ExploreReqComponent>
-    </section>
+      <h2 className="text-4xl font-bold mb-4 text-center">
+          {requestType === 'design-requests' ? 'Explorar Design Request' : 'Explorar Print Request'}
+        </h2>
+
+        {loading ? (
+          <div className="flex justify-center items-center h-64">
+            <div className="text-white">Cargando datos...</div>
+          </div>
+        ) : (
+          <ExploreReqComponent type={requestType} />
+        )}
+      </section>
+    
     </div>
   );
 };
