@@ -11,7 +11,7 @@ import ExploreReqDashboard from '@/components/ExploreReqDashboard';
 import { Suspense } from "react";
 
 const SellerDashboardPage: React.FC = () => {
-  const [selectedDashboard, setSelectedDashboard] = useState< 'explorePrint' | 'exploreDesign' | 'myPrint' | 'myDesign' | 'sell' | 'products' | 'published'>('sell');
+  const [selectedDashboard, setSelectedDashboard] = useState< 'explore' | 'print' | 'design' | 'sell' | 'products' | 'published'>('sell');
   
   const handleProductPublished = (data: any) => {
     console.log('Producto publicado con éxito:', data);
@@ -19,13 +19,11 @@ const SellerDashboardPage: React.FC = () => {
 
   const renderDashboard = () => {
     switch (selectedDashboard) {
-      case 'explorePrint':
-        return <ExploreReqDashboard requestType='print-requests'/>;
-      case 'exploreDesign':
-        return <ExploreReqDashboard requestType='design-requests'/>;
-      case 'myPrint':
+      case 'explore':
+        return <ExploreReqDashboard/>;
+      case 'print':
         return <MyPrintReqDashboard requestType='print-requests'/>;
-      case 'myDesign':
+      case 'design':
         return <MyPrintReqDashboard requestType='design-requests'/>;
       case 'sell':
         return (
@@ -64,29 +62,19 @@ const SellerDashboardPage: React.FC = () => {
           <ul className="space-y-4">
             <li>
               <button
-                onClick={() => setSelectedDashboard('explorePrint')}
+                onClick={() => setSelectedDashboard('explore')}
                 className={`w-full text-left px-4 py-2 rounded-lg ${
-                  selectedDashboard === 'explorePrint' ? 'bg-blue-600 text-white' : 'bg-gray-700 text-gray-300'
+                  selectedDashboard === 'explore' ? 'bg-blue-600 text-white' : 'bg-gray-700 text-gray-300'
                 }`}
               >
-                Explorar Print Requests
+                Explorar Requests
               </button>
             </li>
             <li>
               <button
-                onClick={() => setSelectedDashboard('exploreDesign')}
+                onClick={() => setSelectedDashboard('print')}
                 className={`w-full text-left px-4 py-2 rounded-lg ${
-                  selectedDashboard === 'exploreDesign' ? 'bg-blue-600 text-white' : 'bg-gray-700 text-gray-300'
-                }`}
-              >
-                Explorar Design Requests
-              </button>
-            </li>
-            <li>
-              <button
-                onClick={() => setSelectedDashboard('myPrint')}
-                className={`w-full text-left px-4 py-2 rounded-lg ${
-                  selectedDashboard === 'myPrint' ? 'bg-blue-600 text-white' : 'bg-gray-700 text-gray-300'
+                  selectedDashboard === 'print' ? 'bg-blue-600 text-white' : 'bg-gray-700 text-gray-300'
                 }`}
               >
                 Mis Print Requests
@@ -94,9 +82,9 @@ const SellerDashboardPage: React.FC = () => {
             </li>
             <li>
               <button
-                onClick={() => setSelectedDashboard('myDesign')}
+                onClick={() => setSelectedDashboard('design')}
                 className={`w-full text-left px-4 py-2 rounded-lg ${
-                  selectedDashboard === 'myDesign' ? 'bg-blue-600 text-white' : 'bg-gray-700 text-gray-300'
+                  selectedDashboard === 'design' ? 'bg-blue-600 text-white' : 'bg-gray-700 text-gray-300'
                 }`}
               >
                 Mis Design Requests
