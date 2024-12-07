@@ -3,14 +3,15 @@
 import React, { useState } from 'react';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
-import PrintReqDashboard from '@/components/printReqDashboard';
+import MyPrintReqDashboard from '@/components/MyPrintReqDashboard';
 import ProductForm from '@/components/ProductForm';
 import ProductDashboard from '@/components/ProductDashboard';
 import PublishedProducts from '@/components/PublishedProducts';
+import ExploreReqDashboard from '@/components/ExploreReqDashboard';
 import { Suspense } from "react";
 
 const SellerDashboardPage: React.FC = () => {
-  const [selectedDashboard, setSelectedDashboard] = useState<'print' | 'design' | 'sell' | 'products' | 'published'>('sell');
+  const [selectedDashboard, setSelectedDashboard] = useState< 'explorePrint' | 'exploreDesign' | 'myPrint' | 'myDesign' | 'sell' | 'products' | 'published'>('sell');
   
   const handleProductPublished = (data: any) => {
     console.log('Producto publicado con éxito:', data);
@@ -18,10 +19,14 @@ const SellerDashboardPage: React.FC = () => {
 
   const renderDashboard = () => {
     switch (selectedDashboard) {
-      case 'print':
-        return <PrintReqDashboard requestType='print-requests'/>;
-      case 'design':
-        return <PrintReqDashboard requestType='design-requests'/>;
+      case 'explorePrint':
+        return <ExploreReqDashboard requestType='print-requests'/>;
+      case 'exploreDesign':
+        return <ExploreReqDashboard requestType='design-requests'/>;
+      case 'myPrint':
+        return <MyPrintReqDashboard requestType='print-requests'/>;
+      case 'myDesign':
+        return <MyPrintReqDashboard requestType='design-requests'/>;
       case 'sell':
         return (
           <div className="container mx-auto">
@@ -59,22 +64,42 @@ const SellerDashboardPage: React.FC = () => {
           <ul className="space-y-4">
             <li>
               <button
-                onClick={() => setSelectedDashboard('print')}
+                onClick={() => setSelectedDashboard('explorePrint')}
                 className={`w-full text-left px-4 py-2 rounded-lg ${
-                  selectedDashboard === 'print' ? 'bg-blue-600 text-white' : 'bg-gray-700 text-gray-300'
+                  selectedDashboard === 'explorePrint' ? 'bg-blue-600 text-white' : 'bg-gray-700 text-gray-300'
                 }`}
               >
-                Print Requests
+                Explorar Print Requests
               </button>
             </li>
             <li>
               <button
-                onClick={() => setSelectedDashboard('design')}
+                onClick={() => setSelectedDashboard('exploreDesign')}
                 className={`w-full text-left px-4 py-2 rounded-lg ${
-                  selectedDashboard === 'design' ? 'bg-blue-600 text-white' : 'bg-gray-700 text-gray-300'
+                  selectedDashboard === 'exploreDesign' ? 'bg-blue-600 text-white' : 'bg-gray-700 text-gray-300'
                 }`}
               >
-                Design Requests
+                Explorar Design Requests
+              </button>
+            </li>
+            <li>
+              <button
+                onClick={() => setSelectedDashboard('myPrint')}
+                className={`w-full text-left px-4 py-2 rounded-lg ${
+                  selectedDashboard === 'myPrint' ? 'bg-blue-600 text-white' : 'bg-gray-700 text-gray-300'
+                }`}
+              >
+                Mis Print Requests
+              </button>
+            </li>
+            <li>
+              <button
+                onClick={() => setSelectedDashboard('myDesign')}
+                className={`w-full text-left px-4 py-2 rounded-lg ${
+                  selectedDashboard === 'myDesign' ? 'bg-blue-600 text-white' : 'bg-gray-700 text-gray-300'
+                }`}
+              >
+                Mis Design Requests
               </button>
             </li>
             <li>
