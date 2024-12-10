@@ -41,10 +41,12 @@ export default function PaymentPage() {
          
           const order_products = [
             {
-              product: String(code), // Convert 'code' to string
-              quantity: String(quantity), // Convert 'quantity' to string
+              product: Number(code), // Convert 'code' to string
+              quantity: Number(quantity), // Convert 'quantity' to string
+
             },
           ];
+
   
           const response = await fetch(`${API_URL}/orders/create/`, {
             method: 'POST',
@@ -58,8 +60,8 @@ export default function PaymentPage() {
           if (!response.ok) {
             throw new Error('Failed to fetch preference_id');
           }
-
           const data = await response.json();
+          console.log('Preference ID Response:', JSON.stringify(data, null, 2));
           setPreferenceId(data.preference_id);
         } catch (error) {
           console.error('Error fetching preference_id:', error);
