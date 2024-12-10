@@ -7,11 +7,11 @@ import ExploreReqComponent from '@/components/ExploreReqComponent';
 type TableType = 'pending' | 'quoted' | 'accepted' | 'finalized' | 'delivered';
 
 
-interface PrintReqDashboardProps {
+interface MyPrintReqDashboardProps {
   requestType: 'print-requests' | 'design-requests';
 }
 
-const PrintReqDashboard: React.FC<PrintReqDashboardProps> = ({ requestType }) => {
+const MyPrintReqDashboard: React.FC<MyPrintReqDashboardProps> = ({ requestType }) => {
   const {
     pendingRequests,
     quotedRequests,
@@ -129,23 +129,9 @@ const PrintReqDashboard: React.FC<PrintReqDashboardProps> = ({ requestType }) =>
                 ))
         )}
       </section>
-
-      <section className="mb-12 bg-gray-800 p-8 rounded-lg">
-      <h2 className="text-4xl font-bold mb-4 text-center">
-          {requestType === 'design-requests' ? 'Explorar Design Request' : 'Explorar Print Request'}
-        </h2>
-
-        {loading ? (
-          <div className="flex justify-center items-center h-64">
-            <div className="text-white">Cargando datos...</div>
-          </div>
-        ) : (
-          <ExploreReqComponent type={requestType} />
-        )}
-      </section>
     
     </div>
   );
 };
 
-export default PrintReqDashboard;
+export default MyPrintReqDashboard;

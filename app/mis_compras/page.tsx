@@ -50,15 +50,11 @@ const adaptProductFromAPI = (apiProduct: ProductFromAPI): Product => {
 
 // Tipo para los detalles del producto
 type ProductDetail = {
-  code: number;
   name: string;
-  price: number;
   material: string;
-  stock: number;
   description: string;
   images: { image_url: string }[];
-  stl_file_url: string | null;
-  seller_name: string;
+  price: number;
 };
 
 const MisComprasPage: React.FC = () => {
@@ -72,7 +68,7 @@ const MisComprasPage: React.FC = () => {
   const [products, setProducts] = useState<Order[]>([]); // Estado para almacenar órdenes
   const [loading, setLoading] = useState<boolean>(true); // Loading state for products
   const [expandedOrders, setExpandedOrders] = useState<Set<number>>(new Set());
-  const [previewProduct, setPreviewProduct] = useState<null | ProductDetail>(null);
+  const [previewProduct, setPreviewProduct] = useState<Product | null>(null);
   const [previewPosition, setPreviewPosition] = useState({ x: 0, y: 0 });
   const timeoutRef = useRef<NodeJS.Timeout>();
 
@@ -110,7 +106,11 @@ const MisComprasPage: React.FC = () => {
 
       if (response.ok) {
         const data = await response.json();
-        setProducts(data); // Aquí actualizas `products` con la data de la API
+        // Ordenar las órdenes por fecha de manera descendente
+        const sortedData = data.sort((a: Order, b: Order) => 
+          new Date(b.orderdate).getTime() - new Date(a.orderdate).getTime()
+        );
+        setProducts(sortedData);
       } else {
         console.error('Error al obtener las solicitudes');
       }
@@ -145,15 +145,45 @@ const MisComprasPage: React.FC = () => {
     }
     
     const rect = event.currentTarget.getBoundingClientRect();
+    
     setPreviewPosition({
-      x: rect.left - 300,
+      x: rect.left - 410,
       y: rect.top
     });
 
-    // Obtenemos los detalles del producto de la API
-    const productDetails = await fetchProductDetails(product.productcode);
-    if (productDetails) {
-      setPreviewProduct(productDetails);
+    try {
+      const response = await fetch(`${API_URL}/products/${product.productcode}/`);
+      if (response.ok) {
+        const data = await response.json();
+        // Adaptamos el producto al formato que espera ProductCard
+        const adaptedProduct: Product = {
+          code: String(data.productcode || product.productcode),
+          name: data.product_name || product.product_name,
+          price: String(data.price_per_unit || product.price_per_unit),
+          material: data.material || 'No especificado',
+          stock: String(data.stock || 'No especificado'),
+          description: data.description || '',
+          images_url: data.images?.map((img: any) => img.image_url) || [],
+          stl_file_url: data.stl_file_url || null,
+          seller: data.seller || 'No especificado'
+        };
+        setPreviewProduct(adaptedProduct);
+      }
+    } catch (error) {
+      console.error('Error fetching product details:', error);
+      // Si falla la petición, usamos los datos que ya tenemos
+      const adaptedProduct: Product = {
+        code: String(product.productcode),
+        name: product.product_name,
+        price: String(product.price_per_unit),
+        material: product.material || 'No especificado',
+        stock: String(product.quantity || 'No especificado'),
+        description: product.description || '',
+        images_url: product.images_url || [],
+        stl_file_url: product.stl_url || null,
+        seller: product.seller || 'No especificado'
+      };
+      setPreviewProduct(adaptedProduct);
     }
   };
 
@@ -182,116 +212,111 @@ const MisComprasPage: React.FC = () => {
   // Renderizado de productos
   const renderProducts = () => {
     return (
-      <div className="mt-8">
-        {loading ? (
-          <p className="text-gray-500 text-center">Cargando productos...</p>
-        ) : products.length === 0 ? (
-          <p className="text-gray-500 text-center">No hay productos comprados.</p>
-        ) : (
-          <div className="overflow-x-auto">
-            <div className="flex justify-between items-center mb-6 bg-gray-800 py-4 px-6 rounded-lg">
-              <h1 className="text-4xl font-bold text-white tracking-tight">Mis Compras</h1>
-            </div>
-            <div className="space-y-4">
-              {products.map((order, index) => (
-                <div key={order.orderid} className="bg-[#374151] rounded-lg overflow-hidden">
-                  {/* Cabecera de la orden */}
-                  <div className="flex justify-between items-center p-4 bg-gray-800">
-                    <div className="space-x-8 flex items-center">
-                      <span>Orden #{order.orderid}</span>
-                      <span>Estado: {order.status}</span>
-                      <span>Fecha: {formatDate(order.orderdate)}</span>
-                      <span>Total: ${order.total_price}</span>
-                    </div>
-                    <button
-                      onClick={() => {
-                        const newExpandedOrders = new Set(expandedOrders);
-                        if (newExpandedOrders.has(order.orderid)) {
-                          newExpandedOrders.delete(order.orderid);
-                        } else {
-                          newExpandedOrders.add(order.orderid);
-                        }
-                        setExpandedOrders(newExpandedOrders);
-                      }}
-                      className="text-white hover:text-gray-300"
-                    >
-                      {expandedOrders.has(order.orderid) ? (
-                        <MinusCircleIcon className="w-6 h-6" />
-                      ) : (
-                        <PlusCircleIcon className="w-6 h-6" />
+      <div className="container mx-auto">
+        <section className="mb-12 bg-gray-800 p-8 rounded-lg">
+          <div className="flex justify-between items-center mb-6">
+            <h2 className="text-4xl font-bold text-center">
+              Mis Compras
+            </h2>
+          </div>
+          
+          {loading ? (
+            <p className="text-gray-500 text-center">Cargando productos...</p>
+          ) : products.length === 0 ? (
+            <p className="text-gray-500 text-center">No hay productos comprados.</p>
+          ) : (
+            <div className="overflow-x-auto">
+              <table className="min-w-full bg-gray-700 text-white rounded-lg">
+                <thead>
+                  <tr className="bg-gray-600">
+                    <th className="px-6 py-3 text-left text-sm font-semibold">Orden</th>
+                    <th className="px-6 py-3 text-left text-sm font-semibold">Estado</th>
+                    <th className="px-6 py-3 text-left text-sm font-semibold">Fecha</th>
+                    <th className="px-6 py-3 text-left text-sm font-semibold">Total</th>
+                    <th className="px-6 pl-12 py-3 text-left text-sm font-semibold">Acciones</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-gray-600">
+                  {products.map((order) => (
+                    <React.Fragment key={order.orderid}>
+                      <tr className="transition-colors">
+                        <td className="px-6 py-4">#{order.orderid}</td>
+                        <td className="px-6 py-4">{order.status}</td>
+                        <td className="px-6 py-4">{formatDate(order.orderdate)}</td>
+                        <td className="px-6 py-4">${order.total_price}</td>
+                        <td className="px-6 py-4">
+                          <button
+                            onClick={() => {
+                              const newExpandedOrders = new Set(expandedOrders);
+                              if (newExpandedOrders.has(order.orderid)) {
+                                newExpandedOrders.delete(order.orderid);
+                              } else {
+                                newExpandedOrders.add(order.orderid);
+                              }
+                              setExpandedOrders(newExpandedOrders);
+                            }}
+                            className="ml-4 text-white flex items-center"
+                          >
+                            {expandedOrders.has(order.orderid) ? (
+                              <>
+                                <span className="mr-2">Colapsar</span>
+                                <MinusCircleIcon className="w-5 h-5" />
+                              </>
+                            ) : (
+                              <>
+                                <span className="mr-2">Expandir</span>
+                                <PlusCircleIcon className="w-5 h-5" />
+                              </>
+                            )}
+                          </button>
+                        </td>
+                      </tr>
+
+                      {expandedOrders.has(order.orderid) && (
+                        <tr>
+                          <td colSpan={5} className="px-6 py-4 bg-[#1E2837]">
+                            <table className="min-w-full divide-y divide-gray-600">
+                              <thead>
+                                <tr>
+                                  <th className="px-6 py-3 text-left text-sm font-semibold">Nombre</th>
+                                  <th className="px-6 py-3 text-center text-sm font-semibold">Producto</th>
+                                  <th className="px-6 py-3 text-center text-sm font-semibold">Cantidad</th>
+                                  <th className="px-6 py-3 text-right text-sm font-semibold">Precio Total</th>
+                                </tr>
+                              </thead>
+                              <tbody className="divide-y divide-gray-600">
+                                {order.products.map((product, productIndex) => (
+                                  <tr 
+                                    key={productIndex} 
+                                    className="hover:bg-gray-700 transition-colors"
+                                  >
+                                    <td className="px-6 py-4 text-sm">{product.product_name}</td>
+                                    <td className="px-6 py-4 text-sm text-center">
+                                      <a
+                                        href={`/products/${product.productcode}`}
+                                        className="text-blue-400 hover:text-blue-300"
+                                        onMouseEnter={(e) => handleProductMouseEnter(e, product)}
+                                        onMouseLeave={handleMouseLeave}
+                                      >
+                                        Ver producto aquí
+                                      </a>
+                                    </td>
+                                    <td className="px-6 py-4 text-sm text-center">{product.quantity}</td>
+                                    <td className="px-6 py-4 text-sm text-right">${product.price_per_unit * product.quantity}</td>
+                                  </tr>
+                                ))}
+                              </tbody>
+                            </table>
+                          </td>
+                        </tr>
                       )}
-                    </button>
-                  </div>
-
-                  {/* Detalles de productos (expandible) */}
-                  {expandedOrders.has(order.orderid) && (
-                    <div className="p-4 bg-[#374151]">
-                      <table className="min-w-full">
-                        <thead>
-                          <tr className="bg-gray-600">
-                            <th className="px-4 py-2 text-center">Nombre</th>
-                            <th className="px-4 py-2 text-center">Producto</th>
-                            <th className="px-4 py-2 text-center">Cantidad</th>
-                            <th className="px-4 py-2 text-center">Precio Total</th>
-                          </tr>
-                        </thead>
-                        <tbody className="divide-y divide-gray-600">
-                          {order.products.map((product: ProductFromAPI, productIndex: number) => (
-                            <tr key={productIndex} className="hover:bg-gray-800">
-                              <td className="px-4 py-2 text-center">{product.product_name}</td>
-                              <td className="px-4 py-2 text-center">
-                                <a
-                                  href={`/products/${product.productcode}`}
-                                  className="text-blue-500 underline hover:text-blue-700"
-                                  onMouseEnter={(e) => handleProductMouseEnter(e, product)}
-                                  onMouseLeave={handleMouseLeave}
-                                >
-                                  Ver producto
-                                </a>
-                              </td>
-                              <td className="px-4 py-2 text-center">{product.quantity}</td>
-                              <td className="px-4 py-2 text-center">${product.price_per_unit * product.quantity}</td>
-                            </tr>
-                          ))}
-                        </tbody>
-                      </table>
-                    </div>
-                  )}
-                </div>
-              ))}
+                    </React.Fragment>
+                  ))}
+                </tbody>
+              </table>
             </div>
-          </div>
-        )}
-
-        {/* Preview del producto usando ProductCard */}
-        {previewProduct && (
-          <div
-            className="fixed z-[9999]"
-            style={{
-              left: `${previewPosition.x}px`,
-              top: `${previewPosition.y}px`,
-              width: '300px',
-              pointerEvents: 'auto'
-            }}
-            onMouseEnter={handlePreviewMouseEnter}
-            onMouseLeave={handleMouseLeave}
-          >
-            <ProductCard 
-              product={{
-                code: String(previewProduct.code),
-                name: previewProduct.name,
-                price: String(previewProduct.price),
-                material: previewProduct.material,
-                stock: String(previewProduct.stock),
-                description: previewProduct.description,
-                images_url: previewProduct.images.map(img => img.image_url),
-                stl_file_url: previewProduct.stl_file_url,
-                seller: previewProduct.seller_name
-              }}
-              rotate={true}
-            />
-          </div>
-        )}
+          )}
+        </section>
       </div>
     );
   };
@@ -384,6 +409,29 @@ const MisComprasPage: React.FC = () => {
           {renderSection()}
         </main>
       </div>
+
+      {/* Preview del producto */}
+      {previewProduct && (
+        <div 
+          className="fixed z-[9999]"
+          style={{
+            left: `${previewPosition.x}px`,
+            top: `${previewPosition.y}px`,
+            width: '400px',
+            pointerEvents: 'auto'
+          }}
+          onMouseEnter={handlePreviewMouseEnter}
+          onMouseLeave={handleMouseLeave}
+        >
+          <div className="bg-gray-800 rounded-lg overflow-hidden shadow-lg">
+            <ProductCard 
+              product={previewProduct}
+              rotate={true}
+            />
+          </div>
+        </div>
+      )}
+
       <Footer />
     </div>
   );
