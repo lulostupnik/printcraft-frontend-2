@@ -41,8 +41,8 @@ export default function PaymentPage() {
          
           const order_products = [
             {
-              product: String(code), // Convert 'code' to string
-              quantity: String(quantity), // Convert 'quantity' to string
+              product: code, 
+              quantity: quantity,
             },
           ];
   
