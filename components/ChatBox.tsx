@@ -5,15 +5,25 @@ import { API_URL } from '@/api/api';
 
 export default function ChatBox() {
   const [userInput, setUserInput] = useState('');
-  const [messages, setMessages] = useState<Array<{ role: string, text: string, productId?: number }>>([]);
+  const [messages, setMessages] = useState<Array<{ role: string, text: string, productId?: number }>>([
+    {
+      role: 'assistant',
+      text: '¡Hola! Soy CositoAI, tu asistente personal. Estoy aquí para ayudarte a encontrar ese producto de impresión 3D que necesitas. Pregúntame por cualquier artículo y te ayudaré a localizarlo.',
+    },
+  ]);
   const [isChatLoading, setIsChatLoading] = useState(false);
   const [isChatOpen, setIsChatOpen] = useState(false);
 
   const handleChatSubmit = async () => {
     if (!userInput.trim()) return;
+
+    const inputToSend = userInput; // Save current input
+    setUserInput(''); // Clear the input immediately
+
     setIsChatLoading(true);
 
-    const newMessages = [...messages, { role: 'user', text: userInput }];
+    // Add the user's message to the chat before the API call
+    const newMessages = [...messages, { role: 'user', text: inputToSend }];
     setMessages(newMessages);
 
     try {
@@ -22,7 +32,7 @@ export default function ChatBox() {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ input: userInput }),
+        body: JSON.stringify({ input: inputToSend }),
       });
 
       let assistantMessage: { role: string, text: string, productId?: number } = {
@@ -46,7 +56,6 @@ export default function ChatBox() {
       setMessages([...newMessages, { role: 'assistant', text: 'Ha ocurrido un error.' }]);
     } finally {
       setIsChatLoading(false);
-      setUserInput('');
     }
   };
 
