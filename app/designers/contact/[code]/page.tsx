@@ -22,6 +22,9 @@ const ContactPage = () => {
   const [reqType, setReqType] = useState<'print-requests' | 'design-requests'>('design-requests');
   const [urlfecth, setUrlFetch] = useState<string>(`${API_URL}`);
   const [materials, setMaterials] = useState<Material[]>([]);
+  const [showNotification, setShowNotification] = useState(false);
+  const [notificationMessage, setNotificationMessage] = useState('');
+  const [notificationType, setNotificationType] = useState<'success' | 'error'>('success');
 
   useEffect(() => {
     const fetchMaterials = async () => {
@@ -43,12 +46,32 @@ const ContactPage = () => {
     fetchMaterials();
   }, []);
 
+  // Función para recargar los datos
+  const reloadData = async () => {
+    try {
+      const response = await fetch(`${API_URL}/materials/`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+        },
+      });
+      if (response.ok) {
+        const data = await response.json();
+        setMaterials(data);
+      }
+    } catch (error) {
+      console.error('Error al recargar materiales:', error);
+    }
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     const accessToken = localStorage.getItem('accessToken');
     if (!accessToken) {
-      alert('No estás autorizado. Por favor inicia sesión.');
+      setNotificationMessage('No estás autorizado. Por favor inicia sesión.');
+      setNotificationType('error');
+      setShowNotification(true);
+      setTimeout(() => setShowNotification(false), 3000);
       return;
     }
 
@@ -96,19 +119,44 @@ const ContactPage = () => {
       });
 
       if (response.ok) {
-        alert('Formulario enviado con éxito');
+        setNotificationMessage('✅ Solicitud enviada exitosamente');
+        setNotificationType('success');
+        setShowNotification(true);
+        setTimeout(() => setShowNotification(false), 3000);
+
+        // Limpiar el formulario
+        setDescription('');
+        setQuantity(1);
+        setMaterial('');
+        setStlFile(null);
+        setDesignImages([]);
+        // Recargar los datos
+        await reloadData();
       } else {
         const errorData = await response.json();
-        alert(errorData.message || 'Ocurrió un error. Inténtalo nuevamente.');
+        setNotificationMessage(errorData.message || 'Ocurrió un error. Inténtalo nuevamente.');
+        setNotificationType('error');
+        setShowNotification(true);
+        setTimeout(() => setShowNotification(false), 3000);
       }
     } catch (error) {
-      alert('Ocurrió un error. Inténtalo nuevamente.');
+      setNotificationMessage('Ocurrió un error. Inténtalo nuevamente.');
+      setNotificationType('error');
+      setShowNotification(true);
+      setTimeout(() => setShowNotification(false), 3000);
     }
   };
 
   return (
     <div className="flex flex-col min-h-screen bg-gray-900 text-white">
-  <Suspense fallback={<div></div>}>
+      {/* Notificación de éxito */}
+      {showNotification && (
+        <div className={`fixed top-4 right-4 ${notificationType === 'success' ? 'bg-green-500' : 'bg-red-500'} text-white px-6 py-3 rounded-lg shadow-lg z-50 animate-fade-in-out`}>
+          {notificationMessage}
+        </div>
+      )}
+
+      <Suspense fallback={<div></div>}>
           <Header showCart={true} showSearchBar={true}/>
       </Suspense>
 

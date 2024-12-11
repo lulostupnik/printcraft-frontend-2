@@ -3,6 +3,7 @@ import { PlusCircleIcon, MinusCircleIcon } from '@heroicons/react/24/solid';
 import { PrintRequestUser } from '@/types/UserPrintRequests2'; // Import your actual type
 import { useRouter } from 'next/navigation';
 import STLViewer from '@/components/RotatingStlView';  // Importamos STLViewer
+import { API_URL } from "@/api/api";
 
 type UserRequestsTableProps = {
   title: string;
@@ -79,6 +80,35 @@ const UserRequestsTable: React.FC<UserRequestsTableProps> = ({
       setTooltipStl(null);
       setTooltipImage(null);
     }, 300);
+  };
+
+  const handleDeleteRequest = async (requestId: number) => {
+    if (window.confirm('¿Estás seguro de que deseas eliminar esta solicitud?')) {
+      try {
+        const response = await fetch(`${API_URL}/${requestType}/delete/${requestId}/`, {
+          method: 'DELETE',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
+          },
+          credentials: 'include',
+        });
+
+        if (!response.ok) {
+          throw new Error('Error al borrar la solicitud');
+        }
+
+        alert('Solicitud eliminada exitosamente');
+        window.location.reload();
+        /*setTimeout(() => {
+          window.location.reload();
+        }, 1000);*/
+
+      } catch (error) {
+        console.error('Error al borrar la solicitud:', error);
+        alert('No se pudo borrar la solicitud');
+      }
+    }
   };
 
   return (
@@ -221,7 +251,7 @@ const UserRequestsTable: React.FC<UserRequestsTableProps> = ({
                             <>
                               <button
                                 className="bg-red-500 text-white px-4 py-2 rounded-lg"
-                                onClick={() => handleDeclineRequest?.(request.requestID)}
+                                onClick={() => handleDeleteRequest(request.requestID)}
                               >
                                 Borrar
                               </button>
