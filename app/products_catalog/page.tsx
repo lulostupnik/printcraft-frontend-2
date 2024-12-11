@@ -18,7 +18,7 @@ function CatalogPageContent() {
   const [error, setError] = useState<string | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
-  const [pageSize] = useState(10); // fixed page size
+  const [pageSize] = useState(8); // fixed page size
 
   // Update searchQuery whenever the URL search parameter changes
   useEffect(() => {
@@ -134,40 +134,25 @@ function CatalogPageContent() {
         <div className="mb-8 text-center">No products available.</div>
       )}
 
-      <div className="mt-auto flex justify-center items-center py-4">
+      <div className="mt-auto flex justify-center items-center gap-4 py-4">
         <button
           onClick={handlePreviousPage}
           disabled={currentPage === 1}
-          className="bg-gray-700 text-white rounded px-4 py-2 mr-2 disabled:opacity-50"
+          className="bg-gray-700 text-white rounded px-4 py-2 disabled:opacity-50"
         >
-          Previous
+          Anterior
         </button>
 
-        <div className="flex items-center">
-          <span className="mr-2">Page</span>
-          <input
-            type="number"
-            min="1"
-            max={totalPages}
-            value={inputPage}
-            onChange={handlePageInputChange}
-            className="w-16 bg-gray-800 text-white text-center rounded px-2 py-1"
-          />
-          <span className="mx-2">of {totalPages}</span>
-          <button
-            onClick={handleGoToPage}
-            className="bg-gray-700 text-white rounded px-2 py-1"
-          >
-            Go
-          </button>
+        <div className="text-white">
+          Página {currentPage} de {totalPages}
         </div>
 
         <button
           onClick={handleNextPage}
           disabled={currentPage === totalPages}
-          className="bg-gray-700 text-white rounded px-4 py-2 ml-2 disabled:opacity-50"
+          className="bg-gray-700 text-white rounded px-4 py-2 disabled:opacity-50"
         >
-          Next
+          Siguiente
         </button>
       </div>
     </main>
