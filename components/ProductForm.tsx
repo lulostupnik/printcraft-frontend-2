@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, ChangeEvent, FormEvent } from 'react';
+import React, { useState, useEffect, ChangeEvent, FormEvent } from 'react';
 import { API_URL } from "@/api/api";
 
 interface ProductData {
@@ -16,6 +16,11 @@ interface ProductFormProps {
   onProductPublished?: (data: any) => void; // Optional callback when the product is published
 }
 
+interface Material {
+  name: string;
+  // Agrega otras propiedades si las hay
+}
+
 const ProductForm: React.FC<ProductFormProps> = ({ onProductPublished }) => {
   const [productData, setProductData] = useState<ProductData>({
     name: '',
@@ -29,8 +34,29 @@ const ProductForm: React.FC<ProductFormProps> = ({ onProductPublished }) => {
 
   const [isLoading, setIsLoading] = useState(false);
   const [imagePreviews, setImagePreviews] = useState<string[]>([]);
+  const [materials, setMaterials] = useState<Material[]>([]);
 
-  const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  useEffect(() => {
+    const fetchMaterials = async () => {
+      try {
+        const response = await fetch(`${API_URL}/materials/`, {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+          },
+        });
+        if (response.ok) {
+          const data = await response.json();
+          setMaterials(data);
+        }
+      } catch (error) {
+        console.error('Error al cargar materiales:', error);
+      }
+    };
+
+    fetchMaterials();
+  }, []);
+
+  const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
     setProductData({ ...productData, [name]: value });
   };
@@ -172,15 +198,21 @@ const ProductForm: React.FC<ProductFormProps> = ({ onProductPublished }) => {
         </div>
         <div className="mb-4">
           <label htmlFor="material" className="block text-sm font-medium">Material</label>
-          <input
-            type="text"
+          <select
             id="material"
             name="material"
             value={productData.material}
             onChange={handleChange}
-            className="w-full mt-1 p-2 bg-gray-700 border border-gray-600 rounded"
+            className="w-full mt-1 p-2 bg-gray-700 border border-gray-600 rounded font-sans text-sm text-white"
             required
-          />
+          >
+            <option value="">Selecciona un material</option>
+            {materials.map((material, index) => (
+              <option key={index} value={material.name} className="font-sans">
+                {material.name}
+              </option>
+            ))}
+          </select>
         </div>
         <div className="mb-4">
           <label htmlFor="stock" className="block text-sm font-medium">Stock</label>
