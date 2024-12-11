@@ -32,7 +32,7 @@ const SellerDashboardPage: React.FC = () => {
               <h2 className="text-4xl font-bold mb-4 text-center">
                 Publicar un producto
               </h2>
-                <ProductForm onProductPublished={handleProductPublished} />  {/* Use the form component */}
+                <ProductForm onProductPublished={handleProductPublished} />
               </section>
           </div>
         );

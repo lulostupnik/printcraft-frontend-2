@@ -1,10 +1,14 @@
 'use client';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useParams } from 'next/navigation';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import { API_URL } from '@/api/api';
 import { Suspense } from "react";
+
+interface Material {
+  name: string;
+}
 
 const ContactPage = () => {
   const [hasDesign, setHasDesign] = useState<boolean>(false);
@@ -17,7 +21,27 @@ const ContactPage = () => {
   const code = typeof params.code === 'string' ? params.code : '';
   const [reqType, setReqType] = useState<'print-requests' | 'design-requests'>('design-requests');
   const [urlfecth, setUrlFetch] = useState<string>(`${API_URL}`);
+  const [materials, setMaterials] = useState<Material[]>([]);
 
+  useEffect(() => {
+    const fetchMaterials = async () => {
+      try {
+        const response = await fetch(`${API_URL}/materials/`, {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+          },
+        });
+        if (response.ok) {
+          const data = await response.json();
+          setMaterials(data);
+        }
+      } catch (error) {
+        console.error('Error al cargar materiales:', error);
+      }
+    };
+
+    fetchMaterials();
+  }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -167,14 +191,19 @@ const ContactPage = () => {
           {/* Material Section */}
           <div className="mb-4">
             <label className="block text-sm font-medium mb-2">Material</label>
-            <input
-              type="text"
+            <select
               value={material}
               onChange={(e) => setMaterial(e.target.value)}
-              className="w-full mt-1 p-2 bg-gray-700 border border-gray-600 rounded"
-              placeholder="Especifique el material..."
+              className="w-full mt-1 p-2 bg-gray-700 border border-gray-600 rounded font-sans text-sm text-white"
               required
-            />
+            >
+              <option value="">Selecciona un material</option>
+              {materials.map((material, index) => (
+                <option key={index} value={material.name} className="font-sans">
+                  {material.name}
+                </option>
+              ))}
+            </select>
           </div>
 
           {/* Quantity Section */}
