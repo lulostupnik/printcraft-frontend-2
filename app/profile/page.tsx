@@ -19,6 +19,13 @@ export default function ProfilePage() {
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
+  const [isEditOpen, setIsEditOpen] = useState<boolean>(false);
+  const [editForm, setEditForm] = useState({
+    username: '',
+    firstName: '',
+    lastName: '',
+    email: ''
+  });
 
   const router = useRouter();
 
@@ -67,6 +74,51 @@ export default function ProfilePage() {
     router.push(`/products/${productCode}`);
   };
 
+  const handleEdit = () => {
+    setEditForm({
+      username: username || '',
+      firstName: firstName || '',
+      lastName: lastName || '',
+      email: email || ''
+    });
+    setIsEditOpen(true);
+  };
+
+  const handleSaveChanges = async () => {
+    try {
+      const userId = localStorage.getItem('userId');
+      const accessToken = localStorage.getItem('accessToken');
+      
+      const response = await fetch(`${API_URL}/user/update/`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${accessToken}`
+        },
+        body: JSON.stringify(editForm)
+      });
+
+      if (!response.ok) throw new Error('Failed to update user data');
+
+      // Actualizar el localStorage y el estado
+      localStorage.setItem('username', editForm.username);
+      localStorage.setItem('firstName', editForm.firstName);
+      localStorage.setItem('lastName', editForm.lastName);
+      localStorage.setItem('email', editForm.email);
+
+      setUsername(editForm.username);
+      setFirstName(editForm.firstName);
+      setLastName(editForm.lastName);
+      setEmail(editForm.email);
+
+      console.log('Cerrando snackbar...');
+      setIsEditOpen(false);
+    } catch (err) {
+      console.error('Error:', err);
+      setError('Error al actualizar los datos');
+    }
+  };
+
   return (
     <div className="flex flex-col min-h-screen bg-gray-900 text-white">
         <Suspense fallback={<div></div>}>
@@ -78,7 +130,15 @@ export default function ProfilePage() {
         <section className="mb-12">
           <h1 className="text-4xl font-bold mb-6">Perfil de Usuario</h1>
           <div className="bg-gray-800 p-6 rounded-lg">
-            <h2 className="text-2xl font-bold mb-4">Información Personal</h2>
+            <div className="flex justify-between items-center mb-4">
+              <h2 className="text-2xl font-bold">Información Personal</h2>
+              <button
+                onClick={handleEdit}
+                className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+              >
+                Modificar
+              </button>
+            </div>
             <p className="mb-2">
               <strong>Username:</strong> {username || 'N/A'}
             </p>
@@ -101,6 +161,72 @@ export default function ProfilePage() {
             )}
           </div>
         </section>
+
+        {isEditOpen && (
+          <div className="fixed inset-0 z-50 overflow-y-auto">
+            <div className="flex items-center justify-center min-h-screen">
+              <div className="fixed inset-0 bg-black opacity-30" onClick={() => setIsEditOpen(false)} />
+
+              <div className="relative bg-gray-800 rounded-lg p-8 max-w-md w-full mx-4">
+                <h3 className="text-xl font-bold mb-4">Modificar Información Personal</h3>
+                
+                <div className="space-y-4">
+                  <div>
+                    <label className="block text-sm font-medium mb-1">Username</label>
+                    <input
+                      type="text"
+                      value={editForm.username}
+                      onChange={(e) => setEditForm({...editForm, username: e.target.value})}
+                      className="w-full p-2 rounded bg-gray-700"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium mb-1">Nombre</label>
+                    <input
+                      type="text"
+                      value={editForm.firstName}
+                      onChange={(e) => setEditForm({...editForm, firstName: e.target.value})}
+                      className="w-full p-2 rounded bg-gray-700"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium mb-1">Apellido</label>
+                    <input
+                      type="text"
+                      value={editForm.lastName}
+                      onChange={(e) => setEditForm({...editForm, lastName: e.target.value})}
+                      className="w-full p-2 rounded bg-gray-700"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium mb-1">Email</label>
+                    <input
+                      type="email"
+                      value={editForm.email}
+                      onChange={(e) => setEditForm({...editForm, email: e.target.value})}
+                      className="w-full p-2 rounded bg-gray-700"
+                    />
+                  </div>
+                </div>
+
+                <div className="mt-6 flex justify-end space-x-3">
+                  <button
+                    onClick={() => setIsEditOpen(false)}
+                    className="bg-gray-600 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded"
+                  >
+                    Cancelar
+                  </button>
+                  <button
+                    onClick={handleSaveChanges}
+                    className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                  >
+                    Guardar
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
 
         {isSeller && sellerData && (
           <section className="mb-12">
