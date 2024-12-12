@@ -89,7 +89,7 @@ export default function Footer({ className = '' }: FooterProps) {
   
         {/* Copyright Section */}
         <div className="text-right">
-          <h3 className="text-lg font-semibold mb-4">&copy; 2023 Printcraft.<br /> All rights reserved.</h3>
+          <h3 className="text-lg font-semibold mb-4">&copy; 2023 3dCapybara.<br /> All rights reserved.</h3>
         </div>
       </div>
     </div>

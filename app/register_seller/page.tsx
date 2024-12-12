@@ -648,6 +648,7 @@ import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import { API_URL } from "@/api/api";
 
+
 export default function SellerPage() {
   const [address, setAddress] = useState<string>('');
   const [storeName, setStoreName] = useState<string>('');
@@ -723,7 +724,7 @@ export default function SellerPage() {
       }
     };
 
-    const mercadoPagoURL = `https://auth.mercadopago.com.ar/authorization?client_id=5696619348847657&response_type=code&platform_id=mp&redirect_uri=https://3dcapybara.vercel.app/register_seller`;
+    const mercadoPagoURL = `https://auth.mercadopago.com.ar/authorization?client_id=5696619348847657&response_type=code&redirect_uri=https://3dcapybara.vercel.app/register_seller&scope=write_payments read_payments offline_access`;
 
     return (
       <main className="flex-grow container mx-auto px-4 py-8">
