@@ -4,6 +4,7 @@ import { PrintRequestUser } from '@/types/UserPrintRequests2'; // Import your ac
 import { useRouter } from 'next/navigation';
 import STLViewer from '@/components/RotatingStlView';  // Importamos STLViewer
 import { API_URL } from "@/api/api";
+import { AuctionResponse } from '@/types/AuctionResponse';
 
 type UserRequestsTableProps = {
   title: string;
@@ -12,10 +13,12 @@ type UserRequestsTableProps = {
   isExpanded: boolean;
   onExpand: () => void;
   priceInputs?: { [key: number]: string };
-  handleAcceptRequest?: (requestID: number) => void;
+  handleAcceptRequest?: (requestID: number, responseID: number) => void;
   handleDeclineRequest?: (requestID: number) => void;
   handleMarkAsDelivered?: (requestID: number) => void;
-  requestType: 'print-requests' | 'design-requests';
+  requestType: 'print-requests' | 'design-requests' | 'design-reverse-auctions' | 'print-reverse-auctions';
+  handleRequestResponses?: (requestID: number) => void;
+  responses?: AuctionResponse[];
 };
 
 const UserRequestsTable: React.FC<UserRequestsTableProps> = ({
@@ -29,6 +32,8 @@ const UserRequestsTable: React.FC<UserRequestsTableProps> = ({
   handleDeclineRequest,
   handleMarkAsDelivered,
   requestType,
+  handleRequestResponses,
+  responses,
 }) => {
   const maxHeight = isExpanded ? 'max-h-[24rem]' : 'max-h-[12rem]';
   const [tooltipStl, setTooltipStl] = useState<string | null>(null);
@@ -36,6 +41,8 @@ const UserRequestsTable: React.FC<UserRequestsTableProps> = ({
   const [tooltipPosition, setTooltipPosition] = useState({ x: 0, y: 0 });
   const timeoutRef = useRef<NodeJS.Timeout>();
   const router = useRouter();
+  const [showSnackbar, setShowSnackbar] = useState(false);
+  const [currentRequestId, setCurrentRequestId] = useState<number | null>(null);
 
   const handleNavigateToDesigner = (sellerID: number) => {
     router.push(`/designers/designer/${sellerID}`);
@@ -109,6 +116,29 @@ const UserRequestsTable: React.FC<UserRequestsTableProps> = ({
         alert('No se pudo borrar la solicitud');
       }
     }
+  };
+
+  const handleShowResponses = async (requestId: number) => {
+    if (handleRequestResponses) {
+      await handleRequestResponses(requestId);
+      setCurrentRequestId(requestId);
+      setShowSnackbar(true);
+    }
+  };
+
+  const handleCloseSnackbar = () => {
+    setShowSnackbar(false);
+  };
+
+  const formatDate = (dateString: string) => {
+    const date = new Date(dateString);
+    return date.toLocaleDateString('es-ES', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit'
+    });
   };
 
   return (
@@ -249,6 +279,14 @@ const UserRequestsTable: React.FC<UserRequestsTableProps> = ({
                         <div className="flex justify-center space-x-2">
                           {type === 'pending' && (
                             <>
+                              {(requestType === 'design-reverse-auctions' || requestType === 'print-reverse-auctions') && (
+                                <button
+                                  className="bg-blue-500 text-white px-4 py-2 rounded-lg"
+                                  onClick={() => handleShowResponses(request.requestID)}
+                                >
+                                  Respuestas
+                                </button>
+                              )}
                               <button
                                 className="bg-red-500 text-white px-4 py-2 rounded-lg"
                                 onClick={() => handleDeleteRequest(request.requestID)}
@@ -330,6 +368,57 @@ const UserRequestsTable: React.FC<UserRequestsTableProps> = ({
                 alt="Imagen de diseño"
                 className="w-full h-full object-cover"
               />
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Snackbar modificado para manejar el caso sin respuestas */}
+      {showSnackbar && (
+        <div className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50">
+          <div className="bg-gray-800 text-white p-6 rounded-lg shadow-lg w-[90%] max-w-6xl">
+            <div className="flex justify-between items-center mb-4">
+              <h4 className="text-xl font-bold">Respuestas recibidas:</h4>
+              <button
+                className="text-gray-300 hover:text-white"
+                onClick={handleCloseSnackbar}
+              >
+                <span className="text-2xl">&times;</span>
+              </button>
+            </div>
+            <div className="max-h-[70vh] overflow-y-auto">
+              {responses && responses.length > 0 ? (
+                responses.map((response, index) => (
+                  <div key={index} className="mb-4 p-4 bg-gray-700 rounded hover:bg-gray-600 transition-colors">
+                    <div className="flex items-center justify-between">
+                      <div className="grid grid-cols-4 gap-8 flex-grow">
+                        <p><span className="font-semibold">Vendedor:</span> {response.sellerName}</p>
+                        <p><span className="font-semibold">Precio:</span> ${response.price}</p>
+                        <p><span className="font-semibold">Dirección:</span> {response.sellerAddress || 'Sin dirección'}</p>
+                        <p><span className="font-semibold">Creado el:</span> {formatDate(response.created_at)}</p>
+                      </div>
+                      <div className="ml-8">
+                        <button
+                          onClick={() => {
+                            if (handleAcceptRequest && currentRequestId) {
+                              console.log('Accepting response:', response.responseID, 'for request:', currentRequestId);
+                              handleAcceptRequest(currentRequestId, response.responseID);
+                              handleCloseSnackbar();
+                            }
+                          }}
+                          className="bg-green-500 hover:bg-green-600 text-white px-6 py-2 rounded-lg transition-colors"
+                        >
+                          Aceptar Oferta
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                ))
+              ) : (
+                <div className="p-4 bg-gray-700 rounded text-center">
+                  <p>No hay respuestas disponibles.</p>
+                </div>
+              )}
             </div>
           </div>
         </div>

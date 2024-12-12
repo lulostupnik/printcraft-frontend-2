@@ -4,7 +4,7 @@ import usePrintRequests from '@/hooks/usePrintRequest';
 
 
 const ExploreReqDashboard: React.FC = () => {
-  const { loading } = usePrintRequests('print-requests');
+  const { loading } = usePrintRequests('print-requests');   //solamente tiene el loading
 
   return (
     <div className="container mx-auto">
