@@ -30,7 +30,7 @@ const UserPrintReqDashboard: React.FC<UserPrintReqDashboardProps> = ({ requestTy
   ];
   
   const tables = React.useMemo(() => {
-    if (requestType.includes("design-reverse-auctions" || "print-reverse-auctions")) {
+    if (requestType === "design-reverse-auctions" || requestType === "print-reverse-auctions") {
       return [{
         key: 'pending',
         title: 'Subastas Activas',

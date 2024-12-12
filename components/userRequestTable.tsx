@@ -274,48 +274,6 @@ const UserRequestsTable: React.FC<UserRequestsTableProps> = ({
                           {request.status === 'Realizada' ? `Buscar en: ${request.direccion_del_vendedor || 'dirección no disponible'}`: 'Esperando al vendedor'}
                       </td>
                     )}
-                    {type !== 'delivered' && type !== 'accepted-finalized' && (
-                      <td className="px-4 py-2 text-center">
-                        <div className="flex justify-center space-x-2">
-                          {type === 'pending' && (
-                            <>
-                              {(requestType === 'design-reverse-auctions' || requestType === 'print-reverse-auctions') && (
-                                <button
-                                  className="bg-blue-500 text-white px-4 py-2 rounded-lg"
-                                  onClick={() => handleShowResponses(request.requestID)}
-                                >
-                                  Respuestas
-                                </button>
-                              )}
-                              <button
-                                className="bg-red-500 text-white px-4 py-2 rounded-lg"
-                                onClick={() => handleDeleteRequest(request.requestID)}
-                              >
-                                Borrar
-                              </button>
-                            </>
-                          )}
-                          {type === 'quoted' && (
-                            <>
-                              <button
-                                className="bg-green-500 text-white px-4 py-2 rounded-lg"
-                                onClick={() => handleAcceptRequest?.(request.requestID)}>
-                                Aceptar
-                              </button>
-                              
-                              <button
-                                className="bg-red-500 text-white px-4 py-2 rounded-lg"
-                                onClick={() => handleDeclineRequest?.(request.requestID)}
-                              >
-                                Declinar
-                              </button>
-                            </>
-                          )}
-
-                         
-                        </div>
-                      </td>
-                    )}
                   </tr>
                 ))}
               </tbody>

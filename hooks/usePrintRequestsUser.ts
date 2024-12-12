@@ -127,21 +127,27 @@ const usePrintRequestsUser = (requestType: 'print-requests' | 'design-requests' 
 
   // Filter requests into different statuses
   const pendingRequests = printRequests.filter((req: PrintRequest) => 
-    requestType.includes("design-reverse-auctions" || "print-reverse-auctions") ? true : req.status === 'Pendiente'
+    requestType === "design-reverse-auctions" || requestType === "print-reverse-auctions" 
+      ? true 
+      : req.status === 'Pendiente'
   );
   
   // Para reverse auctions, no necesitamos los otros estados
-  const quotedRequests = requestType.includes("design-reverse-auctions" || "print-reverse-auctions") ? 
-    [] : printRequests.filter((req: PrintRequest) => req.status === 'Cotizada');
+  const quotedRequests = requestType === "design-reverse-auctions" || requestType === "print-reverse-auctions"
+    ? [] 
+    : printRequests.filter((req: PrintRequest) => req.status === 'Cotizada');
   
-  const acceptedRequests = requestType.includes("design-reverse-auctions" || "print-reverse-auctions") ? 
-    [] : printRequests.filter((req: PrintRequest) => req.status === 'Aceptada');
+  const acceptedRequests = requestType === "design-reverse-auctions" || requestType === "print-reverse-auctions"
+    ? [] 
+    : printRequests.filter((req: PrintRequest) => req.status === 'Aceptada');
   
-  const finalizedRequests = requestType.includes("design-reverse-auctions" || "print-reverse-auctions") ? 
-    [] : printRequests.filter((req: PrintRequest) => req.status === 'Realizada');
+  const finalizedRequests = requestType === "design-reverse-auctions" || requestType === "print-reverse-auctions"
+    ? [] 
+    : printRequests.filter((req: PrintRequest) => req.status === 'Realizada');
   
-  const deliveredRequests = requestType.includes("design-reverse-auctions" || "print-reverse-auctions") ? 
-    [] : printRequests.filter((req: PrintRequest) => req.status === 'Entregada');
+  const deliveredRequests = requestType === "design-reverse-auctions" || requestType === "print-reverse-auctions"
+    ? [] 
+    : printRequests.filter((req: PrintRequest) => req.status === 'Entregada');
 
   return {
     pendingRequests,
