@@ -11,7 +11,7 @@ type RequestsTableProps = {
   onExpand: () => void; // New prop for handling expand action
   priceInputs?: { [key: number]: string };
   handlePriceChange?: (requestID: number, value: string) => void;
-  handleAcceptRequest?: (requestID: number) => void;
+  handleAcceptRequest?: (requestID: number, price: number) => void;
   handleDeclineRequest?: (requestID: number) => void;
   handleFinalizeRequest?: (requestID: number) => void;
   handleMarkAsDelivered?: (requestID: number) => void;
@@ -180,13 +180,27 @@ const RequestsTable: React.FC<RequestsTableProps> = ({
 
                     {type === 'pending' && (
                       <td className="px-4 py-2 text-center">
-                        <input
-                          type="number"
-                          value={priceInputs?.[request.requestID] || ''}
-                          onChange={(e) => handlePriceChange?.(request.requestID, e.target.value)}
-                          placeholder="Precio"
-                          className="bg-gray-800 text-white p-2 rounded-lg text-center"
-                        />
+                        {request.price ? (
+                          <span className="font-medium">{request.price}</span>
+                        ) : (
+                          <div className="flex items-center justify-center">
+                            <span className="text-gray-400 mr-1">$</span>
+                            <input
+                              type="number"
+                              min="0"
+                              step="0.01"
+                              value={priceInputs?.[request.requestID] || ''}
+                              onChange={(e) => handlePriceChange?.(request.requestID, e.target.value)}
+                              className="w-20 px-2 py-1.5 bg-gray-600 border border-gray-500 rounded-md 
+                                        text-white placeholder-gray-400 focus:outline-none focus:ring-2 
+                                        focus:ring-blue-500 focus:border-transparent transition-all
+                                        [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none 
+                                        [&::-webkit-inner-spin-button]:appearance-none text-center"
+                              placeholder="0.00"
+                              required
+                            />
+                          </div>
+                        )}
                       </td>
                     )}
 
@@ -204,8 +218,16 @@ const RequestsTable: React.FC<RequestsTableProps> = ({
                           {type === 'pending' && (
                             <>
                               <button
-                                className="bg-green-500 text-white px-4 py-2 rounded-lg"
-                                onClick={() => handleAcceptRequest?.(request.requestID)}
+                                className={`bg-green-500 text-white px-4 py-2 rounded-lg ${
+                                  !request.price && !priceInputs?.[request.requestID] ? 'opacity-50 cursor-not-allowed' : ''
+                                }`}
+                                onClick={() => {
+                                  const price = request.price || Number(priceInputs?.[request.requestID]);
+                                  if (price) {
+                                    handleAcceptRequest?.(request.requestID, Number(price));
+                                  }
+                                }}
+                                disabled={!request.price && !priceInputs?.[request.requestID]}
                               >
                                 Aceptar
                               </button>
