@@ -1,4 +1,5 @@
 'use client'
+import ChatBox from "@/components/ChatBox";
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import SimpleHeader from '@/components/SimpleHeader';

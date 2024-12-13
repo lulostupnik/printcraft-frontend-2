@@ -1,4 +1,5 @@
 'use client';
+import ChatBox from "@/components/ChatBox";
 import { API_URL } from "@/api/api";
 import React, { useEffect, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';

@@ -7,6 +7,7 @@ import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import STLViewer from '@/components/RotatingStlView';
 import { API_URL } from '@/api/api';
+import ChatBox from "@/components/ChatBox";
 
 interface CartProduct {
   id: number;
@@ -312,6 +313,8 @@ const CartPage = () => {
       </main>
 
       <Footer />
+
+      <ChatBox/>
     </div>
   );
 };

@@ -1,5 +1,6 @@
 'use client'
 //Opcion 1
+import ChatBox from "@/components/ChatBox";
 import React, { useState } from 'react';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';

@@ -1,4 +1,5 @@
 "use client";
+import ChatBox from "@/components/ChatBox";
 import Header from '@/components/Header';
 import { API_URL } from "@/api/api";
 import Footer from '@/components/Footer';

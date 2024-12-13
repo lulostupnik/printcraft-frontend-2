@@ -5,7 +5,7 @@ import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import { API_URL } from '@/api/api';
 import { Suspense } from "react";
-
+import ChatBox from "@/components/ChatBox";
 interface Material {
   name: string;
 }

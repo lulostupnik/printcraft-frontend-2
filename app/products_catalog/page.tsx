@@ -1,5 +1,5 @@
 "use client";
-
+import ChatBox from "@/components/ChatBox";
 import { API_URL } from "@/api/api";
 import { useState, useEffect, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
