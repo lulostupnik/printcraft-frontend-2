@@ -59,7 +59,7 @@ type ProductDetail = {
 
 const MisComprasPage: React.FC = () => {
   const [selectedSection, setSelectedSection] = useState<
-    "products" | "designRequests" | "printRequests"
+    "products" | "designRequests" | "printRequests" | "reverseAuctions"
   >("products");
 
   const router = useRouter(); // Initialize useRouter
@@ -72,7 +72,7 @@ const MisComprasPage: React.FC = () => {
   const [previewPosition, setPreviewPosition] = useState({ x: 0, y: 0 });
   const timeoutRef = useRef<NodeJS.Timeout>();
 
-  const handleSectionChange= (section: "products" | "designRequests" | "printRequests") => {
+  const handleSectionChange= (section: "products" | "designRequests" | "printRequests" | "reverseAuctions") => {
     setLoading(true); // Set loading to true
 
     setTimeout(() => {
@@ -332,6 +332,16 @@ const MisComprasPage: React.FC = () => {
     );
   };
 
+  //<UserPrintReqDashboard requestType="print-reverse-auctions" />
+
+  const renderReverseAuctions = () => {
+    return (
+    <div>
+      <UserPrintReqDashboard requestType="design-reverse-auctions" />
+    </div>
+    );
+  };
+
   //<UserPrintReqDashboard requestType="print-requests" />
   //<AuctionRequestComponent type="print-requests"></AuctionRequestComponent>
 
@@ -351,6 +361,8 @@ const MisComprasPage: React.FC = () => {
         return <div>{renderDesignRequests()}</div>
       case "printRequests":
         return <div>{renderPrintRequests()}</div>
+      case "reverseAuctions":
+        return <div>{renderReverseAuctions()}</div>
       default:
         return <div></div>;
     }
@@ -375,7 +387,7 @@ const MisComprasPage: React.FC = () => {
                     : "bg-gray-700 text-gray-300"
                 }`}
               >
-                Products
+                Ordenes de compra
               </button>
             </li>
             <li>
@@ -387,7 +399,7 @@ const MisComprasPage: React.FC = () => {
                     : "bg-gray-700 text-gray-300"
                 }`}
               >
-                Design Requests
+                Solicitudes de diseño
               </button>
             </li>
             <li>
@@ -399,7 +411,19 @@ const MisComprasPage: React.FC = () => {
                     : "bg-gray-700 text-gray-300"
                 }`}
               >
-                Print Requests
+                Solicitudes de impresión
+              </button>
+            </li>
+            <li>
+              <button
+                onClick={() => handleSectionChange("reverseAuctions")}
+                className={`w-full text-left px-4 py-2 rounded-lg ${
+                  selectedSection === "reverseAuctions"
+                    ? "bg-blue-600 text-white"
+                    : "bg-gray-700 text-gray-300"
+                }`}
+              >
+                Subastas
               </button>
             </li>
           </ul>

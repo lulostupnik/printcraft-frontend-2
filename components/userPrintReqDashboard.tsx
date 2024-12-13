@@ -7,7 +7,7 @@ import usePrintRequestsUser from '@/hooks/usePrintRequestsUser';
 type TableType = 'pending' | 'quoted' |  'delivered' | 'accepted-finalized';
 
 interface UserPrintReqDashboardProps {
-  requestType: 'print-requests' | 'design-requests';
+  requestType: 'print-requests' | 'design-requests' | 'design-reverse-auctions' | 'print-reverse-auctions';
 }
 
 const UserPrintReqDashboard: React.FC<UserPrintReqDashboardProps> = ({ requestType }) => {
@@ -20,7 +20,8 @@ const UserPrintReqDashboard: React.FC<UserPrintReqDashboardProps> = ({ requestTy
     expandedTable,
     setExpandedTable,
     handleAcceptRequest,
-    handleDeclineRequest,
+    handleRequestResponses,
+    responses,
   } = usePrintRequestsUser(requestType);
 
   const combinedAcceptedAndFinalizedRequests = [
@@ -28,86 +29,107 @@ const UserPrintReqDashboard: React.FC<UserPrintReqDashboardProps> = ({ requestTy
     ...finalizedRequests,
   ];
   
-  const tables: {
-    key: TableType;
-    title: string;
-    requests: any[]; // You can type this based on your actual request data model
-    type: TableType ;
-    priceInputs?: { [key: number]: string };
-    handlePriceChange?: (requestID: number, value: string) => void;
-    handleAcceptRequest?: (requestID: number) => void;
-    handleDeclineRequest?: (requestID: number) => void;
-    handleMarkAsDelivered?: (requestID: number) => void;
-  }[] = [
-    {
-      key: 'pending',
-      title: 'Solicitudes Pendientes',
-      requests: pendingRequests,
-      type: 'pending',
-   
-    },
-    {
-      key: 'quoted',
-      title: 'Solicitudes Cotizadas',
-      requests: quotedRequests,
-      type: 'quoted',
-      handleAcceptRequest,
-      handleDeclineRequest,
-    },
-    {
-      key: 'accepted-finalized', // Combined table for accepted and finalized requests
-      title: 'Solicitudes Aceptadas y Finalizadas',
-      requests: combinedAcceptedAndFinalizedRequests,
-      type: 'accepted-finalized'
-    },
-    {
-      key: 'delivered',
-      title: 'Solicitudes Entregadas',
-      requests: deliveredRequests,
-      type: 'delivered',
-    },
-  ];
+  const tables = React.useMemo(() => {
+    if (requestType === "design-reverse-auctions" || requestType === "print-reverse-auctions") {
+      return [{
+        key: 'pending',
+        title: 'Subastas Activas',
+        requests: pendingRequests,
+        type: 'pending' as const,
+        handleAcceptRequest,
+        handleRequestResponses,
+        responses,
+      }];
+    }
+
+    return [
+      {
+        key: 'pending',
+        title: 'Solicitudes Pendientes',
+        requests: pendingRequests,
+        type: 'pending',
+        handleRequestResponses,
+        responses,
+      },
+      {
+        key: 'quoted',
+        title: 'Solicitudes Cotizadas',
+        requests: quotedRequests,
+        type: 'quoted',
+        handleAcceptRequest,
+      },
+      {
+        key: 'accepted-finalized',
+        title: 'Solicitudes Aceptadas y Finalizadas',
+        requests: combinedAcceptedAndFinalizedRequests,
+        type: 'accepted-finalized'
+      },
+      {
+        key: 'delivered',
+        title: 'Solicitudes Entregadas',
+        requests: deliveredRequests,
+        type: 'delivered',
+      },
+    ];
+  }, [requestType, pendingRequests, quotedRequests, combinedAcceptedAndFinalizedRequests, deliveredRequests]);
 
   return (
     <div className="container mx-auto">
       <section className="mb-12 bg-gray-800 p-8 rounded-lg">
         <h2 className="text-4xl font-bold mb-4 text-center">
-          {requestType === 'design-requests' ? 'Design Request Dashboard' : 'Print Request Dashboard'}
+          {(() => {
+            switch (requestType) {
+              case 'design-requests':
+                return 'Panel de Solicitudes de Diseño';
+              case 'print-requests':
+                return 'Panel de Solicitudes de Impresión';
+              case 'design-reverse-auctions':
+                return 'Panel de Subastas de Diseño';
+              case 'print-reverse-auctions':
+                return 'Panel de Subastas de Impresión';
+              default:
+                return 'Panel de Solicitudes';
+            }
+          })()}
         </h2>
 
-        {expandedTable === null
-          ? tables.map((table) => (
-              <UserRequestsTable
-                key={table.key}
-                title={table.title}
-                requests={table.requests}
-                type={table.type}
-                priceInputs={table.priceInputs}
-                handleAcceptRequest={table.handleAcceptRequest}
-                handleDeclineRequest={table.handleDeclineRequest}
-                handleMarkAsDelivered={table.handleMarkAsDelivered}
-                isExpanded={false}
-                onExpand={() => setExpandedTable(table.key)}
-                requestType={requestType} // Pass requestType here
-              />
-            ))
-          : tables
-              .filter((table) => table.key === expandedTable)
-              .map((table) => (
+        {tables.every(table => table.requests.length === 0) ? (
+          <div className="text-center text-gray-300 py-8">
+            <p className="text-xl">No hay solicitudes disponibles</p>
+          </div>
+        ) : (
+          expandedTable === null
+            ? tables.map((table) => (
                 <UserRequestsTable
                   key={table.key}
                   title={table.title}
                   requests={table.requests}
-                  type={table.type}
-                  priceInputs={table.priceInputs}
+                  type={table.type as 'pending' | 'quoted' | 'accepted-finalized' | 'delivered'}
                   handleAcceptRequest={table.handleAcceptRequest}
-                  handleDeclineRequest={table.handleDeclineRequest}
-                  handleMarkAsDelivered={table.handleMarkAsDelivered}
-                  isExpanded={true}
-                  onExpand={() => setExpandedTable(null)}
-                  requestType={requestType} // Pass requestType here
+                  handleRequestResponses={table.handleRequestResponses}
+                  responses={table.responses}
+                  isExpanded={false}
+                  onExpand={() => setExpandedTable(table.key)}
+                  requestType={requestType}
                 />
-              ))}
+              ))
+            : tables
+                .filter((table) => table.key === expandedTable)
+                .map((table) => (
+                  <UserRequestsTable
+                    key={table.key}
+                    title={table.title}
+                    requests={table.requests}
+                    type={table.type as 'pending' | 'quoted' | 'accepted-finalized' | 'delivered'}
+                    handleAcceptRequest={table.handleAcceptRequest}
+                    handleRequestResponses={table.handleRequestResponses}
+                    responses={table.responses}
+                    isExpanded={true}
+                    onExpand={() => setExpandedTable(null)}
+                    requestType={requestType}
+                  />
+                ))
+        )}
       </section>
     </div>
   );

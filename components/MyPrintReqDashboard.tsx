@@ -36,7 +36,7 @@ const MyPrintReqDashboard: React.FC<MyPrintReqDashboardProps> = ({ requestType }
     type: TableType;
     priceInputs?: { [key: number]: string };
     handlePriceChange?: (requestID: number, value: string) => void;
-    handleAcceptRequest?: (requestID: number) => void;
+    handleAcceptRequest?: (requestID: number, price: number) => void;
     handleDeclineRequest?: (requestID: number) => void;
     handleFinalizeRequest?: (requestID: number) => void;
     handleMarkAsDelivered?: (requestID: number) => void;
