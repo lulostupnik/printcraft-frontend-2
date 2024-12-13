@@ -240,7 +240,6 @@ const ProductDetailPage = () => {
         <div className={`w-full ${product.images.length > 0 ? 'lg:w-2/3' : 'lg:w-full'}`}>
           <div className="bg-gray-800 p-6 rounded-lg">
             <h1 className="text-4xl font-bold mb-4">{product.name}</h1>
-            <p className="text-xl text-green-400 mb-2">15% OFF</p>
             <p className="text-3xl font-bold mb-4">${product.price}</p>
             <p className="text-gray-300 mb-4">Color: Amarillo/Azul</p>
             <div className="mb-4">
