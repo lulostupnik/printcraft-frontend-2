@@ -6,7 +6,6 @@ import { AuctionResponse } from '@/types/AuctionResponse';
 
 const usePrintRequestsUser = (requestType: 'print-requests' | 'design-requests' | 'design-reverse-auctions' | 'print-reverse-auctions' ) => {
   const [printRequests, setPrintRequests] = useState<PrintRequest[]>([]);
-  const [priceInputs, setPriceInputs] = useState<{ [key: number]: string }>({});
   const [expandedTable, setExpandedTable] = useState<string | null>(null); // Manage expanded table
   const router = useRouter(); 
   const [responses, setResponses] = useState<AuctionResponse[]>([]);
@@ -41,7 +40,7 @@ const usePrintRequestsUser = (requestType: 'print-requests' | 'design-requests' 
   }, [requestType]);
 
 
-  const handleAcceptRequest = async (requestID: number, responseID: number) => {
+  const handleAcceptResponse = async (requestID: number, responseID: number) => {
     try {
       console.log('Accepting response:', responseID, 'for request:', requestID); // Para debugging
 
@@ -125,6 +124,47 @@ const usePrintRequestsUser = (requestType: 'print-requests' | 'design-requests' 
     }
   };
 
+  // Handle Accept Request
+  const handleAcceptRequest = async (requestID: number) => {
+    try {
+      const response = await fetch(`${API_URL}/${requestType}/${requestID}/user-respond/`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          response: 'Accept',
+        }),
+      });
+  
+      if (response.ok) {
+        const data = await response.json();
+        const preferenceID = data.preference_id; // Extract preference ID
+  
+        // Update the status of the request to 'Cotizada'
+        setPrintRequests((prevRequests) =>
+          prevRequests.map((request) =>
+            request.requestID === requestID
+              ? { ...request, status: 'Cotizada' }
+              : request
+          )
+        );
+  
+        // If preference ID exists, navigate to the Mercado Pago page with the ID
+        if (preferenceID) {
+          router.push(`/mp_pref/${preferenceID}`);
+        }
+  
+        alert('Request accepted!');
+      } else {
+        console.error('Failed to accept the request');
+      }
+    } catch (error) {
+      console.error('Error accepting the request:', error);
+    }
+  };
+
   // Filter requests into different statuses
   const pendingRequests = printRequests.filter((req: PrintRequest) => 
     requestType === "design-reverse-auctions" || requestType === "print-reverse-auctions" 
@@ -157,8 +197,9 @@ const usePrintRequestsUser = (requestType: 'print-requests' | 'design-requests' 
     deliveredRequests,
     expandedTable,
     setExpandedTable,
-    handleAcceptRequest,
+    handleAcceptResponse,
     handleDeclineRequest,
+    handleAcceptRequest,
     handleRequestResponses,
     responses,
   };

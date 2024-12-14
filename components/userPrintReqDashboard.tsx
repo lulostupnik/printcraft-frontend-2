@@ -19,9 +19,11 @@ const UserPrintReqDashboard: React.FC<UserPrintReqDashboardProps> = ({ requestTy
     deliveredRequests,
     expandedTable,
     setExpandedTable,
-    handleAcceptRequest,
+    handleAcceptResponse,
     handleRequestResponses,
     responses,
+    handleAcceptRequest,
+    handleDeclineRequest,
   } = usePrintRequestsUser(requestType);
 
   const combinedAcceptedAndFinalizedRequests = [
@@ -36,7 +38,7 @@ const UserPrintReqDashboard: React.FC<UserPrintReqDashboardProps> = ({ requestTy
         title: 'Subastas Activas',
         requests: pendingRequests,
         type: 'pending' as const,
-        handleAcceptRequest,
+        handleAcceptResponse,
         handleRequestResponses,
         responses,
       }];
@@ -56,7 +58,7 @@ const UserPrintReqDashboard: React.FC<UserPrintReqDashboardProps> = ({ requestTy
         title: 'Solicitudes Cotizadas',
         requests: quotedRequests,
         type: 'quoted',
-        handleAcceptRequest,
+        handleAcceptResponse,
       },
       {
         key: 'accepted-finalized',
@@ -105,8 +107,10 @@ const UserPrintReqDashboard: React.FC<UserPrintReqDashboardProps> = ({ requestTy
                   title={table.title}
                   requests={table.requests}
                   type={table.type as 'pending' | 'quoted' | 'accepted-finalized' | 'delivered'}
-                  handleAcceptRequest={table.handleAcceptRequest}
+                  handleAcceptResponse={table.handleAcceptResponse}
                   handleRequestResponses={table.handleRequestResponses}
+                  handleAcceptRequest={handleAcceptRequest}
+                  handleDeclineRequest={handleDeclineRequest}
                   responses={table.responses}
                   isExpanded={false}
                   onExpand={() => setExpandedTable(table.key)}
@@ -121,8 +125,10 @@ const UserPrintReqDashboard: React.FC<UserPrintReqDashboardProps> = ({ requestTy
                     title={table.title}
                     requests={table.requests}
                     type={table.type as 'pending' | 'quoted' | 'accepted-finalized' | 'delivered'}
-                    handleAcceptRequest={table.handleAcceptRequest}
+                    handleAcceptResponse={table.handleAcceptResponse}
                     handleRequestResponses={table.handleRequestResponses}
+                    handleAcceptRequest={handleAcceptRequest}
+                    handleDeclineRequest={handleDeclineRequest}
                     responses={table.responses}
                     isExpanded={true}
                     onExpand={() => setExpandedTable(null)}

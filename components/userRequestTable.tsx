@@ -12,9 +12,9 @@ type UserRequestsTableProps = {
   type: 'pending' | 'quoted' | 'accepted-finalized' | 'delivered';
   isExpanded: boolean;
   onExpand: () => void;
-  priceInputs?: { [key: number]: string };
-  handleAcceptRequest?: (requestID: number, responseID: number) => void;
+  handleAcceptResponse?: (requestID: number, responseID: number) => void;
   handleDeclineRequest?: (requestID: number) => void;
+  handleAcceptRequest?: (requestID: number) => void;
   handleMarkAsDelivered?: (requestID: number) => void;
   requestType: 'print-requests' | 'design-requests' | 'design-reverse-auctions' | 'print-reverse-auctions';
   handleRequestResponses?: (requestID: number) => void;
@@ -27,9 +27,9 @@ const UserRequestsTable: React.FC<UserRequestsTableProps> = ({
   type,
   isExpanded,
   onExpand,
-  priceInputs,
-  handleAcceptRequest,
+  handleAcceptResponse,
   handleDeclineRequest,
+  handleAcceptRequest,
   handleMarkAsDelivered,
   requestType,
   handleRequestResponses,
@@ -274,6 +274,45 @@ const UserRequestsTable: React.FC<UserRequestsTableProps> = ({
                           {request.status === 'Realizada' ? `Buscar en: ${request.direccion_del_vendedor || 'dirección no disponible'}`: 'Esperando al vendedor'}
                       </td>
                     )}
+
+                    {type !== 'accepted-finalized' && type !== 'delivered' && (
+                      <td className="px-4 py-2 text-center">
+                        <div className="flex justify-center space-x-2">
+                          {type === 'quoted' && (
+                            <>
+                              <button
+                                onClick={() => handleAcceptRequest && handleAcceptRequest(request.requestID)}
+                                className="bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded"
+                              >
+                                Aceptar
+                              </button>
+                              <button
+                                onClick={() => handleDeclineRequest && handleDeclineRequest(request.requestID)}
+                                className="bg-yellow-500 hover:bg-yellow-600 text-white px-3 py-1 rounded"
+                              >
+                                Rechazar
+                              </button>
+                            </>
+                          )}
+                          
+                          {(requestType === 'design-reverse-auctions' || requestType === 'print-reverse-auctions') && (
+                            <button
+                              onClick={() => handleShowResponses(request.requestID)}
+                              className="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded"
+                            >
+                              Respuestas
+                            </button>
+                          )}
+                          
+                          <button
+                            onClick={() => handleDeleteRequest(request.requestID)}
+                            className="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded"
+                          >
+                            Borrar
+                          </button>
+                        </div>
+                      </td>
+                    )}
                   </tr>
                 ))}
               </tbody>
@@ -358,9 +397,9 @@ const UserRequestsTable: React.FC<UserRequestsTableProps> = ({
                       <div className="ml-8">
                         <button
                           onClick={() => {
-                            if (handleAcceptRequest && currentRequestId) {
+                            if (handleAcceptResponse && currentRequestId) {
                               console.log('Accepting response:', response.responseID, 'for request:', currentRequestId);
-                              handleAcceptRequest(currentRequestId, response.responseID);
+                              handleAcceptResponse(currentRequestId, response.responseID);
                               handleCloseSnackbar();
                             }
                           }}
