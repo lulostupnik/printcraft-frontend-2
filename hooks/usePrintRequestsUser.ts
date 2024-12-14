@@ -4,7 +4,7 @@ import { PrintRequest } from '@/types/PrintRequests';
 import { useRouter, useParams } from 'next/navigation'; // Ensure this import is correct
 import { AuctionResponse } from '@/types/AuctionResponse';
 
-const usePrintRequestsUser = (requestType: 'print-requests' | 'design-requests' | 'design-reverse-auctions' | 'print-reverse-auctions' ) => {
+const usePrintRequestsUser = (requestType: 'print-requests' | 'design-requests' | 'design-reverse-auctions' | 'print-reverse-auction' ) => {
   const [printRequests, setPrintRequests] = useState<PrintRequest[]>([]);
   const [expandedTable, setExpandedTable] = useState<string | null>(null); // Manage expanded table
   const router = useRouter(); 
@@ -76,7 +76,18 @@ const usePrintRequestsUser = (requestType: 'print-requests' | 'design-requests' 
   // Handle Decline Request
   const handleDeclineRequest = async (requestID: number) => {
     try {
-      const response = await fetch(`${API_URL}/${requestType}/${requestID}/user-respond/`, {
+      console.log('Original requestType:', requestType);
+      
+      const apiRequestType = requestType === 'design-reverse-auctions' 
+        ? 'design-reverse-auction'
+        : requestType;
+      
+      console.log('API requestType:', apiRequestType);
+
+      const url = `${API_URL}/${apiRequestType}/${requestID}/user-respond/`;
+      console.log('URL final:', url);
+
+      const response = await fetch(url, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
@@ -88,7 +99,6 @@ const usePrintRequestsUser = (requestType: 'print-requests' | 'design-requests' 
       });
 
       if (response.ok) {
-        // Remove the request from the list after declining
         setPrintRequests((prevRequests) =>
           prevRequests.filter((request) => request.requestID !== requestID)
         );
@@ -167,25 +177,25 @@ const usePrintRequestsUser = (requestType: 'print-requests' | 'design-requests' 
 
   // Filter requests into different statuses
   const pendingRequests = printRequests.filter((req: PrintRequest) => 
-    requestType === "design-reverse-auctions" || requestType === "print-reverse-auctions" 
+    requestType === "design-reverse-auctions" || requestType === "print-reverse-auction" 
       ? true 
       : req.status === 'Pendiente'
   );
   
   // Para reverse auctions, no necesitamos los otros estados
-  const quotedRequests = requestType === "design-reverse-auctions" || requestType === "print-reverse-auctions"
+  const quotedRequests = requestType === "design-reverse-auctions" || requestType === "print-reverse-auction"
     ? [] 
     : printRequests.filter((req: PrintRequest) => req.status === 'Cotizada');
   
-  const acceptedRequests = requestType === "design-reverse-auctions" || requestType === "print-reverse-auctions"
+  const acceptedRequests = requestType === "design-reverse-auctions" || requestType === "print-reverse-auction"
     ? [] 
     : printRequests.filter((req: PrintRequest) => req.status === 'Aceptada');
   
-  const finalizedRequests = requestType === "design-reverse-auctions" || requestType === "print-reverse-auctions"
+  const finalizedRequests = requestType === "design-reverse-auctions" || requestType === "print-reverse-auction"
     ? [] 
     : printRequests.filter((req: PrintRequest) => req.status === 'Realizada');
   
-  const deliveredRequests = requestType === "design-reverse-auctions" || requestType === "print-reverse-auctions"
+  const deliveredRequests = requestType === "design-reverse-auctions" || requestType === "print-reverse-auction"
     ? [] 
     : printRequests.filter((req: PrintRequest) => req.status === 'Entregada');
 

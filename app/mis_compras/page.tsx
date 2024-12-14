@@ -339,6 +339,7 @@ const MisComprasPage: React.FC = () => {
     return (
     <div>
       <UserPrintReqDashboard requestType="design-reverse-auctions" />
+      <UserPrintReqDashboard requestType="print-reverse-auction" />
     </div>
     );
   };

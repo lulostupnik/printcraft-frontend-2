@@ -7,7 +7,7 @@ import usePrintRequestsUser from '@/hooks/usePrintRequestsUser';
 type TableType = 'pending' | 'quoted' |  'delivered' | 'accepted-finalized';
 
 interface UserPrintReqDashboardProps {
-  requestType: 'print-requests' | 'design-requests' | 'design-reverse-auctions' | 'print-reverse-auctions';
+  requestType: 'print-requests' | 'design-requests' | 'design-reverse-auctions' | 'print-reverse-auction';
 }
 
 const UserPrintReqDashboard: React.FC<UserPrintReqDashboardProps> = ({ requestType }) => {
@@ -32,7 +32,7 @@ const UserPrintReqDashboard: React.FC<UserPrintReqDashboardProps> = ({ requestTy
   ];
   
   const tables = React.useMemo(() => {
-    if (requestType === "design-reverse-auctions" || requestType === "print-reverse-auctions") {
+    if (requestType === "design-reverse-auctions" || requestType === "print-reverse-auction") {
       return [{
         key: 'pending',
         title: 'Subastas Activas',
@@ -40,6 +40,7 @@ const UserPrintReqDashboard: React.FC<UserPrintReqDashboardProps> = ({ requestTy
         type: 'pending' as const,
         handleAcceptResponse,
         handleRequestResponses,
+        handleDeclineRequest,
         responses,
       }];
     }
@@ -51,6 +52,7 @@ const UserPrintReqDashboard: React.FC<UserPrintReqDashboardProps> = ({ requestTy
         requests: pendingRequests,
         type: 'pending',
         handleRequestResponses,
+        handleDeclineRequest,
         responses,
       },
       {
@@ -73,7 +75,7 @@ const UserPrintReqDashboard: React.FC<UserPrintReqDashboardProps> = ({ requestTy
         type: 'delivered',
       },
     ];
-  }, [requestType, pendingRequests, quotedRequests, combinedAcceptedAndFinalizedRequests, deliveredRequests]);
+  }, [requestType, pendingRequests, quotedRequests, combinedAcceptedAndFinalizedRequests, deliveredRequests, handleDeclineRequest, handleAcceptResponse, handleRequestResponses, responses]);
 
   return (
     <div className="container mx-auto">
@@ -87,7 +89,7 @@ const UserPrintReqDashboard: React.FC<UserPrintReqDashboardProps> = ({ requestTy
                 return 'Panel de Solicitudes de Impresión';
               case 'design-reverse-auctions':
                 return 'Panel de Subastas de Diseño';
-              case 'print-reverse-auctions':
+              case 'print-reverse-auction':
                 return 'Panel de Subastas de Impresión';
               default:
                 return 'Panel de Solicitudes';

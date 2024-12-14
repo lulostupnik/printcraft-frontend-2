@@ -16,7 +16,7 @@ type UserRequestsTableProps = {
   handleDeclineRequest?: (requestID: number) => void;
   handleAcceptRequest?: (requestID: number) => void;
   handleMarkAsDelivered?: (requestID: number) => void;
-  requestType: 'print-requests' | 'design-requests' | 'design-reverse-auctions' | 'print-reverse-auctions';
+  requestType: 'print-requests' | 'design-requests' | 'design-reverse-auctions' | 'print-reverse-auction';
   handleRequestResponses?: (requestID: number) => void;
   responses?: AuctionResponse[];
 };
@@ -92,7 +92,11 @@ const UserRequestsTable: React.FC<UserRequestsTableProps> = ({
   const handleDeleteRequest = async (requestId: number) => {
     if (window.confirm('¿Estás seguro de que deseas eliminar esta solicitud?')) {
       try {
-        const response = await fetch(`${API_URL}/${requestType}/delete/${requestId}/`, {
+        const deleteRequestType = requestType === 'design-reverse-auctions' 
+          ? 'design-reverse-auction' 
+          : requestType;
+
+        const response = await fetch(`${API_URL}/${deleteRequestType}/delete/${requestId}/`, {
           method: 'DELETE',
           headers: {
             'Content-Type': 'application/json',
@@ -107,9 +111,6 @@ const UserRequestsTable: React.FC<UserRequestsTableProps> = ({
 
         alert('Solicitud eliminada exitosamente');
         window.location.reload();
-        /*setTimeout(() => {
-          window.location.reload();
-        }, 1000);*/
 
       } catch (error) {
         console.error('Error al borrar la solicitud:', error);
@@ -295,7 +296,7 @@ const UserRequestsTable: React.FC<UserRequestsTableProps> = ({
                             </>
                           )}
                           
-                          {(requestType === 'design-reverse-auctions' || requestType === 'print-reverse-auctions') && (
+                          {(requestType === 'design-reverse-auctions' || requestType === 'print-reverse-auction') && (
                             <button
                               onClick={() => handleShowResponses(request.requestID)}
                               className="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded"
