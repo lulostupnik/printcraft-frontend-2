@@ -60,6 +60,7 @@ function CatalogPageContent() {
             seller: item.seller.toString(),
             price: item.price,
             images_url: item.images.map((img: any) => img.image_url),
+            size: item.size,
           })
         );
 
