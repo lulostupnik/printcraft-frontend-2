@@ -83,7 +83,7 @@ export default function SellerPage() {
       }
     };
 
-    const mercadoPagoURL = `https://auth.mercadopago.com.ar/authorization?client_id=5696619348847657&response_type=code&redirect_uri=https://3dcapybara.vercel.app/register_seller&scope=write_payments read_payments offline_access`;
+    const mercadoPagoURL = `https://auth.mercadopago.com.ar/authorization?client_id=5696619348847657&response_type=code&redirect_uri=https://3dcapybara.vercel.app/register_seller`;
 
     return (
       <main className="flex-grow container mx-auto px-4 py-8">
