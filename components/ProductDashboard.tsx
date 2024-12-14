@@ -1,267 +1,50 @@
-// import React, { useEffect, useState } from 'react';
-// import ProductTable from '@/components/ProductTable';
-// import { SoldProductRequest } from '@/types/SoldProduct';
-// import { API_URL } from '@/api/api';
-// import SoldProdTable from './SoldProdTable';
-
-// type ProductFromBack = {
-//   orderid: number;
-//   userid: number; // Asegúrate de que userID tenga un campo email
-//   orderdate: string; // Cambié a string ya que la API normalmente devuelve una cadena
-//   quantity: number;
-//   productcode: number; // Cambié a un objeto con el campo name
-//   status: "Completada" | "En proceso" | "Entregada";
-//   preference_id: string;
-//   user_email: string;
-//   product_name: string;
-//   total_price: number;
-// };
-
-// const ProductDashboard: React.FC = () => {
-//   const [requests, setRequests] = useState<SoldProductRequest[]>([]);
-//   const [expandedTable, setExpandedTable] = useState<string | null>(null);
-
-//   const getAccessToken = () => {
-//     return localStorage.getItem('accessToken') || '';
-//   };
-
-//   // Fetch de las solicitudes
-//   const fetchRequests = async () => {
-//     const token = getAccessToken();
-
-//     if (!token) {
-//       console.error('No hay token de acceso');
-//       return;
-//     }
-
-//     console.log('Token:', token.substring(0, 10) + '...'); // Solo muestra los primeros 10 caracteres por seguridad
-
-//     try {
-//       // Agregar log para verificar el token
-//       console.log('Token being used:', token);
-
-//       const response = await fetch(`${API_URL}/seller-orders/`, {
-//         method: 'GET',
-//         headers: {
-//           Authorization: `Bearer ${token}`,
-//           'Content-Type': 'application/json',
-//         },
-//       });
-
-//       // Agregar logs para depuración
-//       console.log('Response status:', response.status);
-//       const responseText = await response.text();
-//       console.log('Response body:', responseText);
-
-//       if (response.ok) {
-//         // Intentar parsear el texto como JSON
-//         const data: ProductFromBack[] = JSON.parse(responseText);
-        
-//         const updatedRequests: SoldProductRequest[] = data.map((product) => ({
-//           requestID: product.orderid,
-//           email: product.user_email,
-//           quantity: product.quantity,
-//           name: product.product_name,
-//           date: new Date(product.orderdate).toISOString(),
-//           status: product.status,
-//           productCode: product.productcode,
-//           price: product.total_price
-//         }));
-
-//         setRequests(updatedRequests);
-//       } else {
-//         console.error('Error en la respuesta del servidor:', {
-//           status: response.status,
-//           statusText: response.statusText,
-//           body: responseText
-//         });
-//       }
-//     } catch (error) {
-//       console.error('Error detallado en el fetch:', error);
-//     }
-//   };
-
-//   // Función para cambiar el estado de una solicitud a 'finalized'
-//  // Función para cambiar el estado de una solicitud a 'finalized'
-// const finalizeRequest = async (request: SoldProductRequest) => {
-//   const updatedRequest: SoldProductRequest = {
-//     ...request,
-//     status: 'Completada', // Assign 'finalized' status
-//   };
-
-//   // Check if the access token exists
-//   const accessToken = localStorage.getItem('accessToken');
-//   if (!accessToken) {
-//     console.error('Access token not found');
-//     // Optionally, handle the case where the user is not authenticated, like redirecting to a login page
-//     return;
-//   }
-
-//   try {
-//     // Sending the POST request to your API
-//     const response = await fetch(`${API_URL}/orders/complete/${request.requestID}/`, {
-//       method: 'POST',
-//       headers: {
-//         'Authorization': `Bearer ${accessToken}`,
-//         'Content-Type': 'application/json',
-//       },
-//       body: JSON.stringify(updatedRequest),
-//     });
-
-//     // If the request is successful, update the table
-//     if (response.ok) {
-//       setRequests((prevRequests) =>
-//         prevRequests.map((r) => (r.requestID === request.requestID ? updatedRequest : r))
-//       );
-//     } else {
-//       console.error('Failed to finalize the request');
-//       // Handle error as needed
-//     }
-//   } catch (error) {
-//     console.error('Error during the request:', error);
-//     // Handle network or other errors as needed
-//   }
-// };
-
-
-
-// const deliveredRequest = async (request: SoldProductRequest) => {
-//   const updatedRequest: SoldProductRequest = {
-//     ...request,
-//     status: 'Entregada', // Assign 'finalized' status
-//   };
-
-//   // Check if the access token exists
-//   const accessToken = localStorage.getItem('accessToken');
-//   if (!accessToken) {
-//     console.error('Access token not found');
-//     // Optionally, handle the case where the user is not authenticated, like redirecting to a login page
-//     return;
-//   }
-
-//   try {
-//     // Sending the POST request to your API
-//     const response = await fetch(`${API_URL}/orders/deliver/${request.requestID}/`, {
-//       method: 'POST',
-//       headers: {
-//         'Authorization': `Bearer ${accessToken}`,
-//         'Content-Type': 'application/json',
-//       },
-//       body: JSON.stringify(updatedRequest),
-//     });
-
-//     // If the request is successful, update the table
-//     if (response.ok) {
-//       setRequests((prevRequests) =>
-//         prevRequests.map((r) => (r.requestID === request.requestID ? updatedRequest : r))
-//       );
-//     } else {
-//       console.error('Failed to finalize the request');
-//       // Handle error as needed
-//     }
-//   } catch (error) {
-//     console.error('Error during the request:', error);
-//     // Handle network or other errors as needed
-//   }
-// };
-
-
-  
-//   useEffect(() => {
-//     fetchRequests();
-//   }, []);
-
-//   const tables = [
-//     {
-//       key: 'proc',
-//       title: 'Solicitudes a imprimir',
-//       requests: requests.filter((request) => request.status === 'En proceso'),
-
-//     },
-//     {
-//       key: 'compl',
-//       title: 'Solicitudes listas a entregar',
-//       requests: requests.filter((request) => request.status === 'Completada'),
-//     },
-//     {
-//       key: 'entr',
-//       title: 'Entregadas',
-//       requests: requests.filter((request) => request.status === 'Entregada'),
-//     },
-//   ];
-
-//   return (
-//     <div className="container mx-auto">
-//       <section className="mb-12 bg-gray-800 p-8 rounded-lg">
-//         <h2 className="text-4xl font-bold mb-4 text-center">Product Dashboard</h2>
-
-//         {expandedTable === null
-//           ? tables.map((table) => (
-//               <SoldProdTable
-//                 key={table.key}
-//                 title={table.title}
-//                 requests={table.requests}
-//                 isExpanded={false}
-//                 onExpand={() => setExpandedTable(table.key)}
-//                 finalizeRequest={table.key === 'proc' ? finalizeRequest : deliveredRequest}
-//               />
-//             ))
-//           : tables
-//               .filter((table) => table.key === expandedTable)
-//               .map((table) => (
-//                 <SoldProdTable
-//                   key={table.key}
-//                   title={table.title}
-//                   requests={table.requests}
-//                   isExpanded={true}
-//                   onExpand={() => setExpandedTable(null)}
-//                   finalizeRequest={table.key === 'proc' ? finalizeRequest : deliveredRequest}
-//                 />
-//               ))}
-//       </section>
-//     </div>
-//   );
-// };
-
-// export default ProductDashboard;
-
-
-import React, { useEffect, useState } from 'react';
-import { SoldProductRequest } from '@/types/SoldProduct';
+import React, { useEffect, useState, useRef } from 'react';
 import { API_URL } from '@/api/api';
-import SoldProdTable from './SoldProdTable';
+import { MinusCircleIcon, PlusCircleIcon } from '@heroicons/react/24/outline';
+import ProductCard from '@/components/ProductCard';
+import { Product } from '@/types/Product';
 
-type ProductFromBack = {
-  orderid: number;
-  userid: number;
-  orderdate: string;
-  quantity: number;
+// Tipo para los productos en una orden
+type OrderProduct = {
   productcode: number;
-  status: "Completada" | "En proceso" | "Entregada";
-  preference_id: string;
-  user_email: string;
   product_name: string;
-  total_price: number;
+  quantity: number;
+  price: number;  //es el precio unitario
+};
+
+// Tipo para las órdenes
+type Order = {
+  orderid: number;
+  status: string;
+  orderdate: string;
+  products: OrderProduct[];
+  user_email: string;
 };
 
 const ProductDashboard: React.FC = () => {
-  const [requests, setRequests] = useState<SoldProductRequest[]>([]);
-  const [expandedTable, setExpandedTable] = useState<string | null>(null);
-  const [loading, setLoading] = useState(true); // <-- loading state
+  const [orders, setOrders] = useState<Order[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [expandedOrders, setExpandedOrders] = useState<Set<number>>(new Set());
+  const [previewProduct, setPreviewProduct] = useState<Product | null>(null);
+  const [previewPosition, setPreviewPosition] = useState({ x: 0, y: 0 });
+  const timeoutRef = useRef<NodeJS.Timeout>();
 
   const getAccessToken = () => {
     return localStorage.getItem('accessToken') || '';
   };
 
-  // Fetch de las solicitudes
-  const fetchRequests = async () => {
-    const token = getAccessToken();
+  // Función para formatear la fecha
+  const formatDate = (dateString: string) => {
+    const date = new Date(dateString);
+    return date.toLocaleDateString('es-ES', {
+      day: 'numeric',
+      month: 'long',
+      year: 'numeric'
+    });
+  };
 
-    if (!token) {
-      console.error('No hay token de acceso');
-      setLoading(false);
-      return;
-    }
+  const fetchOrders = async () => {
+    const token = getAccessToken();
 
     try {
       const response = await fetch(`${API_URL}/seller-orders/`, {
@@ -272,149 +55,106 @@ const ProductDashboard: React.FC = () => {
         },
       });
 
-      const responseText = await response.text();
-
       if (response.ok) {
-        const data: ProductFromBack[] = JSON.parse(responseText);
-        const updatedRequests: SoldProductRequest[] = data.map((product) => ({
-          requestID: product.orderid,
-          email: product.user_email,
-          quantity: product.quantity,
-          name: product.product_name,
-          date: new Date(product.orderdate).toISOString(),
-          status: product.status,
-          productCode: product.productcode,
-          price: product.total_price
-        }));
-        setRequests(updatedRequests);
+        const data = await response.json();
+        // Ordenar las órdenes por fecha de manera descendente
+        const sortedData = data.sort((a: Order, b: Order) => 
+          new Date(b.orderdate).getTime() - new Date(a.orderdate).getTime()
+        );
+        setOrders(sortedData);
       } else {
-        console.error('Error en la respuesta del servidor:', {
-          status: response.status,
-          statusText: response.statusText,
-          body: responseText
-        });
+        console.error('Error al obtener las órdenes');
       }
     } catch (error) {
-      console.error('Error detallado en el fetch:', error);
+      console.error('Error en el fetch:', error);
     } finally {
-      setLoading(false); // <-- set loading to false once done
+      setLoading(false);
     }
   };
-  
-
-  // Función para cambiar el estado de una solicitud a 'finalized'
- // Función para cambiar el estado de una solicitud a 'finalized'
-const finalizeRequest = async (request: SoldProductRequest) => {
-  const updatedRequest: SoldProductRequest = {
-    ...request,
-    status: 'Completada', // Assign 'finalized' status
-  };
-
-  // Check if the access token exists
-  const accessToken = localStorage.getItem('accessToken');
-  if (!accessToken) {
-    console.error('Access token not found');
-    // Optionally, handle the case where the user is not authenticated, like redirecting to a login page
-    return;
-  }
-
-  try {
-    // Sending the POST request to your API
-    const response = await fetch(`${API_URL}/orders/complete/${request.requestID}/`, {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${accessToken}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(updatedRequest),
-    });
-
-    // If the request is successful, update the table
-    if (response.ok) {
-      setRequests((prevRequests) =>
-        prevRequests.map((r) => (r.requestID === request.requestID ? updatedRequest : r))
-      );
-    } else {
-      console.error('Failed to finalize the request');
-      // Handle error as needed
-    }
-  } catch (error) {
-    console.error('Error during the request:', error);
-    // Handle network or other errors as needed
-  }
-};
-
-
-
-const deliveredRequest = async (request: SoldProductRequest) => {
-  const updatedRequest: SoldProductRequest = {
-    ...request,
-    status: 'Entregada', // Assign 'finalized' status
-  };
-
-  // Check if the access token exists
-  const accessToken = localStorage.getItem('accessToken');
-  if (!accessToken) {
-    console.error('Access token not found');
-    // Optionally, handle the case where the user is not authenticated, like redirecting to a login page
-    return;
-  }
-
-  try {
-    // Sending the POST request to your API
-    const response = await fetch(`${API_URL}/orders/deliver/${request.requestID}/`, {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${accessToken}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(updatedRequest),
-    });
-
-    // If the request is successful, update the table
-    if (response.ok) {
-      setRequests((prevRequests) =>
-        prevRequests.map((r) => (r.requestID === request.requestID ? updatedRequest : r))
-      );
-    } else {
-      console.error('Failed to finalize the request');
-      // Handle error as needed
-    }
-  } catch (error) {
-    console.error('Error during the request:', error);
-    // Handle network or other errors as needed
-  }
-};
-
 
   useEffect(() => {
-    fetchRequests();
+    fetchOrders();
   }, []);
 
-  const tables = [
-    {
-      key: 'proc',
-      title: 'Solicitudes a imprimir',
-      requests: requests.filter((request) => request.status === 'En proceso'),
-    },
-    {
-      key: 'compl',
-      title: 'Solicitudes listas a entregar',
-      requests: requests.filter((request) => request.status === 'Completada'),
-    },
-    {
-      key: 'entr',
-      title: 'Entregadas',
-      requests: requests.filter((request) => request.status === 'Entregada'),
-    },
-  ];
+  const handleProductMouseEnter = async (event: React.MouseEvent, product: OrderProduct) => {
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current);
+    }
+    
+    const rect = event.currentTarget.getBoundingClientRect();
+    
+    setPreviewPosition({
+      x: rect.left - 410,
+      y: rect.top
+    });
+
+    try {
+      const response = await fetch(`${API_URL}/products/${product.productcode}/`);
+      if (response.ok) {
+        const data = await response.json();
+        const adaptedProduct: Product = {
+          code: String(data.productcode || product.productcode),
+          name: data.product_name || product.product_name,
+          price: String(data.price_per_unit || product.price),
+          material: data.material || 'No especificado',
+          stock: String(data.stock || 'No especificado'),
+          description: data.description || '',
+          images_url: data.images?.map((img: any) => img.image_url) || [],
+          stl_file_url: data.stl_file_url || null,
+          seller: data.seller || 'No especificado',
+          size: 'Pequeño'
+        };
+        setPreviewProduct(adaptedProduct);
+      } else {
+        const fallbackProduct: Product = {
+          code: String(product.productcode),
+          name: product.product_name,
+          price: String(product.price),
+          material: 'No especificado',
+          stock: String(product.quantity),
+          description: '',
+          images_url: [],
+          stl_file_url: null,
+          seller: 'No especificado',
+          size: 'Pequeño'
+        };
+        setPreviewProduct(fallbackProduct);
+      }
+    } catch (error) {
+      console.error('Error fetching product details:', error);
+      const fallbackProduct: Product = {
+        code: String(product.productcode),
+        name: product.product_name,
+        price: String(product.price),
+        material: 'No especificado',
+        stock: String(product.quantity),
+        description: '',
+        images_url: [],
+        stl_file_url: null,
+        seller: 'No especificado',
+        size: 'Pequeño'
+      };
+      setPreviewProduct(fallbackProduct);
+    }
+  };
+
+  const handlePreviewMouseEnter = () => {
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current);
+    }
+  };
+
+  const handleMouseLeave = () => {
+    timeoutRef.current = setTimeout(() => {
+      setPreviewProduct(null);
+    }, 300);
+  };
 
   if (loading) {
-    // Show a loader component while loading
     return (
       <div className="container mx-auto p-8">
         <div className="flex justify-center items-center h-64">
-          <span className="text-gray-300">Cargando datos...</span>
+          <span className="text-gray-300">Cargando órdenes...</span>
         </div>
       </div>
     );
@@ -423,32 +163,132 @@ const deliveredRequest = async (request: SoldProductRequest) => {
   return (
     <div className="container mx-auto">
       <section className="mb-12 bg-gray-800 p-8 rounded-lg">
-        <h2 className="text-4xl font-bold mb-4 text-center">Product Dashboard</h2>
+        <div className="flex justify-between items-center mb-6">
+          <h2 className="text-4xl font-bold text-center">
+            Órdenes de Venta
+          </h2>
+        </div>
+        
+        {orders.length === 0 ? (
+          <p className="text-gray-500 text-center">No hay órdenes de venta.</p>
+        ) : (
+          <div className="overflow-x-auto">
+            <table className="min-w-full bg-gray-700 text-white rounded-lg">
+              <thead>
+                <tr className="bg-gray-600">
+                  <th className="px-6 py-3 text-left text-sm font-semibold">Orden</th>
+                  <th className="px-6 py-3 text-left text-sm font-semibold">Cliente</th>
+                  <th className="px-6 py-3 text-left text-sm font-semibold">Estado</th>
+                  <th className="px-6 py-3 text-left text-sm font-semibold">Fecha</th>
+                  <th className="px-6 py-3 text-left text-sm font-semibold">Total</th>
+                  <th className="px-6 pl-12 py-3 text-left text-sm font-semibold">Acciones</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-gray-600">
+                {orders.map((order) => (
+                  <React.Fragment key={order.orderid}>
+                    <tr className="transition-colors">
+                      <td className="px-6 py-4">#{order.orderid}</td>
+                      <td className="px-6 py-4">{order.user_email}</td>
+                      <td className="px-6 py-4">{order.status}</td>
+                      <td className="px-6 py-4">{formatDate(order.orderdate)}</td>
+                      <td className="px-6 py-4">
+                        ${order.products.reduce((total, product) => total + (product.price * product.quantity), 0).toFixed(2)}
+                      </td>
+                      <td className="px-6 py-4">
+                        <button
+                          onClick={() => {
+                            const newExpandedOrders = new Set(expandedOrders);
+                            if (newExpandedOrders.has(order.orderid)) {
+                              newExpandedOrders.delete(order.orderid);
+                            } else {
+                              newExpandedOrders.add(order.orderid);
+                            }
+                            setExpandedOrders(newExpandedOrders);
+                          }}
+                          className="ml-4 text-white flex items-center"
+                        >
+                          {expandedOrders.has(order.orderid) ? (
+                            <>
+                              <span className="mr-2">Colapsar</span>
+                              <MinusCircleIcon className="w-5 h-5" />
+                            </>
+                          ) : (
+                            <>
+                              <span className="mr-2">Expandir</span>
+                              <PlusCircleIcon className="w-5 h-5" />
+                            </>
+                          )}
+                        </button>
+                      </td>
+                    </tr>
 
-        {expandedTable === null
-          ? tables.map((table) => (
-              <SoldProdTable
-                key={table.key}
-                title={table.title}
-                requests={table.requests}
-                isExpanded={false}
-                onExpand={() => setExpandedTable(table.key)}
-                finalizeRequest={table.key === 'proc' ? finalizeRequest : deliveredRequest}
-              />
-            ))
-          : tables
-              .filter((table) => table.key === expandedTable)
-              .map((table) => (
-                <SoldProdTable
-                  key={table.key}
-                  title={table.title}
-                  requests={table.requests}
-                  isExpanded={true}
-                  onExpand={() => setExpandedTable(null)}
-                  finalizeRequest={table.key === 'proc' ? finalizeRequest : deliveredRequest}
-                />
-              ))}
+                    {expandedOrders.has(order.orderid) && (
+                      <tr>
+                        <td colSpan={6} className="px-6 py-4 bg-[#1E2837]">
+                          <table className="min-w-full divide-y divide-gray-600">
+                            <thead>
+                              <tr>
+                                <th className="px-6 py-3 text-left text-sm font-semibold">Nombre</th>
+                                <th className="px-6 py-3 text-center text-sm font-semibold">Cantidad</th>
+                                <th className="px-6 py-3 text-center text-sm font-semibold">Precio Unitario</th>
+                                <th className="px-6 py-3 text-right text-sm font-semibold">Precio Total</th>
+                              </tr>
+                            </thead>
+                            <tbody className="divide-y divide-gray-600">
+                              {order.products.map((product, productIndex) => (
+                                <tr 
+                                  key={productIndex} 
+                                  className="hover:bg-gray-700 transition-colors"
+                                >
+                                  <td className="px-6 py-4 text-sm">
+                                    <span
+                                      className="cursor-pointer text-blue-400 hover:text-blue-300"
+                                      onMouseEnter={(e) => handleProductMouseEnter(e, product)}
+                                      onMouseLeave={handleMouseLeave}
+                                    >
+                                      {product.product_name}
+                                    </span>
+                                  </td>
+                                  <td className="px-6 py-4 text-sm text-center">{product.quantity}</td>
+                                  <td className="px-6 py-4 text-sm text-center">${product.price}</td>
+                                  <td className="px-6 py-4 text-sm text-right">
+                                    ${product.price * product.quantity}
+                                  </td>
+                                </tr>
+                              ))}
+                            </tbody>
+                          </table>
+                        </td>
+                      </tr>
+                    )}
+                  </React.Fragment>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
       </section>
+      {previewProduct && (
+        <div 
+          className="fixed z-[9999]"
+          style={{
+            left: `${previewPosition.x}px`,
+            top: `${previewPosition.y}px`,
+            width: '400px',
+            pointerEvents: 'auto'
+          }}
+          onMouseEnter={handlePreviewMouseEnter}
+          onMouseLeave={handleMouseLeave}
+        >
+          <div className="bg-gray-800 rounded-lg overflow-hidden shadow-lg">
+            <ProductCard 
+              product={previewProduct}
+              rotate={true}
+            />
+          </div>
+        </div>
+      )}
     </div>
   );
 };

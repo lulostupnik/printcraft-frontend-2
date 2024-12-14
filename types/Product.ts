@@ -1,4 +1,6 @@
 // Product.ts
+export type SizeType = 'Pequeño' | 'Mediano' | 'Grande';
+
 export interface Product {
   code: string;           // The product's unique code
   name: string;           // The name of the product
@@ -9,4 +11,5 @@ export interface Product {
   seller: string;         // The seller of the product
   price: string;          // The price of the product
   images_url: string[] ;   // An array of URLs to the product's images, should always be defined
+  size: SizeType;        // The size of the product
 }

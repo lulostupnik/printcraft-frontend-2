@@ -49,7 +49,8 @@ const SoldProdTable: React.FC<SoldProdTableProps> = ({
           seller: data.seller,
           description: data.description || '',
           stl_file_url: data.stl_file_url || null,
-          images_url: data.images?.map((img: any) => img.image_url) || []
+          images_url: data.images?.map((img: any) => img.image_url) || [],
+          size: data.size
         };
 
         setTooltipProduct(product);
