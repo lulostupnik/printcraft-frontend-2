@@ -180,7 +180,7 @@ const ProductForm: React.FC<ProductFormProps> = ({ onProductPublished }) => {
           />
         </div>
         <div className="mb-4">
-          <label htmlFor="description" className="block text-sm font-medium">Descripción (opcional)</label>
+          <label htmlFor="description" className="block text-sm font-medium">Descripción (obligatorio)</label>
           <textarea
             id="description"
             name="description"

@@ -55,10 +55,13 @@ const usePrintRequestsUser = (requestType: 'print-requests' | 'design-requests' 
       if (response.ok) {
         const data = await response.json();
         console.log('Response accepted successfully:', data);
-        
-        if (data.preference_id) {
-          router.push(`/mp_pref/${data.preference_id}`);
-        } else {
+        const preferenceID = data.preference_id; // Extract preference ID
+
+        if (data.payment_link) {
+          router.push(`${data.payment_link}`);
+        }else if(preferenceID) 
+          router.push(`/mp_pref/${preferenceID}`);
+        else {
           alert('Oferta aceptada exitosamente');
           window.location.reload();
         }
@@ -141,7 +144,8 @@ const usePrintRequestsUser = (requestType: 'print-requests' | 'design-requests' 
       if (response.ok) {
         const data = await response.json();
         const preferenceID = data.preference_id; // Extract preference ID
-  
+        const payment_link = data.payment_link; 
+
         // Update the status of the request to 'Cotizada'
         setPrintRequests((prevRequests) =>
           prevRequests.map((request) =>
@@ -154,9 +158,10 @@ const usePrintRequestsUser = (requestType: 'print-requests' | 'design-requests' 
         // If preference ID exists, navigate to the Mercado Pago page with the ID
         if (preferenceID) {
           router.push(`/mp_pref/${preferenceID}`);
+        }else if(payment_link){
+          router.push(payment_link);
         }
   
-        alert('Request accepted!');
       } else {
         console.error('Failed to accept the request');
       }
