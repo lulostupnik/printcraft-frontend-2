@@ -125,7 +125,7 @@ function CatalogPageContent() {
               onClick={() => handleProductClick(product.code)}
               className="cursor-pointer"
             >
-              <ProductCard product={product} />
+              <ProductCard product={product} rotate={true} />
             </div>
           ))}
         </div>
