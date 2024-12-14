@@ -42,7 +42,7 @@ const usePrintRequestsUser = (requestType: 'print-requests' | 'design-requests' 
 
   const handleAcceptResponse = async (requestID: number, responseID: number) => {
     try {
-      console.log('Accepting response:', responseID, 'for request:', requestID); // Para debugging
+      console.log('Aceptando respuesta:', responseID, 'para solicitud:', requestID);
 
       const response = await fetch(`${API_URL}/${requestType}/${requestID}/accept-response/${responseID}/`, {
         method: 'POST',
@@ -52,26 +52,28 @@ const usePrintRequestsUser = (requestType: 'print-requests' | 'design-requests' 
         },
       });
 
-      if (response.ok) {
-        const data = await response.json();
-        console.log('Response accepted successfully:', data);
-        const preferenceID = data.preference_id; // Extract preference ID
+      const data = await response.json();
 
-        if (data.payment_link) {
-          router.push(`${data.payment_link}`);
-        }else if(preferenceID) 
-          router.push(`/mp_pref/${preferenceID}`);
-        else {
-          alert('Oferta aceptada exitosamente');
-          window.location.reload();
-        }
+      if (response.ok) {
+        console.log('Respuesta aceptada exitosamente:', data);
+        
+        setPrintRequests(prevRequests => 
+          prevRequests.map(req => 
+            req.requestID === requestID 
+              ? { ...req, status: 'Aceptada' } 
+              : req
+          )
+        );
+
+        alert('Oferta aceptada exitosamente');
+        window.location.reload();
       } else {
-        console.error('Failed to accept response');
-        alert('Error al aceptar la oferta');
+        console.error('Error al aceptar la respuesta:', data.error || 'Error desconocido');
+        alert(data.error || 'Error al aceptar la oferta');
       }
     } catch (error) {
-      console.error('Error accepting response:', error);
-      alert('Error al aceptar la oferta');
+      console.error('Error al aceptar la respuesta:', error);
+      alert('Error al aceptar la oferta. Por favor, intente nuevamente.');
     }
   };
   
