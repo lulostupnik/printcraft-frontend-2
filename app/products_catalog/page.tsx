@@ -60,6 +60,7 @@ function CatalogPageContent() {
             seller: item.seller.toString(),
             price: item.price,
             images_url: item.images.map((img: any) => img.image_url),
+            size: item.size,
           })
         );
 
@@ -124,7 +125,7 @@ function CatalogPageContent() {
               onClick={() => handleProductClick(product.code)}
               className="cursor-pointer"
             >
-              <ProductCard product={product} />
+              <ProductCard product={product} rotate={true} />
             </div>
           ))}
         </div>

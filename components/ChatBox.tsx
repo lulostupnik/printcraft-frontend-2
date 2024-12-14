@@ -63,7 +63,7 @@ export default function ChatBox() {
   };
 
   return (
-    <div className="fixed bottom-4 right-4">
+    <div className="fixed bottom-4 right-4 z-50" >
       {isChatOpen ? (
         <div className="w-96 border border-gray-700 shadow-lg rounded-lg overflow-hidden">
           {/* Header */}

@@ -133,13 +133,36 @@ const ProductDetailPage = () => {
     alert('Producto agregado al carrito');
   };
 
-  const handleNewReview = () => {
+  const handleNewReview = async () => {
     const accessToken = localStorage.getItem('accessToken');
     if (!accessToken) {
       router.push('/login');
       return;
     }
-    setShowSnackbar(true);
+
+    try {
+      // Verificar si el usuario puede hacer una review
+      const response = await fetch(`${API_URL}/can-review/${product?.code}/`, {
+        headers: {
+          'Authorization': `Bearer ${accessToken}`
+        }
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        
+        if (data.can_review) {
+          setShowSnackbar(true);
+        } else {
+          alert('No puedes hacer una review de este producto. Es posible que no hayas comprado el producto.');
+        }
+      } else {
+        alert('Error al verificar si puedes hacer una review');
+      }
+    } catch (error) {
+      console.error('Error:', error);
+      alert('Error al verificar si puedes hacer una review');
+    }
   };
 
   const handleSubmitReview = async () => {

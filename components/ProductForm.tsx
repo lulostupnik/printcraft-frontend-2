@@ -1,6 +1,7 @@
 "use client";
 import React, { useState, useEffect, ChangeEvent, FormEvent } from 'react';
 import { API_URL } from "@/api/api";
+import { SizeType } from '@/types/Product';
 
 interface ProductData {
   name: string;
@@ -10,6 +11,7 @@ interface ProductData {
   stock: string;
   stlFile: File | null; // Store the STL file
   imageFiles: File[];  // Store multiple image files
+  size: SizeType;
 }
 
 interface ProductFormProps {
@@ -30,6 +32,7 @@ const ProductForm: React.FC<ProductFormProps> = ({ onProductPublished }) => {
     stock: '',
     stlFile: null,
     imageFiles: [],
+    size: 'Pequeño',
   });
 
   const [isLoading, setIsLoading] = useState(false);
@@ -103,6 +106,7 @@ const ProductForm: React.FC<ProductFormProps> = ({ onProductPublished }) => {
       formData.append('price', productData.price);
       formData.append('material', productData.material);
       formData.append('stock', productData.stock);
+      formData.append('size', productData.size);
 
       if (productData.stlFile) {
         formData.append('stl_file', productData.stlFile);
@@ -137,6 +141,7 @@ const ProductForm: React.FC<ProductFormProps> = ({ onProductPublished }) => {
           stock: '',
           stlFile: null,
           imageFiles: [],
+          size: 'Pequeño',
         });
         setImagePreviews([]);
       } else {
@@ -175,7 +180,7 @@ const ProductForm: React.FC<ProductFormProps> = ({ onProductPublished }) => {
           />
         </div>
         <div className="mb-4">
-          <label htmlFor="description" className="block text-sm font-medium">Descripción (opcional)</label>
+          <label htmlFor="description" className="block text-sm font-medium">Descripción (obligatorio)</label>
           <textarea
             id="description"
             name="description"
@@ -225,6 +230,23 @@ const ProductForm: React.FC<ProductFormProps> = ({ onProductPublished }) => {
             className="w-full mt-1 p-2 bg-gray-700 border border-gray-600 rounded"
             required
           />
+        </div>
+        <div className="mb-4">
+          <label htmlFor="size" className="block text-sm font-medium">Tamaño</label>
+          <select
+            id="size"
+            name="size"
+            value={productData.size}
+            onChange={handleChange}
+            className="w-full mt-1 p-2 bg-gray-700 border border-gray-600 rounded font-sans text-sm text-white"
+            required
+          >
+            {(['Pequeño', 'Mediano', 'Grande'] as SizeType[]).map((size) => (
+              <option key={size} value={size}>
+                {size}
+              </option>
+            ))}
+          </select>
         </div>
         <div className="mb-4">
           <label htmlFor="stlFile" className="block text-sm font-medium">Archivo STL (opcional)</label>

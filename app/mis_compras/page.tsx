@@ -45,7 +45,8 @@ const adaptProductFromAPI = (apiProduct: ProductFromAPI): Product => {
     description: apiProduct.description || '',
     images_url: apiProduct.images_url || [],
     stl_file_url: apiProduct.stl_url || null,
-    seller: apiProduct.seller || 'No especificado'
+    seller: apiProduct.seller || 'No especificado',
+    size: 'Pequeño'
   };
 };
 
@@ -166,7 +167,8 @@ const MisComprasPage: React.FC = () => {
           description: data.description || '',
           images_url: data.images?.map((img: any) => img.image_url) || [],
           stl_file_url: data.stl_file_url || null,
-          seller: data.seller || 'No especificado'
+          seller: data.seller || 'No especificado',
+          size: 'Pequeño'
         };
         setPreviewProduct(adaptedProduct);
       }
@@ -182,7 +184,8 @@ const MisComprasPage: React.FC = () => {
         description: product.description || '',
         images_url: product.images_url || [],
         stl_file_url: product.stl_url || null,
-        seller: product.seller || 'No especificado'
+        seller: product.seller || 'No especificado',
+        size: 'Pequeño'
       };
       setPreviewProduct(adaptedProduct);
     }
