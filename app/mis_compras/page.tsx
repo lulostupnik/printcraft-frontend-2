@@ -245,7 +245,17 @@ const MisComprasPage: React.FC = () => {
                     <React.Fragment key={order.orderid}>
                       <tr className="transition-colors">
                         <td className="px-6 py-4">#{order.orderid}</td>
-                        <td className="px-6 py-4">{order.status}</td>
+                        <td className="px-6 py-4">
+                          {order.status === "Aceptada" ? (
+                            <span className="text-yellow-400">Esperando al vendedor</span>
+                          ) : order.status === "Completada" ? (
+                            <span className="text-green-400">Ir a buscar a DIRECCIÓN</span>
+                          ) : order.status === "Entregada" ? (
+                            <span className="text-blue-400">Entregada</span>
+                          ) : (
+                            order.status
+                          )}
+                        </td>
                         <td className="px-6 py-4">{formatDate(order.orderdate)}</td>
                         <td className="px-6 py-4">${order.total_price}</td>
                         <td className="px-6 py-4">
