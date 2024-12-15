@@ -68,7 +68,7 @@ const SellerDashboardPage: React.FC = () => {
                   selectedDashboard === 'explore' ? 'bg-blue-600 text-white' : 'bg-gray-700 text-gray-300'
                 }`}
               >
-                Explorar Requests
+                Explorar subastas
               </button>
             </li>
             <li>
@@ -78,7 +78,7 @@ const SellerDashboardPage: React.FC = () => {
                   selectedDashboard === 'print' ? 'bg-blue-600 text-white' : 'bg-gray-700 text-gray-300'
                 }`}
               >
-                Mis Print Requests
+                Mis solicitudes de impresión
               </button>
             </li>
             <li>
@@ -88,7 +88,7 @@ const SellerDashboardPage: React.FC = () => {
                   selectedDashboard === 'design' ? 'bg-blue-600 text-white' : 'bg-gray-700 text-gray-300'
                 }`}
               >
-                Mis Design Requests
+                Mis solicitudes de diseño
               </button>
             </li>
             <li>
@@ -99,7 +99,7 @@ const SellerDashboardPage: React.FC = () => {
                   selectedDashboard === 'sell' ? 'bg-blue-600 text-white' : 'bg-gray-700 text-gray-300'
                 }`}
               >
-                Publish product 
+                Publicar producto
               </button>
               {/* dashboard ((publicar, publicados y a vender)) */}
             </li>
@@ -110,7 +110,7 @@ const SellerDashboardPage: React.FC = () => {
                   selectedDashboard === 'products' ? 'bg-blue-600 text-white' : 'bg-gray-700 text-gray-300'
                 }`}
               >
-                Products Sold
+                Órdenes de venta
               </button>
             </li>
             <li>
@@ -120,7 +120,7 @@ const SellerDashboardPage: React.FC = () => {
                   selectedDashboard === 'published' ? 'bg-blue-600 text-white' : 'bg-gray-700 text-gray-300'
                 }`}
               >
-                Published Products
+                Productos publicados
               </button>
             </li>
             

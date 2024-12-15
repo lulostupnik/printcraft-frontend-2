@@ -32,6 +32,7 @@ type Order = {
   orderdate: string;
   total_price: number;
   products: ProductFromAPI[];  // Especificamos que son ProductFromAPI
+  address: string;
 };
 
 // Función adaptadora - la movemos fuera del componente
@@ -249,7 +250,7 @@ const MisComprasPage: React.FC = () => {
                           {order.status === "Aceptada" ? (
                             <span className="text-yellow-400">Esperando al vendedor</span>
                           ) : order.status === "Completada" ? (
-                            <span className="text-green-400">Ir a buscar a DIRECCIÓN</span>
+                            <span className="text-green-400">Ir a buscar a {order.address}</span>
                           ) : order.status === "Entregada" ? (
                             <span className="text-blue-400">Entregada</span>
                           ) : (
