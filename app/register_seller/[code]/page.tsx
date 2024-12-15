@@ -9,7 +9,7 @@ import { API_URL } from "@/api/api";
 export default function SellerFormPage() {
   const router = useRouter();
   const params = useParams();
-  const codeParam = params.code; // The code from the dynamic URL segment
+  const codeParam = params.code as string; // The code from the dynamic URL segment
 
   const [address, setAddress] = useState<string>('');
   const [storeName, setStoreName] = useState<string>('');
