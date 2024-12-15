@@ -41,6 +41,23 @@ const usePrintRequestsUser = (requestType: 'print-requests' | 'design-requests' 
 
 
   const handleAcceptResponse = async (requestID: number, responseID: number) => {
+
+    console.log('Aceptando respuesta:', responseID, 'para solicitud:', requestID);
+
+      const response = await fetch(`${API_URL}/${requestType}/${requestID}/accept-response/${responseID}/`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
+          'Content-Type': 'application/json',
+        },
+      });
+
+      const data = await response.json();
+
+      alert('Oferta aceptada exitosamente');
+      window.location.reload();
+
+      /*
     try {
       console.log('Aceptando respuesta:', responseID, 'para solicitud:', requestID);
 
@@ -54,7 +71,10 @@ const usePrintRequestsUser = (requestType: 'print-requests' | 'design-requests' 
 
       const data = await response.json();
 
-      if (response.ok) {
+      alert('Oferta aceptada exitosamente');
+      window.location.reload();
+
+    /*  if (response.ok) {
         console.log('Respuesta aceptada exitosamente:', data);
         
         setPrintRequests(prevRequests => 
@@ -74,7 +94,7 @@ const usePrintRequestsUser = (requestType: 'print-requests' | 'design-requests' 
     } catch (error) {
       console.error('Error al aceptar la respuesta:', error);
       alert('Error al aceptar la oferta. Por favor, intente nuevamente.');
-    }
+    }*/
   };
   
 

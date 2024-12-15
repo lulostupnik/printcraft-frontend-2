@@ -103,12 +103,12 @@ export default function AuthPage(/*{ redirectTo }: AuthPageProps*/) {
 
       <main className="container mx-auto mt-16 p-4 flex-grow">
         <div className="max-w-md mx-auto">
-          <h1 className="text-4xl font-bold mb-8">Log in</h1>
+          <h1 className="text-4xl font-bold mb-8">Iniciar sesión</h1>
           <form onSubmit={handleSubmit} className="space-y-4">
             <input
               name="username"
               type="text"
-              placeholder="Username"
+              placeholder="Nombre de usuario"
               value={username}
               onChange={(e) => setUsername(e.target.value)}
               className="w-full bg-gray-800 text-white px-4 py-2 rounded-md"
@@ -118,7 +118,7 @@ export default function AuthPage(/*{ redirectTo }: AuthPageProps*/) {
               <input
                 name="password"
                 type={showPassword ? "text" : "password"}
-                placeholder="Password"
+                placeholder="Contraseña"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 className="w-full bg-gray-800 text-white px-4 py-2 rounded-md"
@@ -147,7 +147,7 @@ export default function AuthPage(/*{ redirectTo }: AuthPageProps*/) {
               type="submit"
               className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-md"
             >
-              Log in
+              Iniciar sesión
             </button>
           </form>
 
@@ -158,7 +158,7 @@ export default function AuthPage(/*{ redirectTo }: AuthPageProps*/) {
               onClick={handleNavigateToRegister}
               className="text-blue-500 underline cursor-pointer"
             >
-              Registrate
+              Registrarse
             </button>
           </div>
         </div>
