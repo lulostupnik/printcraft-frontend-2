@@ -184,7 +184,7 @@ const UserRequestsTable: React.FC<UserRequestsTableProps> = ({
                     <th className="px-4 py-2 text-center">Vendedor</th>
                   )}
                   {type === 'accepted-finalized' && (
-                    <th className="px-4 py-2 text-center">Status</th>
+                    <th className="px-4 py-2 text-center">Estado</th>
                   )}
                   {type !== 'accepted-finalized' && type !== 'delivered' && (
                     <th className="px-4 py-2 text-center">Acciones</th>
