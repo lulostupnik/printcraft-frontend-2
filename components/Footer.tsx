@@ -76,11 +76,7 @@ export default function Footer({ className = '' }: FooterProps) {
                 Publicar
               </a>
             </li>
-            <li className="mb-2">
-              <a onClick={handleOfferServicesClick} style={{ cursor: "pointer" }} className="hover:underline">
-                Ofrecer Servicios
-              </a>
-            </li>
+            
           </ul>
         </div>
   
