@@ -151,11 +151,12 @@ const ProductDetailPage = () => {
       if (response.ok) {
         const data = await response.json();
         
-        if (data.can_review) {
+        /*if (data.can_review) {
           setShowSnackbar(true);
         } else {
           alert('No puedes hacer una review de este producto. Es posible que no hayas comprado el producto.');
-        }
+        }*/
+        setShowSnackbar(true);    //todo: ESTO SE TIENE QUE SACAR.
       } else {
         alert('Error al verificar si puedes hacer una review');
       }
