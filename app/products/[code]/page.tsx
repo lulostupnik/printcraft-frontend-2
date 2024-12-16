@@ -269,7 +269,7 @@ const ProductDetailPage = () => {
             <div className="mb-4">
               <h3 className="text-lg font-bold mb-2">Lo que tenés que saber de este producto:</h3>
               <ul className="list-disc list-inside text-gray-300">
-                <li>Material del ncleo: {product.material}</li>
+                <li>Material del nucleo: {product.material}</li>
                 <li>Stock disponible: {product.stock}</li>
                 <li>Vendido por: {product.seller_name} </li>
                 <li>{product.description}</li>
