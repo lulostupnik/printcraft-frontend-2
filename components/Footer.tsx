@@ -32,7 +32,7 @@ export default function Footer({ className = '' }: FooterProps) {
       } else if (!isSeller) {
         router.push('/register_seller');
       } else {
-        router.push('/publish_product');
+        router.push('/seller_landing');
       }
     };
 
